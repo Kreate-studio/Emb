@@ -22,7 +22,7 @@ const donationTiers = [
 
 export function DonationSection() {
   return (
-    <SectionWrapper id="donate" className="bg-secondary/20">
+    <SectionWrapper id="donate">
       <div className="max-w-4xl mx-auto text-center">
         <Heart className="w-16 h-16 mx-auto mb-4 text-primary animate-pulse" />
         <h2 className="text-3xl md:text-4xl font-headline font-bold">

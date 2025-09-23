@@ -57,7 +57,7 @@ const ecosystemItems = [
 
 export function EcosystemShowcase() {
   return (
-    <SectionWrapper id="ecosystem">
+    <SectionWrapper id="ecosystem" className="bg-secondary/20">
       <div className="text-center mb-12">
         <h2 className="text-4xl md:text-5xl font-headline font-bold">
           Explore the Ecosystem

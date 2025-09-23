@@ -33,7 +33,7 @@ const loreEntries = [
 
 export function LoreSection() {
   return (
-    <SectionWrapper id="lore" className="bg-secondary/20">
+    <SectionWrapper id="lore">
       <div className="relative z-10 max-w-3xl mx-auto bg-card/50 border border-border/50 rounded-2xl p-8 md:p-12 shadow-lg backdrop-blur-md text-center">
         <h2 className="text-4xl md:text-5xl font-headline font-bold">
           Whispers of the Ages
