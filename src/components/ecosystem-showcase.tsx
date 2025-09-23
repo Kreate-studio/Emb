@@ -51,7 +51,7 @@ const ecosystemItems = [
     title: 'Creator Hub',
     description:
       'Tools and resources for creators to manage their content and grow their audience.',
-    comingSoon: false,
+    comingSoon: true,
   },
 ];
 
