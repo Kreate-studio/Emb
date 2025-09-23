@@ -6,6 +6,7 @@ import { Header } from '@/components/header';
 import { HeroSection } from '@/components/hero-section';
 import { JoinCTA } from '@/components/join-cta';
 import { LoreSection } from '@/components/lore-section';
+import { PartnershipsCarousel } from '@/components/partnerships-carousel';
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <main className="flex-1">
         <HeroSection />
         <EcosystemShowcase />
+        <PartnershipsCarousel />
         <CommunityShowcase />
         <LoreSection />
         <EventsCarousel />
