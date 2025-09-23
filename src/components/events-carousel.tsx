@@ -1,5 +1,7 @@
 'use client';
 import Image from 'next/image';
+import React from 'react';
+import Autoplay from 'embla-carousel-autoplay';
 import {
   Carousel,
   CarouselContent,
@@ -19,6 +21,14 @@ export function EventsCarousel() {
     ...PlaceHolderImages.find((img) => img.id === event.imageId),
   }));
 
+  const plugin = React.useRef(
+    Autoplay({
+      delay: 4000,
+      stopOnInteraction: true,
+      stopOnMouseEnter: true,
+    })
+  );
+
   return (
     <SectionWrapper id="events" className="bg-secondary/20">
       <div className="text-center mb-12">
@@ -35,6 +45,7 @@ export function EventsCarousel() {
           align: 'start',
           loop: true,
         }}
+        plugins={[plugin.current]}
         className="w-full max-w-4xl mx-auto"
       >
         <CarouselContent>
