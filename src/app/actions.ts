@@ -59,20 +59,23 @@ type AIState = {
   error?: string | null;
 };
 
-const ratelimit = new Ratelimit({
+const ratelimit = kv && process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN ? new Ratelimit({
   redis: kv,
   limiter: Ratelimit.slidingWindow(5, '1 m'),
-});
+}) : null;
 
 export async function getAIResponse(query: string): Promise<AIState> {
-  const ip = headers().get('x-forwarded-for') ?? '127.0.0.1';
-  const { success, limit, remaining } = await ratelimit.limit(ip);
+  if (ratelimit) {
+    const ip = headers().get('x-forwarded-for') ?? '127.0.0.1';
+    const { success } = await ratelimit.limit(ip);
 
-  if (!success) {
-    return {
-      error: 'You have reached the request limit. Please try again in a minute.',
-    };
+    if (!success) {
+      return {
+        error: 'You have reached the request limit. Please try again in a minute.',
+      };
+    }
   }
+
 
   const validatedFields = querySchema.safeParse({ query });
 
