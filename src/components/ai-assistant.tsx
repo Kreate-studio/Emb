@@ -39,7 +39,7 @@ export function AIAssistant() {
     string
   >(messages, (state, newContent) => [
     ...state,
-    { id: Date.now(), role: 'user', content: newContent },
+    { id: state.length + 1, role: 'user', content: newContent },
   ]);
 
   useEffect(() => {
@@ -70,14 +70,14 @@ export function AIAssistant() {
       setError(result.error);
       setMessages((prev) => [
         ...prev,
-        { id: Date.now(), role: 'user', content: userInput },
-        { id: Date.now() + 1, role: 'assistant', content: result.error || 'An error occurred.' },
+        { id: prev.length, role: 'user', content: userInput },
+        { id: prev.length + 1, role: 'assistant', content: result.error || 'An error occurred.' },
       ]);
     } else if (result.response) {
       setMessages((prev) => [
         ...prev,
-        { id: Date.now(), role: 'user', content: userInput },
-        { id: Date.now() + 1, role: 'assistant', content: result.response },
+        { id: prev.length, role: 'user', content: userInput },
+        { id: prev.length + 1, role: 'assistant', content: result.response },
       ]);
     }
     setLoading(false);
