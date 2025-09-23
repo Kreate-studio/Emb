@@ -1,59 +1,7 @@
-import {
-  Bot,
-  Brush,
-  Gamepad2,
-  Library,
-  Music,
-  Users,
-} from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import SectionWrapper from './section-wrapper';
-
-const ecosystemItems = [
-  {
-    icon: Bot,
-    title: 'Emberlyn Bot',
-    description:
-      'A versatile Discord bot to manage your community and enhance engagement.',
-    comingSoon: false,
-  },
-  {
-    icon: Brush,
-    title: 'Artist Hub',
-    description:
-      'A dedicated space for artists to showcase their work, find inspiration, and collaborate.',
-    comingSoon: true,
-  },
-  {
-    icon: Gamepad2,
-    title: 'Gaming Hub',
-    description:
-      'Organize tournaments, track stats, and connect with fellow gamers.',
-    comingSoon: true,
-  },
-  {
-    icon: Music,
-    title: 'Music Hub',
-    description:
-      'Share your compositions, discover new music, and collaborate on projects.',
-    comingSoon: true,
-  },
-  {
-    icon: Library,
-    title: 'Anime/Fandom Hub',
-    description:
-      'A central place for all things anime and fandom, from discussions to fan art.',
-    comingSoon: true,
-  },
-  {
-    icon: Users,
-    title: 'Creator Hub',
-    description:
-      'Tools and resources for creators to manage their content and grow their audience.',
-    comingSoon: true,
-  },
-];
+import { ecosystemItems } from '@/lib/site-data';
 
 export function EcosystemShowcase() {
   return (

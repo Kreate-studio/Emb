@@ -2,19 +2,7 @@ import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import SectionWrapper from './section-wrapper';
 import { Badge } from './ui/badge';
-
-const galleryItems = [
-  { id: 'community-art-1', tag: 'Art', hint: 'fantasy art' },
-  { id: 'community-cosplay-1', tag: 'Cosplay', hint: 'fantasy cosplay' },
-  { id: 'community-art-2', tag: 'Art', hint: 'fantasy character' },
-  { id: 'community-music-1', tag: 'Music', hint: 'fantasy album' },
-  { id: 'community-rp-1', tag: 'Roleplay', hint: 'fantasy scene' },
-  { id: 'community-art-3', tag: 'Art', hint: 'fantasy creature' },
-  { id: 'community-writing-1', tag: 'Writing', hint: 'fantasy story' },
-  { id: 'community-cosplay-2', tag: 'Cosplay', hint: 'elf cosplay' },
-  { id: 'community-art-4', tag: 'Art', hint: 'dragon art' },
-  { id: 'community-video-1', tag: 'Video', hint: 'gameplay video' },
-];
+import { galleryItems } from '@/lib/site-data';
 
 export function CommunityShowcase() {
   const images = galleryItems.map((item) => ({

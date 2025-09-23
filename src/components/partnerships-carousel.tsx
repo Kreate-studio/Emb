@@ -11,34 +11,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import SectionWrapper from './section-wrapper';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
-
-const partners = [
-  {
-    name: 'Mythic Realms',
-    joinLink: '#',
-    imageId: 'partner-mythic-realms',
-  },
-  {
-    name: 'Cyber Scape',
-    joinLink: '#',
-    imageId: 'partner-cyber-scape',
-  },
-  {
-    name: 'Pixel Perfect',
-    joinLink: '#',
-    imageId: 'partner-pixel-perfect',
-  },
-  {
-    name: 'Bardic Tales',
-    joinLink: '#',
-    imageId: 'partner-bardic-tales',
-  },
-  {
-    name: 'Aesthetic Valley',
-    joinLink: '#',
-    imageId: 'partner-aesthetic-valley',
-  },
-];
+import { partners } from '@/lib/site-data';
 
 export function PartnershipsCarousel() {
   const partnerImages = partners.map((partner) => ({

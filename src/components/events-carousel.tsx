@@ -11,33 +11,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import SectionWrapper from './section-wrapper';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
-
-const events = [
-  {
-    title: 'Nexus Clash Tournament',
-    category: 'Gaming',
-    description: 'The seasonal tournament begins. Sharpen your blades!',
-    imageId: 'event-tournament',
-  },
-  {
-    title: 'Chiaroscuro Art Contest',
-    category: 'Art',
-    description: 'Showcase your mastery of light and shadow. Grand prizes await.',
-    imageId: 'event-contest',
-  },
-  {
-    title: 'The Ashen Masquerade',
-    category: 'Roleplay',
-    description: 'A realm-wide roleplaying event of intrigue and mystery.',
-    imageId: 'event-rp',
-  },
-  {
-    title: 'Artist Hub Launch',
-    category: 'Update',
-    description: 'The new Artist Hub is coming soon! Prepare your portfolios.',
-    imageId: 'event-update',
-  },
-];
+import { events } from '@/lib/site-data';
 
 export function EventsCarousel() {
   const eventImages = events.map((event) => ({
