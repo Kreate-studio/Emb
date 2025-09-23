@@ -1,4 +1,5 @@
 import { CommunityShowcase } from '@/components/community-showcase';
+import { DonationSection } from '@/components/donation-section';
 import { EcosystemShowcase } from '@/components/ecosystem-showcase';
 import { EventsCarousel } from '@/components/events-carousel';
 import { Footer } from '@/components/footer';
@@ -19,6 +20,7 @@ export default function Home() {
         <CommunityShowcase />
         <LoreSection />
         <EventsCarousel />
+        <DonationSection />
         <JoinCTA />
       </main>
       <Footer />

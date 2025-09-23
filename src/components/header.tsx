@@ -18,6 +18,7 @@ const navLinks = [
   { href: '#community', label: 'Community' },
   { href: '#lore', label: 'Lore' },
   { href: '#events', label: 'Events' },
+  { href: '#donate', label: 'Donate' },
 ];
 
 export function Header() {
