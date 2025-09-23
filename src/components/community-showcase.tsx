@@ -10,6 +10,10 @@ const galleryItems = [
   { id: 'community-music-1', tag: 'Music', hint: 'fantasy album' },
   { id: 'community-rp-1', tag: 'Roleplay', hint: 'fantasy scene' },
   { id: 'community-art-3', tag: 'Art', hint: 'fantasy creature' },
+  { id: 'community-writing-1', tag: 'Writing', hint: 'fantasy story' },
+  { id: 'community-cosplay-2', tag: 'Cosplay', hint: 'elf cosplay' },
+  { id: 'community-art-4', tag: 'Art', hint: 'dragon art' },
+  { id: 'community-video-1', tag: 'Video', hint: 'gameplay video' },
 ];
 
 export function CommunityShowcase() {
