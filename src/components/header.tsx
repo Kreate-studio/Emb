@@ -49,7 +49,7 @@ export function Header() {
           <div className="hidden md:block">
             <Button asChild>
               <a
-                href="https://discord.com"
+                href="https://discord.gg/PruRXZ7zkF"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -91,7 +91,7 @@ export function Header() {
               <div className="mt-4 pt-4 border-t border-border/50">
                 <Button asChild className="w-full">
                   <a
-                    href="https://discord.com"
+                    href="https://discord.gg/PruRXZ7zkF"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
