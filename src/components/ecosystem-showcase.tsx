@@ -4,7 +4,7 @@ import {
   Gamepad2,
   Library,
   Music,
-  ShieldCheck,
+  Users,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -47,10 +47,10 @@ const ecosystemItems = [
     comingSoon: true,
   },
   {
-    icon: ShieldCheck,
-    title: 'Warden Tools',
+    icon: Users,
+    title: 'Creator Hub',
     description:
-      'Advanced moderation and security tools to protect your community.',
+      'Tools and resources for creators to manage their content and grow their audience.',
     comingSoon: false,
   },
 ];
