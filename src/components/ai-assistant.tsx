@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useOptimistic } from 'react';
+import React, { useState, useRef, useEffect, useOptimistic, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -32,6 +32,7 @@ export function AIAssistant() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [isPending, startTransition] = useTransition();
 
   const [optimisticMessages, addOptimisticMessage] = useOptimistic<
     Message[],
@@ -59,7 +60,9 @@ export function AIAssistant() {
     setError(null);
     setLoading(true);
 
-    addOptimisticMessage(userInput);
+    startTransition(() => {
+      addOptimisticMessage(userInput);
+    });
 
     const result = await getAIResponse(userInput);
 
