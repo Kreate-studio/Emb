@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Accordion,
   AccordionContent,
@@ -7,6 +9,7 @@ import {
 import SectionWrapper from './section-wrapper';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 const loreEntries = [
   {
@@ -33,6 +36,14 @@ const loreEntries = [
 
 export function LoreSection() {
   const bgImage = PlaceHolderImages.find((img) => img.id === 'lore-bg');
+  const [offsetY, setOffsetY] = useState(0);
+  const handleScroll = () => setOffsetY(window.pageYOffset);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <SectionWrapper id="lore" className="relative">
       {bgImage && (
@@ -42,6 +53,7 @@ export function LoreSection() {
           data-ai-hint={bgImage.imageHint}
           fill
           className="object-cover object-center z-0"
+          style={{ transform: `translateY(${offsetY * 0.1}px)` }}
         />
       )}
       <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-0" />
