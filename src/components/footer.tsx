@@ -1,3 +1,6 @@
+
+'use client';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FlameIcon } from './flame-icon';
 import { Button } from './ui/button';
@@ -24,7 +27,12 @@ const socialLinks = [
 ];
 
 export function Footer() {
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
+
   return (
     <footer className="bg-secondary/20 border-t border-border/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -141,7 +149,7 @@ export function Footer() {
         </div>
         <div className="mt-12 pt-8 border-t border-border/50 text-center text-sm text-muted-foreground">
           <p>
-            &copy; {currentYear} D’Last Sanctuary. All Rights Reserved.
+            &copy; {currentYear || new Date().getFullYear()} D’Last Sanctuary. All Rights Reserved.
           </p>
         </div>
       </div>
