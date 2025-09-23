@@ -7,9 +7,6 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import SectionWrapper from './section-wrapper';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
 
 const loreEntries = [
   {
@@ -35,29 +32,8 @@ const loreEntries = [
 ];
 
 export function LoreSection() {
-  const bgImage = PlaceHolderImages.find((img) => img.id === 'lore-bg');
-  const [offsetY, setOffsetY] = useState(0);
-  const handleScroll = () => setOffsetY(window.pageYOffset);
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
-    <SectionWrapper id="lore" className="relative">
-      {bgImage && (
-        <Image
-          src={bgImage.imageUrl}
-          alt={bgImage.description}
-          data-ai-hint={bgImage.imageHint}
-          fill
-          className="object-cover object-center z-0"
-          style={{ transform: `translateY(${offsetY * 0.1}px)` }}
-        />
-      )}
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-0" />
-
+    <SectionWrapper id="lore" className="bg-secondary/20">
       <div className="relative z-10 max-w-3xl mx-auto bg-card/50 border border-border/50 rounded-2xl p-8 md:p-12 shadow-lg backdrop-blur-md text-center">
         <h2 className="text-4xl md:text-5xl font-headline font-bold">
           Whispers of the Ages
