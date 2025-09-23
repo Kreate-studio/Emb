@@ -22,31 +22,19 @@ const navLinks = [
 ];
 
 export function Header() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full transition-all duration-300',
-        isScrolled
-          ? 'bg-background/80 backdrop-blur-lg border-b border-border/50'
-          : 'bg-transparent'
+        'sticky top-0 z-50 w-full transition-all duration-300 py-4'
       )}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16 bg-background/80 backdrop-blur-lg border border-border/50 rounded-full px-6">
           <Link href="/" className="flex items-center gap-2">
             <FlameIcon className="h-8 w-8" />
-            <span className="text-xl font-headline font-bold">
+            <span className="text-xl font-headline font-bold hidden sm:inline-block">
               Sanctyr
             </span>
           </Link>
