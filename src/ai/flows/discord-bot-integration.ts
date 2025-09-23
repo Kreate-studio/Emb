@@ -12,7 +12,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const DiscordBotIntegrationInputSchema = z.object({
-  query: z.string().describe('The user query.'),
+  query: z.string().optional().describe('The user query.'),
 });
 export type DiscordBotIntegrationInput = z.infer<typeof DiscordBotIntegrationInputSchema>;
 
