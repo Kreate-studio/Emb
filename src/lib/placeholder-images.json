@@ -1,3 +1,76 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-bg",
+      "description": "Background image for the hero section, showing floating ruins in a dark fantasy setting.",
+      "imageUrl": "https://images.unsplash.com/photo-1558690281-0ab20ad67b8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxmYW50YXN5JTIwcnVpbnN8ZW58MHx8fHwxNzU4NjM0NTk1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy ruins"
+    },
+    {
+      "id": "lore-bg",
+      "description": "Background for the lore section, showing a mystical landscape.",
+      "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmYW50YXN5JTIwbGFuZHNjYXBlfGVufDB8fHx8MTc1ODU4NDk1MXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy landscape"
+    },
+    {
+      "id": "community-art-1",
+      "description": "User submitted art piece 1.",
+      "imageUrl": "https://images.unsplash.com/photo-1741118235609-bf637a4e7d39?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwYXJ0fGVufDB8fHx8MTc1ODU4MzQxM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy art"
+    },
+    {
+      "id": "community-art-2",
+      "description": "User submitted art piece 2.",
+      "imageUrl": "https://images.unsplash.com/photo-1739513235245-7bf155a094d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxmYW50YXN5JTIwY2hhcmFjdGVyfGVufDB8fHx8MTc1ODYyMTQyMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy character"
+    },
+    {
+      "id": "community-cosplay-1",
+      "description": "User submitted cosplay 1.",
+      "imageUrl": "https://images.unsplash.com/photo-1735720518631-60257e2fde92?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxmYW50YXN5JTIwY29zcGxheXxlbnwwfHx8fDE3NTg2MzQ1OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy cosplay"
+    },
+    {
+      "id": "community-music-1",
+      "description": "Album art for user submitted music.",
+      "imageUrl": "https://images.unsplash.com/photo-1647541706162-f5ad608dd421?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwYWxidW18ZW58MHx8fHwxNzU4NjM0NTk1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy album"
+    },
+    {
+      "id": "community-rp-1",
+      "description": "Image representing a roleplay scene.",
+      "imageUrl": "https://images.unsplash.com/photo-1720185619858-4e26245347c7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxmYW50YXN5JTIwc2NlbmV8ZW58MHx8fHwxNzU4NjM0NTk1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy scene"
+    },
+    {
+      "id": "community-art-3",
+      "description": "User submitted art piece 3.",
+      "imageUrl": "https://images.unsplash.com/photo-1651181380183-ff405917a50f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmYW50YXN5JTIwY3JlYXR1cmV8ZW58MHx8fHwxNzU4NjM0MjUyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy creature"
+    },
+    {
+      "id": "event-tournament",
+      "description": "Banner for a gaming tournament.",
+      "imageUrl": "https://images.unsplash.com/photo-1558008258-be2e19614dda?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxnYW1pbmclMjB0b3VybmFtZW50fGVufDB8fHx8MTc1ODYzNDU5NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gaming tournament"
+    },
+    {
+      "id": "event-contest",
+      "description": "Banner for an art contest.",
+      "imageUrl": "https://images.unsplash.com/photo-1718648078148-64ce09167e91?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhcnQlMjBjb250ZXN0fGVufDB8fHx8MTc1ODYzNDU5NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "art contest"
+    },
+    {
+      "id": "event-rp",
+      "description": "Banner for a roleplaying event.",
+      "imageUrl": "https://images.unsplash.com/photo-1752937083817-34abd8532d6c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxyb2xlcGxheSUyMGV2ZW50fGVufDB8fHx8MTc1ODYzNDU5NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "roleplay event"
+    },
+    {
+      "id": "event-update",
+      "description": "Banner for a site update.",
+      "imageUrl": "https://images.unsplash.com/photo-1603091592272-b18f8b4a4250?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZmFudGFzeSUyMHVwZGF0ZXxlbnwwfHx8fDE3NTg2MzQ1OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy update"
+    }
+  ]
 }
