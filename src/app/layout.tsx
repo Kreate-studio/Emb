@@ -4,7 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { AIAssistant } from '@/components/ai-assistant';
 
 export const metadata: Metadata = {
-  title: 'Emberglow Hub',
+  title: 'Sanctyr',
   description:
     'A realm for Gamers, Artists, and Creators — Shape the kingdom and your destiny.',
 };

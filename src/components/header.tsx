@@ -46,7 +46,7 @@ export function Header() {
           <Link href="/" className="flex items-center gap-2">
             <FlameIcon className="h-8 w-8" />
             <span className="text-xl font-headline font-bold">
-              Emberglow Hub
+              Sanctyr
             </span>
           </Link>
 
@@ -88,7 +88,7 @@ export function Header() {
                      <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
                         <FlameIcon className="h-6 w-6" />
                         <span className="text-lg font-headline font-bold">
-                          Emberglow Hub
+                          Sanctyr
                         </span>
                       </Link>
                       <SheetClose asChild>

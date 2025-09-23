@@ -1,4 +1,3 @@
-
 'use client';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -41,7 +40,7 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-2 mb-4">
               <FlameIcon className="h-7 w-7" />
               <span className="text-lg font-headline font-bold">
-                Emberglow Hub
+                Sanctyr
               </span>
             </Link>
             <p className="max-w-xs text-muted-foreground italic">
