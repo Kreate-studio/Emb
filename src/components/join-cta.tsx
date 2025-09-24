@@ -10,7 +10,6 @@ import SectionWrapper from './section-wrapper';
 import { useToast } from '@/hooks/use-toast';
 import { FlameIcon } from './flame-icon';
 import { Users, User } from 'lucide-react';
-import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import {
   Tooltip,
@@ -69,8 +68,8 @@ function DiscordWidget() {
   const content = () => {
     if (error) {
       return (
-        <p className="text-muted-foreground">
-          Could not load Discord status. Please join us directly!
+        <p className="text-muted-foreground text-center">
+          Could not load Discord server status. You can join us directly!
         </p>
       );
     }
@@ -80,7 +79,11 @@ function DiscordWidget() {
           <div className="animate-pulse flex flex-col items-center gap-4 w-full">
             <div className="h-8 w-48 bg-muted rounded-md"></div>
             <div className="h-6 w-32 bg-muted rounded-md"></div>
-            <div className="h-10 w-full bg-muted rounded-md"></div>
+            <div className="flex justify-center -space-x-4">
+               <div className="h-10 w-10 bg-muted rounded-full border-2 border-background"></div>
+               <div className="h-10 w-10 bg-muted rounded-full border-2 border-background"></div>
+               <div className="h-10 w-10 bg-muted rounded-full border-2 border-background"></div>
+            </div>
           </div>
         </div>
       );
@@ -200,5 +203,3 @@ export function JoinCTA() {
     </SectionWrapper>
   );
 }
-
-    
