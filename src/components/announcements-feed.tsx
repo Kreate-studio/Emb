@@ -5,6 +5,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Megaphone, AlertTriangle, RefreshCw } from 'lucide-react';
 import type { ChannelMessage } from '@/lib/discord-service';
 import { getChannelMessages, getGuildRoles, type GuildRole } from '@/lib/discord-service';
+import { getTenorGifUrl } from '@/app/actions';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Separator } from './ui/separator';
@@ -51,6 +52,16 @@ function FeedMessage({ message, roles }: { message: ChannelMessage, roles: Guild
     const firstAttachment = message.attachments?.[0];
     const isImage = firstAttachment?.content_type?.startsWith('image/');
     const isVideo = firstAttachment?.content_type?.startsWith('video/');
+    const tenorUrl = message.content.match(/https?:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+/)?.[0];
+    const [gifUrl, setGifUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (tenorUrl) {
+            getTenorGifUrl(tenorUrl).then(({ url }) => {
+                if(url) setGifUrl(url);
+            });
+        }
+    }, [tenorUrl]);
     
     return (
         <div className="flex items-start gap-3">
@@ -66,7 +77,7 @@ function FeedMessage({ message, roles }: { message: ChannelMessage, roles: Guild
                     </p>
                 </div>
                 {message.content && <MessageContent message={message} roles={roles} />}
-                 {(firstAttachment && (isImage || isVideo)) && (
+                {(firstAttachment && (isImage || isVideo)) ? (
                      <div className="mt-2 rounded-lg overflow-hidden border border-border">
                         {isImage ? (
                             <Image 
@@ -80,7 +91,18 @@ function FeedMessage({ message, roles }: { message: ChannelMessage, roles: Guild
                             <video controls src={firstAttachment.url} className="max-h-60 w-auto" />
                         ): null}
                     </div>
-                )}
+                ) : gifUrl ? (
+                    <div className="mt-2 rounded-lg overflow-hidden border border-border">
+                        <Image 
+                            src={gifUrl} 
+                            alt="Tenor GIF"
+                            width={220}
+                            height={150} // A common GIF aspect ratio
+                            className="max-h-60 w-auto object-contain"
+                            unoptimized
+                        />
+                    </div>
+                ) : null}
             </div>
         </div>
     );

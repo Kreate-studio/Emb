@@ -1,4 +1,3 @@
-
 'use server';
 
 import {
@@ -9,6 +8,7 @@ import { z } from 'zod';
 import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';
 import { headers } from 'next/headers';
+import {unstable_noStore as noStore} from 'next/cache';
 
 const emailSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -96,4 +96,25 @@ export async function getAIResponse(query: string): Promise<AIState> {
       error: 'The sanctuary is silent... The AI assistant is currently unavailable.',
     };
   }
+}
+
+export async function getTenorGifUrl(url: string) {
+    noStore();
+    try {
+        const response = await fetch(`${url}.gif`, {
+            method: 'HEAD', // We only need the headers to find the redirect
+            redirect: 'manual', // We handle the redirect manually
+        });
+
+        // The 'location' header will contain the final GIF URL
+        const finalUrl = response.headers.get('location');
+
+        if (finalUrl) {
+            return { url: finalUrl };
+        }
+        return { url: null, error: 'Could not find GIF URL' };
+    } catch (error) {
+        console.error('Failed to get Tenor GIF URL:', error);
+        return { url: null, error: 'Failed to fetch Tenor GIF' };
+    }
 }
