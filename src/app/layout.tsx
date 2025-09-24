@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: 'Sanctyr',
   description:
     'A realm for Gamers, Artists, and Creators — Shape the kingdom and your destiny.',
+  icons: {
+    icon: '/logo.png',
+  },
 };
 
 export default function RootLayout({
@@ -17,7 +20,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <head>
-        <link rel="icon" href="/logo.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
