@@ -9,7 +9,7 @@
     {
       "id": "lore-bg",
       "description": "Background for the lore section, showing a mystical landscape.",
-      "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmYW50YXN5JTIwbGFuZHNjYXBlfGVufDB8fHx8fDE3NTg1ODQ5NTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmYW50YXN5JTIwbGFuZHNjYXBlfGVufDB8fHx8fDE3NTg1ODQ5NTF8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy landscape"
     },
     {
@@ -27,7 +27,7 @@
     {
       "id": "community-cosplay-1",
       "description": "User submitted cosplay 1.",
-      "imageUrl": "https://images.unsplash.com/photo-1735720518631-60257e2fde92?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxmYW50YXN5JTIwY29zcGxheXxlbnwwfHx8fDE3NTg2MzQ1OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1735720518631-60257e2fde92?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxmYW50YXN5JTIwY29zcGxheXxlbnwwfHx8fDE3NTg2MzQ1OTV8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy cosplay"
     },
     {
@@ -51,7 +51,7 @@
     {
       "id": "community-writing-1",
       "description": "Image representing a fantasy story.",
-      "imageUrl": "https://images.unsplash.com/photo-1569826302896-9fc21fc56ac7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwc3Rvcnl8ZW58MHx8fHwxNzU4NjUyNDEyfDA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1569826302896-9fc21fc56ac7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwc3Rvcnl8ZW58MHx8fHwxNzU4NjUyNDEyfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy story"
     },
     {
@@ -63,7 +63,7 @@
     {
       "id": "community-art-4",
       "description": "User submitted art piece 4.",
-      "imageUrl": "https://images.unsplash.com/photo-1737640240682-1bbb31a04331?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkcmFnb24lMjBhcnR8ZW58MHx8fHwxNzU4NjUyNDEzfDA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1737640240682-1bbb31a04331?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkcmFnb24lMjBhcnR8ZW58MHx8fHwxNzU4NjUyNDEzfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "dragon art"
     },
     {
@@ -75,13 +75,13 @@
     {
       "id": "event-tournament",
       "description": "Banner for a gaming tournament.",
-      "imageUrl": "https://images.unsplash.com/photo-1558008258-be2e19614dda?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxnYW1pbmclMjB0b3VybmFtZW50fGVufDB8fHx8MTc1ODYzNDU5NXww&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1558008258-be2e19614dda?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxnYW1pbmclMjB0b3VybmFtZW50fGVufDB8fHx8MTc1ODYzNDU5NXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "gaming tournament"
     },
     {
       "id": "event-contest",
       "description": "Banner for an art contest.",
-      "imageUrl": "https://images.unsplash.com/photo-1718648078148-64ce09167e91?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhcnQlMjBjb250ZXN0fGVufDB8fHx8fDE3NTg2MzQ1OTV8MA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1718648078148-64ce09167e91?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhcnQlMjBjb250ZXN0fGVufDB8fHx8fDE3NTg2MzQ1OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "art contest"
     },
     {
@@ -93,7 +93,7 @@
     {
       "id": "event-update",
       "description": "Banner for a site update.",
-      "imageUrl": "https://images.unsplash.com/photo-1603091592272-b18f8b4a4250?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZmFudGFzeSUyMHVwZGF0ZXxlbnwwfHx8fDE3NTg2MzQ1OTV8MA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1603091592272-b18f8b4a4250?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZmFudGFzeSUyMHVwZGF0ZXxlbnwwfHx8fDE3NTg2MzQ1OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy update"
     },
     {
@@ -129,7 +129,7 @@
     {
       "id": "hub-bot-bg",
       "description": "Background image for the Emberlyn Bot hub card, showing a robot mascot.",
-      "imageUrl": "https://images.unsplash.com/photo-1507146426996-321341aa18ac?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://images.unsplash.com/photo-1589254065909-b7086229d092?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "robot mascot"
     },
     {
