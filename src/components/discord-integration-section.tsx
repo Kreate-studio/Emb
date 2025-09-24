@@ -1,9 +1,6 @@
-
 import { getGuildDetails, getChannelMessages, getGuildRoles } from '@/lib/discord-service';
-import SectionWrapper from './section-wrapper';
-import { ServerStats } from './server-stats';
-import { AnnouncementsFeed } from './announcements-feed';
-import { LiveChannelFeed } from './live-channel-feed';
+import { DiscordIntegrationSectionContent } from './discord-integration-section-content';
+
 
 export async function DiscordIntegrationSection() {
     const guildId = process.env.DISCORD_GUILD_ID;
@@ -11,6 +8,9 @@ export async function DiscordIntegrationSection() {
     const liveFeedChannelId = process.env.DISCORD_LIVE_FEED_CHANNEL_ID;
 
     if (!guildId || !announcementsChannelId || !liveFeedChannelId) {
+        // You might want to render a placeholder or nothing at all if the IDs are not set.
+        // Returning null will prevent the section from rendering.
+        console.warn("Discord environment variables are not set. The Discord integration section will not be rendered.");
         return null;
     }
 
@@ -22,34 +22,12 @@ export async function DiscordIntegrationSection() {
         getGuildRoles()
     ]);
 
-    return (
-        <SectionWrapper id="discord-live" className="bg-secondary/20">
-            <div className="text-center mb-10">
-                <h2 className="text-3xl md:text-5xl font-headline font-bold">
-                    From the Community
-                </h2>
-                <p className="mt-3 max-w-2xl mx-auto text-base md:text-lg text-muted-foreground">
-                    A live look into the heart of D’Last Sanctuary on Discord.
-                </p>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-                <ServerStats 
-                    initialData={guildData.details} 
-                    error={guildData.error} 
-                />
-                <AnnouncementsFeed 
-                    initialData={announcementsData.messages} 
-                    error={announcementsData.error}
-                    channelId={announcementsChannelId}
-                    initialRoles={rolesData.roles}
-                    rolesError={rolesData.error}
-                />
-                <LiveChannelFeed 
-                    initialData={liveFeedData.messages} 
-                    error={liveFeedData.error}
-                    channelId={liveFeedChannelId}
-                />
-            </div>
-        </SectionWrapper>
-    );
+    return <DiscordIntegrationSectionContent 
+        guildData={guildData}
+        announcementsData={announcementsData}
+        liveFeedData={liveFeedData}
+        rolesData={rolesData}
+        announcementsChannelId={announcementsChannelId}
+        liveFeedChannelId={liveFeedChannelId}
+    />
 }
