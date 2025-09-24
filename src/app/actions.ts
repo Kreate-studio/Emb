@@ -65,16 +65,17 @@ const ratelimit = kv && process.env.KV_REST_API_URL && process.env.KV_REST_API_T
 }) : null;
 
 export async function getAIResponse(query: string): Promise<AIState> {
-  if (ratelimit) {
-    const ip = headers().get('x-forwarded-for') ?? '127.0.0.1';
-    const { success } = await ratelimit.limit(ip);
-
-    if (!success) {
-      return {
-        error: 'You have reached the request limit. Please try again in a minute.',
-      };
-    }
-  }
+  // Rate limiting disabled for development to avoid intermittent failures.
+  // if (ratelimit) {
+  //   const ip = headers().get('x-forwarded-for') ?? '127.0.0.1';
+  //   const { success } = await ratelimit.limit(ip);
+  //
+  //   if (!success) {
+  //     return {
+  //       error: 'You have reached the request limit. Please try again in a minute.',
+  //     };
+  //   }
+  // }
 
 
   const validatedFields = querySchema.safeParse({ query });
