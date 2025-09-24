@@ -27,7 +27,7 @@
     {
       "id": "community-cosplay-1",
       "description": "User submitted cosplay 1.",
-      "imageUrl": "https://images.unsplash.com/photo-1735720518631-60257e2fde92?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxmYW50YXN5JTIwY29zcGxheXxlbnwwfHx8fDE3NTg2MzQ1OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1735720518631-60257e2fde92?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxmYW50YXN5JTIwY29zcGxheXxlbnwwfHx8fDE3NTg2MzQ1OTV8MA&ixlib.rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy cosplay"
     },
     {
@@ -45,13 +45,13 @@
     {
       "id": "community-art-3",
       "description": "User submitted art piece 3.",
-      "imageUrl": "https://images.unsplash.com/photo-1651181380183-ff405917a50f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmYW50YXN5JTIwY3JlYXR1cmV8ZW58MHx8fHwxNzU4NjM0MjUyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1651181380183-ff405917a50f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmYW50YXN5JTIwY3JlYXR1cmV8ZW58MHx8fHwxNzU4NjM0MjUyfDA&ixlib.rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy creature"
     },
     {
       "id": "community-writing-1",
       "description": "Image representing a fantasy story.",
-      "imageUrl": "https://images.unsplash.com/photo-1569826302896-9fc21fc56ac7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwc3Rvcnl8ZW58MHx8fHwxNzU4NjUyNDEyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1569826302896-9fc21fc56ac7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwc3Rvcnl8ZW58MHx8fHwxNzU4NjUyNDEyfDA&ixlib.rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy story"
     },
     {
@@ -129,8 +129,8 @@
     {
       "id": "hub-bot-bg",
       "description": "Background image for the Emberlyn Bot hub card, showing a robot mascot.",
-      "imageUrl": "https://images.unsplash.com/photo-1589254065909-b7086229d092?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "robot mascot"
+      "imageUrl": "https://images.unsplash.com/photo-1694202158226-92f2549d0124?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "AI character"
     },
     {
       "id": "hub-artist-bg",
@@ -154,7 +154,7 @@
       "id": "hub-anime-bg",
       "description": "Background image for the Anime/Fandom Hub card, showing an anime-style cityscape.",
       "imageUrl": "https://images.unsplash.com/photo-1578632767115-450a1dfe3f73?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "anime style"
+      "imageHint": "fantasy scene"
     },
     {
       "id": "hub-creator-bg",
