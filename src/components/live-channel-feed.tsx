@@ -17,42 +17,11 @@ interface LiveChannelFeedProps {
     channelId: string;
 }
 
-function getTenorGifId(content: string): string | null {
-    const tenorRegex = /https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+-(\d+)/;
-    const match = tenorRegex.exec(content);
-    return match ? match[1] : null;
-}
-
-async function fetchTenorGifUrl(gifId: string): Promise<string | null> {
-    try {
-        if (!process.env.NEXT_PUBLIC_TENOR_API_KEY) {
-            console.warn('Tenor API key is not set. GIFs will not be displayed.');
-            return null;
-        }
-        const response = await fetch(`https://tenor.googleapis.com/v2/posts?ids=${gifId}&key=${process.env.NEXT_PUBLIC_TENOR_API_KEY}&media_filter=gif`);
-        if (!response.ok) return null;
-        const data = await response.json();
-        return data?.results?.[0]?.media_formats?.gif?.url || null;
-    } catch (e) {
-        console.error("Failed to fetch tenor gif", e);
-        return null;
-    }
-}
-
-
 function FeedMessage({ message }: { message: ChannelMessage }) {
     const firstAttachment = message.attachments?.[0];
     const isImage = firstAttachment?.content_type?.startsWith('image/');
     const isVideo = firstAttachment?.content_type?.startsWith('video/');
-    const tenorGifId = getTenorGifId(message.content);
-    const [tenorGifUrl, setTenorGifUrl] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (tenorGifId) {
-            fetchTenorGifUrl(tenorGifId).then(setTenorGifUrl);
-        }
-    }, [tenorGifId]);
-
+    
     return (
         <div className="flex items-start gap-3">
             <Avatar className="h-8 w-8 border">
@@ -68,10 +37,10 @@ function FeedMessage({ message }: { message: ChannelMessage }) {
                 </div>
                 {message.content && (
                     <p className="text-sm text-muted-foreground prose prose-sm prose-invert max-w-none break-words">
-                        {message.content.replace(/https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+-\d+/g, '')}
+                        {message.content}
                     </p>
                 )}
-                 {(firstAttachment && (isImage || isVideo)) ? (
+                 {(firstAttachment && (isImage || isVideo)) && (
                     <div className="mt-2 rounded-lg overflow-hidden border border-border">
                         {isImage ? (
                             <Image 
@@ -85,18 +54,7 @@ function FeedMessage({ message }: { message: ChannelMessage }) {
                             <video controls src={firstAttachment.url} className="max-h-60 w-auto" />
                         ): null}
                     </div>
-                ) : tenorGifUrl ? (
-                     <div className="mt-2 rounded-lg overflow-hidden border border-border">
-                        <Image 
-                            src={tenorGifUrl} 
-                            alt="Tenor GIF"
-                            width={220}
-                            height={124}
-                            unoptimized
-                            className="max-h-60 w-auto object-contain"
-                        />
-                    </div>
-                ) : null}
+                )}
             </div>
         </div>
     );
