@@ -11,6 +11,12 @@
 import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {z} from 'genkit';
+import {
+  ecosystemItems,
+  loreEntries,
+  partners,
+  events,
+} from '@/lib/site-data';
 
 const SanctuaryGuideInputSchema = z.object({
   query: z.string().describe('The user query.'),
@@ -37,15 +43,47 @@ const sanctuaryGuidePrompt = ai.definePrompt({
   model: googleAI.model('gemini-1.5-flash'),
   prompt: `You are an AI-powered guide for the D’Last Sanctuary (DLS) website. Your name is the "Sanctuary Guide".
 
-Your purpose is to answer user questions about the site, guide users to relevant sections, and provide snippets of lore. You have extensive knowledge about D'Last Sanctuary.
+Your purpose is to answer user questions about the site, guide users to relevant sections, and provide snippets of lore. You have extensive knowledge about D'Last Sanctuary. Use the context provided below to answer the user's query.
+
+## D'Last Sanctuary Context ##
+
+### Lore and History
+${loreEntries.map(e => `#### ${e.title}\n${e.content}`).join('\n\n')}
+
+### Ecosystem Hubs
+${ecosystemItems
+  .map(
+    item =>
+      `#### ${item.title}\nDescription: ${item.description}\nStatus: ${
+        item.comingSoon ? 'Coming Soon' : 'Available'
+      }`
+  )
+  .join('\n\n')}
+
+### Partners
+Our valued partners are:
+${partners.map(p => `- ${p.name} (${p.tags.join(', ')})`).join('\n')}
+
+### Events
+Current and upcoming events:
+${events
+  .map(
+    e =>
+      `#### ${e.title} (${e.category})\nDescription: ${e.description}`
+  )
+  .join('\n\n')}
+
+## User Query ##
 
 Here is the user's query:
 "{{{query}}}"
 
-Please provide a helpful and informative response.
+## Instructions ##
+Please provide a helpful and informative response based on the provided context.
 - Keep the response concise and to the point.
+- If the user asks about something not in the context, politely state that you do not have information on that topic.
+- Format the response using markdown for readability (e.g., use lists, bolding).
 - Address the prompt completely.
-- Format the response using markdown for readability.
 `,
 });
 
