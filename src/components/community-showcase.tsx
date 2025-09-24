@@ -12,11 +12,11 @@ export function CommunityShowcase() {
 
   return (
     <SectionWrapper id="community" className="bg-secondary/20">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl md:text-5xl font-headline font-bold">
+      <div className="text-center mb-10">
+        <h2 className="text-3xl md:text-5xl font-headline font-bold">
           Creations of the Realm
         </h2>
-        <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+        <p className="mt-3 max-w-2xl mx-auto text-base md:text-lg text-muted-foreground">
           A glimpse into the incredible talent thriving within our community.
         </p>
       </div>

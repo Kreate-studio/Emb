@@ -43,13 +43,13 @@ export function Footer() {
                 Sanctyr
               </span>
             </Link>
-            <p className="max-w-xs text-muted-foreground italic">
+            <p className="max-w-xs text-muted-foreground italic text-sm md:text-base">
               "From embers, a kingdom shall rise."
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-center lg:text-left">
             <div>
-              <h3 className="font-headline font-semibold text-foreground">
+              <h3 className="font-headline font-semibold text-foreground text-base md:text-lg">
                 Ecosystem
               </h3>
               <ul className="mt-4 space-y-2">
@@ -80,7 +80,7 @@ export function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="font-headline font-semibold text-foreground">
+              <h3 className="font-headline font-semibold text-foreground text-base md:text-lg">
                 Community
               </h3>
               <ul className="mt-4 space-y-2">
@@ -103,7 +103,7 @@ export function Footer() {
               </ul>
             </div>
              <div>
-              <h3 className="font-headline font-semibold text-foreground">
+              <h3 className="font-headline font-semibold text-foreground text-base md:text-lg">
                 Legal
               </h3>
               <ul className="mt-4 space-y-2">
@@ -127,7 +127,7 @@ export function Footer() {
             </div>
           </div>
           <div className="flex flex-col items-center lg:items-end">
-            <h3 className="font-headline font-semibold text-foreground">
+            <h3 className="font-headline font-semibold text-foreground text-base md:text-lg">
               Follow the Flame
             </h3>
             <div className="flex mt-4 space-x-4">

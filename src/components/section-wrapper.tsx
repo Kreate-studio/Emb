@@ -17,7 +17,7 @@ const SectionWrapper = ({
     <section
       id={id}
       className={cn(
-        'relative py-20 md:py-28 lg:py-32 overflow-hidden',
+        'relative py-16 md:py-28 lg:py-32 overflow-hidden',
         className
       )}
       {...props}

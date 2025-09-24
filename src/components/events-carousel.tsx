@@ -31,11 +31,11 @@ export function EventsCarousel() {
 
   return (
     <SectionWrapper id="events" className="bg-secondary/20">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl md:text-5xl font-headline font-bold">
+      <div className="text-center mb-10">
+        <h2 className="text-3xl md:text-5xl font-headline font-bold">
           Events & News
         </h2>
-        <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+        <p className="mt-3 max-w-2xl mx-auto text-base md:text-lg text-muted-foreground">
           Stay updated with the latest happenings in the D’Last Sanctuary.
         </p>
       </div>
@@ -50,7 +50,7 @@ export function EventsCarousel() {
       >
         <CarouselContent>
           {eventImages.map((event, index) => (
-            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+            <CarouselItem key={index} className="sm:basis-1/2 lg:basis-1/3">
               <div className="p-1">
                 <Card className="overflow-hidden group">
                   <CardContent className="flex flex-col items-start p-0">
@@ -68,7 +68,7 @@ export function EventsCarousel() {
                     )}
                     <div className="p-4 w-full">
                        <Badge variant="secondary" className="mb-2">{event.category}</Badge>
-                      <h3 className="text-lg font-bold font-headline">
+                      <h3 className="text-base md:text-lg font-bold font-headline">
                         {event.title}
                       </h3>
                       <p className="text-sm text-muted-foreground mt-1">

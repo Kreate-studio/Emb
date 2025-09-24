@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { FlameIcon } from '@/components/flame-icon';
 import { Button } from '@/components/ui/button';
@@ -22,13 +22,13 @@ export function Header() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full transition-all duration-300 py-4'
+        'sticky top-0 z-50 w-full transition-all duration-300 py-3'
       )}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-16 bg-background/80 backdrop-blur-lg border border-border/50 rounded-full px-6">
+        <div className="relative flex items-center justify-between h-14 bg-background/80 backdrop-blur-lg border border-border/50 rounded-full px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2">
-            <FlameIcon className="h-8 w-8" />
+            <FlameIcon className="h-7 w-7" />
             <span className="text-xl font-headline font-bold hidden sm:inline-block">
               Sanctyr
             </span>
@@ -63,11 +63,12 @@ export function Header() {
               variant="ghost"
               size="icon"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="h-9 w-9"
             >
               {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
+                <X className="h-5 w-5" />
               ) : (
-                <Menu className="h-6 w-6" />
+                <Menu className="h-5 w-5" />
               )}
               <span className="sr-only">Open menu</span>
             </Button>
@@ -76,12 +77,12 @@ export function Header() {
         {isMobileMenuOpen && (
           <div className="md:hidden mt-2">
             <div className="bg-background/80 backdrop-blur-lg border border-border/50 rounded-2xl p-4">
-              <nav className="flex flex-col items-start gap-4">
+              <nav className="flex flex-col items-start gap-2">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-lg font-medium text-foreground hover:text-primary transition-colors w-full p-2 rounded-md"
+                    className="text-base font-medium text-foreground hover:text-primary transition-colors w-full p-2 rounded-md"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.label}

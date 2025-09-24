@@ -39,12 +39,12 @@ export function JoinCTA() {
 
   return (
     <SectionWrapper id="join">
-      <div className="max-w-4xl mx-auto text-center bg-card/50 border border-border/50 rounded-2xl p-8 md:p-12 shadow-lg backdrop-blur-md">
-        <FlameIcon className="w-16 h-16 mx-auto mb-4 animate-pulse" />
+      <div className="max-w-4xl mx-auto text-center bg-card/50 border border-border/50 rounded-2xl p-6 md:p-12 shadow-lg backdrop-blur-md">
+        <FlameIcon className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 animate-pulse" />
         <h2 className="text-3xl md:text-4xl font-headline font-bold">
           Claim Your Place in the Realm
         </h2>
-        <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
+        <p className="mt-3 max-w-2xl mx-auto text-muted-foreground text-base md:text-lg">
           Sign up for early access to our upcoming apps and get exclusive news
           and updates from the High Council.
         </p>
