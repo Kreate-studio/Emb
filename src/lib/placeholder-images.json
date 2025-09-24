@@ -27,13 +27,13 @@
     {
       "id": "community-cosplay-1",
       "description": "User submitted cosplay 1.",
-      "imageUrl": "https://images.unsplash.com/photo-1735720518631-60257e2fde92?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxmYW50YXN5JTIwY29zcGxheXxlbnwwfHx8fDE3NTg2MzQ1OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1735720518631-60257e2fde92?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxmYW50YXN5JTIwY29zcGxheXxlbnwwfHx8fDE3NTg2MzQ1OTV8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy cosplay"
     },
     {
       "id": "community-music-1",
       "description": "Album art for user submitted music.",
-      "imageUrl": "https://images.unsplash.com/photo-1647541706162-f5ad608dd421?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwYWxidW18ZW58MHx8fHwxNzU4NjM0NTk1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1647541706162-f5ad608dd421?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwYWxidW18ZW58MHx8fHwxNzU4NjM0NTk1fDA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy album"
     },
     {
@@ -45,61 +45,61 @@
     {
       "id": "community-art-3",
       "description": "User submitted art piece 3.",
-      "imageUrl": "https://images.unsplash.com/photo-1651181380183-ff405917a50f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmYW50YXN5JTIwY3JlYXR1cmV8ZW58MHx8fHwxNzU4NjM0MjUyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1651181380183-ff405917a50f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmYW50YXN5JTIwY3JlYXR1cmV8ZW58MHx8fHwxNzU4NjM0MjUyfDA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy creature"
     },
     {
       "id": "community-writing-1",
       "description": "Image representing a fantasy story.",
-      "imageUrl": "https://images.unsplash.com/photo-1569826302896-9fc21fc56ac7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwc3Rvcnl8ZW58MHx8fHwxNzU4NjUyNDEyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1569826302896-9fc21fc56ac7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwc3Rvcnl8ZW58MHx8fHwxNzU4NjUyNDEyfDA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy story"
     },
     {
       "id": "community-cosplay-2",
       "description": "User submitted cosplay 2.",
-      "imageUrl": "https://images.unsplash.com/photo-1638237413873-67797007aee1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxlbGYlMjBjb3NwbGF5fGVufDB8fHx8MTc1ODY1MjQxM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1638237413873-67797007aee1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxlbGYlMjBjb3NwbGF5fGVufDB8fHx8MTc1ODY1MjQxM3ww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "elf cosplay"
     },
     {
       "id": "community-art-4",
       "description": "User submitted art piece 4.",
-      "imageUrl": "https://images.unsplash.com/photo-1737640240682-1bbb31a04331?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkcmFnb24lMjBhcnR8ZW58MHx8fHwxNzU4NjUyNDEzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1737640240682-1bbb31a04331?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkcmFnb24lMjBhcnR8ZW58MHx8fHwxNzU4NjUyNDEzfDA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "dragon art"
     },
     {
       "id": "community-video-1",
       "description": "Image representing a gameplay video.",
-      "imageUrl": "https://images.unsplash.com/photo-1649425371500-19385ad5f7d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxnYW1lcGxheSUyMHZpZGVvfGVufDB8fHx8MTc1ODY1MjQxMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1649425371500-19385ad5f7d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxnYW1lcGxheSUyMHZpZGVvfGVufDB8fHx8MTc1ODY1MjQxMnww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "gameplay video"
     },
     {
       "id": "event-tournament",
       "description": "Banner for a gaming tournament.",
-      "imageUrl": "https://images.unsplash.com/photo-1558008258-be2e19614dda?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxnYW1pbmclMjB0b3VybmFtZW50fGVufDB8fHx8MTc1ODYzNDU5NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1558008258-be2e19614dda?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxnYW1pbmclMjB0b3VybmFtZW50fGVufDB8fHx8MTc1ODYzNDU5NXww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "gaming tournament"
     },
     {
       "id": "event-contest",
       "description": "Banner for an art contest.",
-      "imageUrl": "https://images.unsplash.com/photo-1718648078148-64ce09167e91?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhcnQlMjBjb250ZXN0fGVufDB8fHx8MTc1ODYzNDU5NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1718648078148-64ce09167e91?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhcnQlMjBjb250ZXN0fGVufDB8fHx8MTc1ODYzNDU5NXww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "art contest"
     },
     {
       "id": "event-rp",
       "description": "Banner for a roleplaying event.",
-      "imageUrl": "https://images.unsplash.com/photo-1752937083817-34abd8532d6c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxyb2xlcGxheSUyMGV2ZW50fGVufDB8fHx8MTc1ODYzNDU5NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1752937083817-34abd8532d6c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxyb2xlcGxheSUyMGV2ZW50fGVufDB8fHx8MTc1ODYzNDU5NXww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "roleplay event"
     },
     {
       "id": "event-update",
       "description": "Banner for a site update.",
-      "imageUrl": "https://images.unsplash.com/photo-1603091592272-b18f8b4a4250?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZmFudGFzeSUyMHVwZGF0ZXxlbnwwfHx8fDE3NTg2MzQ1OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1603091592272-b18f8b4a4250?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZmFudGFzeSUyMHVwZGF0ZXxlbnwwfHx8fDE3NTg2MzQ1OTV8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy update"
     },
     {
       "id": "partner-mythic-realms",
       "description": "Partner server: Mythic Realms",
-      "imageUrl": "https://images.unsplash.com/photo-1505159940484-eb2b9f2588e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZmFudGFzeSUyMGNhc3RsZXxlbnwwfHx8fDE3NTg1ODkzMTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1505159940484-eb2b9f2588e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZmFudGFzeSUyMGNhc3RsZXxlbnwwfHx8fDE3NTg1ODkzMTd8MA&ixlib.rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy castle"
     },
     {
@@ -129,38 +129,38 @@
     {
       "id": "hub-bot-bg",
       "description": "Background image for the Emberlyn Bot hub card.",
-      "imageUrl": "https://images.unsplash.com/photo-1544415234-b25b59a01053?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://images.unsplash.com/photo-1698083013214-37c223fb3a12?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "glowing crystal"
     },
     {
       "id": "hub-artist-bg",
       "description": "Background image for the Artist Hub card.",
-      "imageUrl": "https://images.unsplash.com/photo-153315832-635183389146?q=80&w=2699&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?q=80&w=2572&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "art supplies"
     },
     {
       "id": "hub-gaming-bg",
       "description": "Background image for the Gaming Hub card.",
-      "imageUrl": "https://images.unsplash.com/photo-1580327344181-c1163234e5a0?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://images.unsplash.com/photo-1542773998-9325f0a098d7?q=80&w=2856&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "gaming setup"
     },
     {
       "id": "hub-music-bg",
       "description": "Background image for the Music Hub card.",
-      "imageUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "music concert"
+      "imageUrl": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "music production"
     },
     {
       "id": "hub-anime-bg",
       "description": "Background image for the Anime/Fandom Hub card.",
-      "imageUrl": "https://images.unsplash.com/photo-1613376023733-0a73375d8620?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageUrl": "https://images.unsplash.com/photo-1579803815617-169151523b09?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "anime aesthetic"
     },
     {
       "id": "hub-creator-bg",
       "description": "Background image for the Creator Hub card.",
-      "imageUrl": "https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG9טby1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "people collaborating"
+      "imageUrl": "https://images.unsplash.com/photo-1496449903678-68ddcb189a24?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "content creator"
     }
   ]
 }
