@@ -11,6 +11,7 @@ if (!BOT_TOKEN) {
 }
 
 async function discordApiFetch(endpoint: string) {
+  noStore();
   if (!BOT_TOKEN) {
     return { data: null, error: 'Discord bot token not configured.' };
   }
@@ -37,6 +38,26 @@ async function discordApiFetch(endpoint: string) {
   }
 }
 
+export interface GuildRole {
+    id: string;
+    name: string;
+    color: number;
+}
+
+export async function getGuildRoles(): Promise<{ roles: GuildRole[] | null, error: string | null}> {
+    if (!GUILD_ID) return { roles: null, error: 'Guild ID not configured.' };
+    const { data, error } = await discordApiFetch(`/guilds/${GUILD_ID}/roles`);
+    if (error || !data) return { roles: null, error };
+    
+    const roles: GuildRole[] = data.map((role: any) => ({
+        id: role.id,
+        name: role.name,
+        color: role.color,
+    }));
+    
+    return { roles, error: null };
+}
+
 export interface GuildDetails {
   name: string;
   memberCount: number;
@@ -45,7 +66,6 @@ export interface GuildDetails {
 }
 
 export async function getGuildDetails(): Promise<{ details: GuildDetails | null, error: string | null }> {
-  noStore();
   const guildId = process.env.DISCORD_GUILD_ID;
   if (!guildId) return { details: null, error: 'Guild ID not configured.' };
 
@@ -92,12 +112,11 @@ export interface ChannelMessage {
         content_type: string;
     }[];
     mentions: {
-      roles: { id: string; name: string; color: number}[];
+      roles: string[];
     }
 }
 
 export async function getChannelMessages(channelId: string, limit: number = 5): Promise<{ messages: ChannelMessage[] | null, error: string | null }> {
-  noStore();
   if (!channelId) return { messages: null, error: 'Channel ID not provided.' };
   
   const { data, error } = await discordApiFetch(`/channels/${channelId}/messages?limit=${limit}`);
@@ -123,11 +142,7 @@ export async function getChannelMessages(channelId: string, limit: number = 5): 
       timestamp: msg.timestamp,
       attachments: msg.attachments || [],
       mentions: {
-        roles: msg.mention_roles?.map((role: any) => ({
-          id: role.id,
-          name: role.name,
-          color: role.color
-        })) || []
+        roles: msg.mention_roles || [],
       }
     }
   });

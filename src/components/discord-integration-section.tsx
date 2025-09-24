@@ -1,5 +1,5 @@
 
-import { getGuildDetails, getChannelMessages } from '@/lib/discord-service';
+import { getGuildDetails, getChannelMessages, getGuildRoles } from '@/lib/discord-service';
 import SectionWrapper from './section-wrapper';
 import { ServerStats } from './server-stats';
 import { AnnouncementsFeed } from './announcements-feed';
@@ -15,10 +15,11 @@ export async function DiscordIntegrationSection() {
     }
 
     // Fetch initial data on the server
-    const [guildData, announcementsData, liveFeedData] = await Promise.all([
+    const [guildData, announcementsData, liveFeedData, rolesData] = await Promise.all([
         getGuildDetails(),
         getChannelMessages(announcementsChannelId, 3),
-        getChannelMessages(liveFeedChannelId, 5)
+        getChannelMessages(liveFeedChannelId, 5),
+        getGuildRoles()
     ]);
 
     return (
@@ -40,6 +41,8 @@ export async function DiscordIntegrationSection() {
                     initialData={announcementsData.messages} 
                     error={announcementsData.error}
                     channelId={announcementsChannelId}
+                    initialRoles={rolesData.roles}
+                    rolesError={rolesData.error}
                 />
                 <LiveChannelFeed 
                     initialData={liveFeedData.messages} 

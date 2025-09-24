@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Megaphone, AlertTriangle, RefreshCw } from 'lucide-react';
 import type { ChannelMessage } from '@/lib/discord-service';
-import { getChannelMessages } from '@/lib/discord-service';
+import { getChannelMessages, getGuildRoles, type GuildRole } from '@/lib/discord-service';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Separator } from './ui/separator';
@@ -14,6 +14,8 @@ interface AnnouncementsFeedProps {
     initialData: ChannelMessage[] | null;
     error: string | null;
     channelId: string;
+    initialRoles: GuildRole[] | null;
+    rolesError: string | null;
 }
 
 function getTenorGifId(content: string): string | null {
@@ -39,15 +41,20 @@ function intToHex(int: number | undefined) {
     return '#' + int.toString(16).padStart(6, '0');
 }
 
-function MessageContent({ message }: { message: ChannelMessage }) {
+function MessageContent({ message, roles }: { message: ChannelMessage, roles: GuildRole[] }) {
     let content = message.content;
 
     // Replace role mentions
-    if (message.mentions.roles) {
-        message.mentions.roles.forEach(role => {
-            const hexColor = intToHex(role.color);
-            const mention = `<span class="text-[${hexColor}] bg-[${hexColor}]/20 px-1 rounded-sm">@${role.name}</span>`;
-            content = content.replace(new RegExp(`<@&${role.id}>`, 'g'), mention);
+    if (message.mentions.roles && roles.length > 0) {
+        message.mentions.roles.forEach(roleId => {
+            const role = roles.find(r => r.id === roleId);
+            if (role) {
+                const hexColor = intToHex(role.color);
+                // Important: Use a class that exists. Tailwind can't generate dynamic classes like `text-[${hexColor}]`.
+                // Instead, use inline styles for dynamic colors.
+                const mention = `<span style="color: ${hexColor}; background-color: ${hexColor}33;" class="px-1 rounded-sm">@${role.name}</span>`;
+                content = content.replace(new RegExp(`<@&${role.id}>`, 'g'), mention);
+            }
         });
     }
 
@@ -62,7 +69,7 @@ function MessageContent({ message }: { message: ChannelMessage }) {
     );
 }
 
-function FeedMessage({ message }: { message: ChannelMessage }) {
+function FeedMessage({ message, roles }: { message: ChannelMessage, roles: GuildRole[] }) {
     const firstAttachment = message.attachments?.[0];
     const isImage = firstAttachment?.content_type?.startsWith('image/');
     const isVideo = firstAttachment?.content_type?.startsWith('video/');
@@ -88,7 +95,7 @@ function FeedMessage({ message }: { message: ChannelMessage }) {
                         {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
                     </p>
                 </div>
-                {message.content && <MessageContent message={message} />}
+                {message.content && <MessageContent message={message} roles={roles} />}
                  {(firstAttachment && (isImage || isVideo)) ? (
                      <div className="mt-2 rounded-lg overflow-hidden border border-border">
                         {isImage ? (
@@ -120,17 +127,26 @@ function FeedMessage({ message }: { message: ChannelMessage }) {
     );
 }
 
-export function AnnouncementsFeed({ initialData, error: initialError, channelId }: AnnouncementsFeedProps) {
+export function AnnouncementsFeed({ initialData, error: initialError, channelId, initialRoles, rolesError: initialRolesError }: AnnouncementsFeedProps) {
     const [data, setData] = useState(initialData);
-    const [error, setError] = useState(initialError);
+    const [roles, setRoles] = useState(initialRoles);
+    const [error, setError] = useState(initialError || initialRolesError);
     const [isUpdating, setIsUpdating] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             setIsUpdating(true);
-            const { messages, error } = await getChannelMessages(channelId, 10);
+            const [{ messages, error: msgError }, { roles: guildRoles, error: rolesError }] = await Promise.all([
+                getChannelMessages(channelId, 10),
+                getGuildRoles()
+            ]);
+            
             if (messages) setData(messages);
-            if (error) setError(error);
+            if (guildRoles) setRoles(guildRoles);
+            
+            const combinedError = msgError || rolesError;
+            if (combinedError) setError(combinedError);
+
             setIsUpdating(false);
         };
 
@@ -150,7 +166,7 @@ export function AnnouncementsFeed({ initialData, error: initialError, channelId 
                 </div>
             </CardHeader>
             <CardContent className="flex-1 overflow-hidden flex flex-col">
-                {error || !data || data.length === 0 ? (
+                {error || !data || data.length === 0 || !roles ? (
                     <div className="m-auto text-center">
                          <AlertTriangle className="h-8 w-8 mx-auto text-muted-foreground" />
                         <p className="text-muted-foreground mt-2 text-sm">{error || 'No announcements found.'}</p>
@@ -160,7 +176,7 @@ export function AnnouncementsFeed({ initialData, error: initialError, channelId 
                         <div className="space-y-4">
                             {data.map((msg, index) => (
                                 <React.Fragment key={msg.id}>
-                                    <FeedMessage message={msg} />
+                                    <FeedMessage message={msg} roles={roles} />
                                     {index < data.length - 1 && <Separator className="my-4"/>}
                                 </React.Fragment>
                             ))}
