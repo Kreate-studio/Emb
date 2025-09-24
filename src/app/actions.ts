@@ -9,6 +9,7 @@ import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';
 import { headers } from 'next/headers';
 import {unstable_noStore as noStore} from 'next/cache';
+import { sendMessageToChannel } from '@/lib/discord-service';
 
 const emailSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -49,6 +50,53 @@ export async function handleNewsletterSignup(
     };
   }
 }
+
+const partnershipSchema = z.object({
+  serverName: z.string().min(2, { message: "Server name must be at least 2 characters."}),
+  serverLink: z.string().url({ message: "Please enter a valid Discord invite link."}),
+});
+
+export async function handlePartnershipRequest(
+  prevState: NewsletterState,
+  formData: FormData
+): Promise<NewsletterState> {
+  const validatedFields = partnershipSchema.safeParse({
+    serverName: formData.get('server-name'),
+    serverLink: formData.get('server-link'),
+  });
+
+  if (!validatedFields.success) {
+    const errors = validatedFields.error.flatten().fieldErrors;
+    return {
+      message: errors.serverName?.[0] || errors.serverLink?.[0] || 'Invalid input.',
+      error: true,
+    };
+  }
+
+  const { serverName, serverLink } = validatedFields.data;
+  const channelId = process.env.DISCORD_PARTNERS_CHANNEL_ID;
+
+  if (!channelId) {
+    console.error("DISCORD_PARTNERS_CHANNEL_ID is not set.");
+    return { message: "Server configuration error. Could not submit request.", error: true };
+  }
+
+  try {
+    const message = `**New Partnership Request**\n\n**Server Name:** ${serverName}\n**Invite Link:** ${serverLink}`;
+    const { error } = await sendMessageToChannel(channelId, message);
+
+    if (error) {
+      console.error("Failed to send partnership request to Discord:", error);
+      return { message: "Could not send request to the council. Please try again later.", error: true };
+    }
+
+    return { message: "Your partnership request has been sent to the High Council for review!" };
+  } catch (err) {
+    console.error("Partnership request submission error:", err);
+    return { message: "An unexpected error occurred. Please try again later.", error: true };
+  }
+}
+
 
 const querySchema = z.object({
   query: z.string().min(1, 'Query cannot be empty.'),

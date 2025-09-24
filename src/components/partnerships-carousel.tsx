@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import React, {useRef} from 'react';
+import React, {useRef, useEffect, useActionState} from 'react';
 import Autoplay from 'embla-carousel-autoplay';
 import {
   Carousel,
@@ -17,6 +17,18 @@ import { partners } from '@/lib/site-data';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { handlePartnershipRequest } from '@/app/actions';
+import { useToast } from '@/hooks/use-toast';
+import { useFormStatus } from 'react-dom';
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" disabled={pending} className="w-full">
+      {pending ? 'Submitting...' : 'Submit Partnership Request'}
+    </Button>
+  );
+}
 
 export function PartnershipsCarousel() {
   const partnerImages = partners.map((partner) => ({
@@ -32,10 +44,23 @@ export function PartnershipsCarousel() {
     })
   );
 
-  const handlePartnerSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    alert('Partnership submitted!');
-  }
+  const [state, formAction] = useActionState(handlePartnershipRequest, { message: '' });
+  const { toast } = useToast();
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (state.message) {
+      toast({
+        title: state.error ? 'Error' : 'Success',
+        description: state.message,
+        variant: state.error ? 'destructive' : 'default',
+      });
+      if (!state.error) {
+        formRef.current?.reset();
+      }
+    }
+  }, [state, toast]);
+
 
   return (
     <SectionWrapper id="partnerships">
@@ -128,16 +153,16 @@ export function PartnershipsCarousel() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handlePartnerSubmit} className="space-y-4">
+          <form ref={formRef} action={formAction} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="server-name">Server Name</Label>
-              <Input id="server-name" placeholder="Your community's name" required />
+              <Input id="server-name" name="server-name" placeholder="Your community's name" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="server-link">Discord Invite Link</Label>
-              <Input id="server-link" placeholder="https://discord.gg/your-invite" required />
+              <Input id="server-link" name="server-link" placeholder="https://discord.gg/your-invite" required />
             </div>
-            <Button type="submit" className="w-full">Submit Partnership Request</Button>
+            <SubmitButton />
           </form>
         </CardContent>
       </Card>

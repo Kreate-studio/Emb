@@ -49,6 +49,19 @@ async function discordApiFetch(endpoint: string, options: RequestInit = {}) {
   }
 }
 
+export async function sendMessageToChannel(channelId: string, message: string): Promise<{error: string | null}> {
+  if (!channelId) return { error: 'Channel ID not provided.' };
+
+  const { error } = await discordApiFetch(`/channels/${channelId}/messages`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content: message })
+  });
+
+  return { error };
+}
+
+
 export interface GuildRole {
     id: string;
     name: string;
