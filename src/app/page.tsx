@@ -1,6 +1,6 @@
 import { CommunityShowcase } from '@/components/community-showcase';
 import { DonationSection } from '@/components/donation-section';
-import { EcosystemShowcase } from '@/components/ecosystem-showcase';
+import { HubsSection } from '@/components/hubs-section';
 import { EventsCarousel } from '@/components/events-carousel';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
@@ -15,7 +15,7 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <HeroSection />
-        <EcosystemShowcase />
+        <HubsSection />
         <PartnershipsCarousel />
         <CommunityShowcase />
         <LoreSection />

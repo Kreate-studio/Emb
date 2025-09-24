@@ -1,12 +1,36 @@
-import { Bot, Brush, Gamepad2, Library, Music, Users } from 'lucide-react';
+import { Bot, Brush, Gamepad2, Library, Music, Users, LucideIcon } from 'lucide-react';
 
-export const ecosystemItems = [
+export type EcosystemItem = {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  comingSoon: boolean;
+  imageId: string;
+  modalContent?: {
+    description?: string;
+    features?: string[];
+  };
+};
+
+export const ecosystemItems: EcosystemItem[] = [
   {
     icon: Bot,
     title: 'Emberlyn Bot',
     description:
       'A versatile Discord bot to manage your community and enhance engagement.',
     comingSoon: false,
+    imageId: 'hub-bot-bg',
+    modalContent: {
+      description:
+        'Emberlyn is the official bot of D\'Last Sanctuary, packed with features for moderation, engagement, and utility. She is an integral part of our community, helping to keep the realm safe and vibrant.',
+      features: [
+        'Advanced Moderation Tools',
+        'Role & Permission Management',
+        'Custom Engagement Commands',
+        'Event & Announcement Integration',
+        'AI-Powered Q&A',
+      ],
+    },
   },
   {
     icon: Brush,
@@ -14,6 +38,7 @@ export const ecosystemItems = [
     description:
       'A dedicated space for artists to showcase their work, find inspiration, and collaborate.',
     comingSoon: true,
+    imageId: 'hub-artist-bg',
   },
   {
     icon: Gamepad2,
@@ -21,6 +46,7 @@ export const ecosystemItems = [
     description:
       'Organize tournaments, track stats, and connect with fellow gamers.',
     comingSoon: true,
+    imageId: 'hub-gaming-bg',
   },
   {
     icon: Music,
@@ -28,6 +54,7 @@ export const ecosystemItems = [
     description:
       'Share your compositions, discover new music, and collaborate on projects.',
     comingSoon: true,
+    imageId: 'hub-music-bg',
   },
   {
     icon: Library,
@@ -35,6 +62,7 @@ export const ecosystemItems = [
     description:
       'A central place for all things anime and fandom, from discussions to fan art.',
     comingSoon: true,
+imageId: 'hub-anime-bg',
   },
   {
     icon: Users,
@@ -42,6 +70,7 @@ export const ecosystemItems = [
     description:
       'Tools and resources for creators to manage their content and grow their audience.',
     comingSoon: true,
+    imageId: 'hub-creator-bg',
   },
 ];
 
@@ -59,7 +88,7 @@ export const partners = [
   {
     name: 'Pixel Perfect',
     joinLink: '#',
-    imageId: 'partner-pixel-perfect',
+imageId: 'partner-pixel-perfect',
   },
   {
     name: 'Bardic Tales',

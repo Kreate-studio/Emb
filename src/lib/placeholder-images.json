@@ -105,26 +105,62 @@
     {
       "id": "partner-cyber-scape",
       "description": "Partner server: Cyber Scape",
-      "imageUrl": "https://images.unsplash.com/photo-1514439827219-9137a0b99245?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjeWJlcnB1bmslMjBjaXR5fGVufDB8fHx8MTc1ODU4NTAyOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1514439827219-9137a0b99245?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjeWJlcnB1bmslMjBjaXR5fGVufDB8fHx8MTc1ODU4NTAyOHww&ixlib.rb-4.1.0&q=80&w=1080",
       "imageHint": "cyberpunk city"
     },
     {
       "id": "partner-pixel-perfect",
       "description": "Partner server: Pixel Perfect",
-      "imageUrl": "https://images.unsplash.com/photo-1576495169018-bd2414046c6b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwaXhlbCUyMGFydHxlbnwwfHx8fDE3NTg1ODM0MTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1576495169018-bd2414046c6b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwaXhlbCUyMGFydHxlbnwwfHx8fDE3NTg1ODM0MTN8MA&ixlib.rb-4.1.0&q=80&w=1080",
       "imageHint": "pixel art"
     },
     {
       "id": "partner-bardic-tales",
       "description": "Partner server: Bardic Tales",
-      "imageUrl": "https://images.unsplash.com/photo-1667657182265-bfebb085706a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwYmFyZHxlbnwwfHx8fDE3NTg2NTIwNzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1667657182265-bfebb085706a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwYmFyZHxlbnwwfHx8fDE3NTg2NTIwNzJ8MA&ixlib.rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy bard"
     },
     {
       "id": "partner-aesthetic-valley",
       "description": "Partner server: Aesthetic Valley",
-      "imageUrl": "https://images.unsplash.com/photo-1704784946514-195826334cf5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx2YXBvcndhdmUlMjBhZXN0aGV0aWN8ZW58MHx8fHwxNzU4NjUyMDcyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1704784946514-195826334cf5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx2YXBvcndhdmUlMjBhZXN0aGV0aWN8ZW58MHx8fHwxNzU4NjUyMDcyfDA&ixlib.rb-4.1.0&q=80&w=1080",
       "imageHint": "vaporwave aesthetic"
+    },
+    {
+      "id": "hub-bot-bg",
+      "description": "Background image for the Emberlyn Bot hub card.",
+      "imageUrl": "https://images.unsplash.com/photo-1544415234-b25b59a01053?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "glowing crystal"
+    },
+    {
+      "id": "hub-artist-bg",
+      "description": "Background image for the Artist Hub card.",
+      "imageUrl": "https://images.unsplash.com/photo-153315832-635183389146?q=80&w=2699&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "art supplies"
+    },
+    {
+      "id": "hub-gaming-bg",
+      "description": "Background image for the Gaming Hub card.",
+      "imageUrl": "https://images.unsplash.com/photo-1580327344181-c1163234e5a0?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "gaming setup"
+    },
+    {
+      "id": "hub-music-bg",
+      "description": "Background image for the Music Hub card.",
+      "imageUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "music concert"
+    },
+    {
+      "id": "hub-anime-bg",
+      "description": "Background image for the Anime/Fandom Hub card.",
+      "imageUrl": "https://images.unsplash.com/photo-1613376023733-0a73375d8620?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "anime aesthetic"
+    },
+    {
+      "id": "hub-creator-bg",
+      "description": "Background image for the Creator Hub card.",
+      "imageUrl": "https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG9טby1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "people collaborating"
     }
   ]
 }
