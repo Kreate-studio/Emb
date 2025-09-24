@@ -121,7 +121,7 @@ export function LiveChannelFeed({ initialData, error: initialError, channelId }:
     }, [fetchData]);
 
     return (
-        <Card className="flex flex-col h-96">
+        <Card className="flex flex-col h-96 bg-card/50 border-border/50 backdrop-blur-md shadow-lg">
             <CardHeader className='pb-2'>
                 <div className='flex justify-between items-center'>
                     <CardTitle className="flex items-center gap-2">

@@ -40,7 +40,7 @@ export function ServerStats({ initialData, error: initialError }: ServerStatsPro
 
     if (error || !data) {
         return (
-            <Card className="h-96 flex flex-col justify-center items-center text-center p-4">
+            <Card className="h-96 flex flex-col justify-center items-center text-center p-4 bg-card/50 border-border/50 backdrop-blur-md shadow-lg">
                  <div className="flex items-center justify-center h-14 w-14 rounded-full bg-muted border mb-4">
                     <Crown className="h-8 w-8 text-muted-foreground" />
                 </div>
@@ -55,7 +55,7 @@ export function ServerStats({ initialData, error: initialError }: ServerStatsPro
     }
 
     return (
-        <Card className="h-96 flex flex-col">
+        <Card className="h-96 flex flex-col bg-card/50 border-border/50 backdrop-blur-md shadow-lg">
             <CardHeader className="flex-row items-center justify-between gap-4 space-y-0 pb-2">
                 <div className='flex items-center gap-4'>
                     <Avatar className="h-14 w-14 border-2 border-primary">
