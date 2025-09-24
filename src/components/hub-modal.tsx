@@ -46,7 +46,7 @@ export function HubModal({ isOpen, onClose, hub }: HubModalProps) {
         <div className="my-4">
           {hub.title === 'Emberlyn Bot' ? (
             <Button asChild className="w-full">
-              <a href="https://discord.gg/PruRXZ7zkF" target="_blank" rel="noopener noreferrer">Invite Emberlyn to Your Server</a>
+              <a href="https://discord.com/oauth2/authorize?client_id=1411335886121205822&permissions=8&integration_type=0&scope=bot" target="_blank" rel="noopener noreferrer">Invite Emberlyn to Your Server</a>
             </Button>
           ) : hub.comingSoon ? (
              <p className="text-center text-muted-foreground italic">
