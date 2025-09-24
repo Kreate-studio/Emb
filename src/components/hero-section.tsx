@@ -40,8 +40,8 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-background/50 z-0" />
 
       <div className="relative z-10 text-center p-4 flex flex-col items-center">
-        <FlameIcon className="w-20 h-20 md:w-24 md:h-24 mb-4 drop-shadow-[0_0_15px_hsl(var(--accent))] animate-pulse" />
-        <h1 className="text-4xl md:text-7xl font-headline font-bold text-transparent bg-clip-text bg-gradient-to-br from-foreground to-muted-foreground drop-shadow-lg animate-fade-in-down">
+        <FlameIcon className="w-16 h-16 md:w-24 md:h-24 mb-4 drop-shadow-[0_0_15px_hsl(var(--accent))] animate-pulse" />
+        <h1 className="text-3xl md:text-7xl font-headline font-bold uppercase text-transparent bg-clip-text bg-gradient-to-br from-foreground to-muted-foreground drop-shadow-lg animate-fade-in-down">
           D’Last Sanctuary
         </h1>
         <p className="mt-4 max-w-2xl text-base md:text-xl text-muted-foreground animate-fade-in-up animation-delay-300">
@@ -51,7 +51,7 @@ export function HeroSection() {
         <div className="mt-8 flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-600">
           <Button size="lg" asChild>
             <a
-              href="https://discord.com"
+              href="https://discord.gg/PruRXZ7zkF"
               target="_blank"
               rel="noopener noreferrer"
             >

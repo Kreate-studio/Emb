@@ -26,10 +26,10 @@ export function Header() {
       )}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-14 bg-background/80 backdrop-blur-lg border border-border/50 rounded-full px-4 md:px-6">
+        <div className="relative flex items-center justify-between h-12 md:h-14 bg-background/80 backdrop-blur-lg border border-border/50 rounded-full px-4 md:px-6">
           <Link href="/" className="flex items-center gap-2">
-            <FlameIcon className="h-7 w-7" />
-            <span className="text-xl font-headline font-bold hidden sm:inline-block">
+            <FlameIcon className="h-6 w-6 md:h-7 md:w-7" />
+            <span className="text-lg md:text-xl font-headline font-bold hidden sm:inline-block">
               Sanctyr
             </span>
           </Link>
@@ -63,7 +63,7 @@ export function Header() {
               variant="ghost"
               size="icon"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="h-9 w-9"
+              className="h-8 w-8"
             >
               {isMobileMenuOpen ? (
                 <X className="h-5 w-5" />
