@@ -45,7 +45,7 @@ export function HeroSection() {
           D’LAST SANCTUARY
         </h1>
         <p className="mt-4 max-w-2xl text-base md:text-xl text-muted-foreground animate-fade-in-up animation-delay-300">
-          A realm for Gamers, Artists, and Creators — Shape the kingdom and your
+          A realm for Gamers, Artists, and Creators - Shape the kingdom and your
           destiny.
         </p>
         <div className="mt-8 flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-600">
