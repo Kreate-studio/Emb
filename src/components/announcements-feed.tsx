@@ -36,7 +36,7 @@ async function fetchTenorGifUrl(gifId: string): Promise<string | null> {
     }
 }
 
-function intToHex(int: number | undefined) {
+function intToHex(int: number) {
     if (int === undefined || int === 0) return '#FFFFFF'; // Default to white if color is undefined or 0
     return '#' + int.toString(16).padStart(6, '0');
 }
@@ -174,7 +174,7 @@ export function AnnouncementsFeed({ initialData, error: initialError, channelId,
                 ) : (
                     <ScrollArea className="h-full pr-4 -mr-4">
                         <div className="space-y-4">
-                            {data.map((msg, index) => (
+                            {data.slice().reverse().map((msg, index) => (
                                 <React.Fragment key={msg.id}>
                                     <FeedMessage message={msg} roles={roles} />
                                     {index < data.length - 1 && <Separator className="my-4"/>}
