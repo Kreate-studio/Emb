@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Megaphone, AlertTriangle, RefreshCw } from 'lucide-react';
@@ -9,6 +9,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Separator } from './ui/separator';
 import Image from 'next/image';
+import { Button } from './ui/button';
 
 interface AnnouncementsFeedProps {
     initialData: ChannelMessage[] | null;
@@ -26,6 +27,10 @@ function getTenorGifId(content: string): string | null {
 
 async function fetchTenorGifUrl(gifId: string): Promise<string | null> {
     try {
+        if (!process.env.NEXT_PUBLIC_TENOR_API_KEY) {
+            console.warn('Tenor API key is not set. GIFs will not be displayed.');
+            return null;
+        }
         const response = await fetch(`https://tenor.googleapis.com/v2/posts?ids=${gifId}&key=${process.env.NEXT_PUBLIC_TENOR_API_KEY}&media_filter=gif`);
         if (!response.ok) return null;
         const data = await response.json();
@@ -37,7 +42,7 @@ async function fetchTenorGifUrl(gifId: string): Promise<string | null> {
 }
 
 function intToHex(int: number) {
-    if (int === undefined || int === 0) return '#FFFFFF'; // Default to white if color is undefined or 0
+    if (int === undefined || int === null || int === 0) return '#FFFFFF'; // Default to white
     return '#' + int.toString(16).padStart(6, '0');
 }
 
@@ -50,8 +55,6 @@ function MessageContent({ message, roles }: { message: ChannelMessage, roles: Gu
             const role = roles.find(r => r.id === roleId);
             if (role) {
                 const hexColor = intToHex(role.color);
-                // Important: Use a class that exists. Tailwind can't generate dynamic classes like `text-[${hexColor}]`.
-                // Instead, use inline styles for dynamic colors.
                 const mention = `<span style="color: ${hexColor}; background-color: ${hexColor}33;" class="px-1 rounded-sm">@${role.name}</span>`;
                 content = content.replace(new RegExp(`<@&${role.id}>`, 'g'), mention);
             }
@@ -59,7 +62,7 @@ function MessageContent({ message, roles }: { message: ChannelMessage, roles: Gu
     }
 
     // Remove Tenor URL from content
-    content = content.replace(/https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+/g, '');
+    content = content.replace(/https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+-\d+/g, '');
 
     return (
         <p 
@@ -133,26 +136,26 @@ export function AnnouncementsFeed({ initialData, error: initialError, channelId,
     const [error, setError] = useState(initialError || initialRolesError);
     const [isUpdating, setIsUpdating] = useState(false);
 
+     const fetchData = useCallback(async () => {
+        setIsUpdating(true);
+        const [{ messages, error: msgError }, { roles: guildRoles, error: rolesError }] = await Promise.all([
+            getChannelMessages(channelId, 10),
+            getGuildRoles()
+        ]);
+        
+        if (messages) setData(messages);
+        if (guildRoles) setRoles(guildRoles);
+        
+        const combinedError = msgError || rolesError;
+        setError(combinedError);
+
+        setIsUpdating(false);
+    }, [channelId]);
+
     useEffect(() => {
-        const fetchData = async () => {
-            setIsUpdating(true);
-            const [{ messages, error: msgError }, { roles: guildRoles, error: rolesError }] = await Promise.all([
-                getChannelMessages(channelId, 10),
-                getGuildRoles()
-            ]);
-            
-            if (messages) setData(messages);
-            if (guildRoles) setRoles(guildRoles);
-            
-            const combinedError = msgError || rolesError;
-            if (combinedError) setError(combinedError);
-
-            setIsUpdating(false);
-        };
-
         const interval = setInterval(fetchData, 30000); // 30 seconds
         return () => clearInterval(interval);
-    }, [channelId]);
+    }, [fetchData]);
 
     return (
         <Card className="flex flex-col h-96">
@@ -162,7 +165,9 @@ export function AnnouncementsFeed({ initialData, error: initialError, channelId,
                         <Megaphone className="h-6 w-6 text-primary" />
                         Announcements
                     </CardTitle>
-                    <RefreshCw className={`h-4 w-4 text-muted-foreground ${isUpdating ? 'animate-spin' : ''}`} />
+                    <Button variant="ghost" size="icon" onClick={fetchData} disabled={isUpdating}>
+                        <RefreshCw className={`h-4 w-4 text-muted-foreground ${isUpdating ? 'animate-spin' : ''}`} />
+                    </Button>
                 </div>
             </CardHeader>
             <CardContent className="flex-1 overflow-hidden flex flex-col">
@@ -170,6 +175,10 @@ export function AnnouncementsFeed({ initialData, error: initialError, channelId,
                     <div className="m-auto text-center">
                          <AlertTriangle className="h-8 w-8 mx-auto text-muted-foreground" />
                         <p className="text-muted-foreground mt-2 text-sm">{error || 'No announcements found.'}</p>
+                         <Button variant="outline" size="sm" className="mt-4" onClick={fetchData} disabled={isUpdating}>
+                            <RefreshCw className={`mr-2 h-4 w-4 ${isUpdating ? 'animate-spin' : ''}`} />
+                            Try Again
+                        </Button>
                     </div>
                 ) : (
                     <ScrollArea className="h-full pr-4 -mr-4">

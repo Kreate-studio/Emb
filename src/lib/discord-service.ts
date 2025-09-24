@@ -63,6 +63,8 @@ export interface GuildDetails {
   memberCount: number;
   onlineCount: number;
   iconUrl: string | null;
+  premiumSubscriptionCount: number;
+  premiumTier: number;
 }
 
 export async function getGuildDetails(): Promise<{ details: GuildDetails | null, error: string | null }> {
@@ -78,7 +80,8 @@ export async function getGuildDetails(): Promise<{ details: GuildDetails | null,
       return { details: null, error: guildRes.error };
   }
    if (widgetRes.error || !widgetRes.data) {
-      return { details: null, error: widgetRes.error };
+      // Widget can be disabled, so we don't want to fail the entire request
+      console.warn("Could not fetch Discord widget.json. Online count may be inaccurate.");
   }
 
   const iconHash = guildRes.data.icon;
@@ -88,8 +91,10 @@ export async function getGuildDetails(): Promise<{ details: GuildDetails | null,
     details: {
       name: guildRes.data.name,
       memberCount: guildRes.data.approximate_member_count || 0,
-      onlineCount: widgetRes.data.presence_count || 0,
-      iconUrl: iconUrl
+      onlineCount: widgetRes.data?.presence_count || 0,
+      iconUrl: iconUrl,
+      premiumSubscriptionCount: guildRes.data.premium_subscription_count || 0,
+      premiumTier: guildRes.data.premium_tier || 0,
     },
     error: null
   };
@@ -137,7 +142,7 @@ export async function getChannelMessages(channelId: string, limit: number = 5): 
         displayName: displayName,
         avatarUrl: author.avatar
           ? `https://cdn.discordapp.com/avatars/${author.id}/${author.avatar}.png`
-          : `https://cdn.discordapp.com/embed/avatars/${parseInt(author.discriminator) % 5}.png`
+          : `https://cdn.discordapp.com/embed/avatars/${(parseInt(author.id) >> 22) % 6}.png`
       },
       timestamp: msg.timestamp,
       attachments: msg.attachments || [],

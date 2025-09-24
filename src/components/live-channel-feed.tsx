@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MessageCircle, AlertTriangle, RefreshCw } from 'lucide-react';
@@ -9,6 +9,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Separator } from './ui/separator';
 import Image from 'next/image';
+import { Button } from './ui/button';
 
 interface LiveChannelFeedProps {
     initialData: ChannelMessage[] | null;
@@ -24,7 +25,10 @@ function getTenorGifId(content: string): string | null {
 
 async function fetchTenorGifUrl(gifId: string): Promise<string | null> {
     try {
-        // NOTE: This requires a Tenor API key to be set in the environment.
+        if (!process.env.NEXT_PUBLIC_TENOR_API_KEY) {
+            console.warn('Tenor API key is not set. GIFs will not be displayed.');
+            return null;
+        }
         const response = await fetch(`https://tenor.googleapis.com/v2/posts?ids=${gifId}&key=${process.env.NEXT_PUBLIC_TENOR_API_KEY}&media_filter=gif`);
         if (!response.ok) return null;
         const data = await response.json();
@@ -64,7 +68,7 @@ function FeedMessage({ message }: { message: ChannelMessage }) {
                 </div>
                 {message.content && (
                     <p className="text-sm text-muted-foreground prose prose-sm prose-invert max-w-none break-words">
-                        {message.content.replace(/https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+/g, '')}
+                        {message.content.replace(/https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+-\d+/g, '')}
                     </p>
                 )}
                  {(firstAttachment && (isImage || isVideo)) ? (
@@ -103,18 +107,18 @@ export function LiveChannelFeed({ initialData, error: initialError, channelId }:
     const [error, setError] = useState(initialError);
     const [isUpdating, setIsUpdating] = useState(false);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setIsUpdating(true);
-            const { messages, error } = await getChannelMessages(channelId, 15);
-            if (messages) setData(messages);
-            if (error) setError(error);
-            setIsUpdating(false);
-        };
+    const fetchData = useCallback(async () => {
+        setIsUpdating(true);
+        const { messages, error } = await getChannelMessages(channelId, 15);
+        if (messages) setData(messages);
+        if (error) setError(error);
+        setIsUpdating(false);
+    }, [channelId]);
 
+    useEffect(() => {
         const interval = setInterval(fetchData, 5000); // Fetch more frequently for live feel
         return () => clearInterval(interval);
-    }, [channelId]);
+    }, [fetchData]);
 
     return (
         <Card className="flex flex-col h-96">
@@ -124,7 +128,9 @@ export function LiveChannelFeed({ initialData, error: initialError, channelId }:
                         <MessageCircle className="h-6 w-6 text-primary" />
                         Live Feed
                     </CardTitle>
-                    <RefreshCw className={`h-4 w-4 text-muted-foreground ${isUpdating ? 'animate-spin' : ''}`} />
+                    <Button variant="ghost" size="icon" onClick={fetchData} disabled={isUpdating}>
+                        <RefreshCw className={`h-4 w-4 text-muted-foreground ${isUpdating ? 'animate-spin' : ''}`} />
+                    </Button>
                 </div>
             </CardHeader>
             <CardContent className="flex-1 overflow-hidden flex flex-col">
@@ -132,6 +138,10 @@ export function LiveChannelFeed({ initialData, error: initialError, channelId }:
                     <div className="m-auto text-center">
                          <AlertTriangle className="h-8 w-8 mx-auto text-muted-foreground" />
                         <p className="text-muted-foreground mt-2 text-sm">{error || 'Could not load live feed.'}</p>
+                         <Button variant="outline" size="sm" className="mt-4" onClick={fetchData} disabled={isUpdating}>
+                            <RefreshCw className={`mr-2 h-4 w-4 ${isUpdating ? 'animate-spin' : ''}`} />
+                            Try Again
+                        </Button>
                     </div>
                 ) : (
                     <ScrollArea className="h-full pr-4 -mr-4">
