@@ -9,13 +9,13 @@
     {
       "id": "lore-bg",
       "description": "Background for the lore section, showing a mystical landscape.",
-      "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmYW50YXN5JTIwbGFuZHNjYXBlfGVufDB8fHx8fDE3NTg1ODQ5NTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxmYW50YXN5JTIwbGFuZHNjYXBlfGVufDB8fHx8fDE3NTg1ODQ5NTF8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy landscape"
     },
     {
       "id": "community-art-1",
       "description": "User submitted art piece 1.",
-      "imageUrl": "https://images.unsplash.com/photo-1741118235609-bf637a4e7d39?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwYXJ0fGVufDB8fHx8fDE3NTg1ODMzQxM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1741118235609-bf637a4e7d39?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwYXJ0fGVufDB8fHx8fDE3NTg1ODMzQxM3ww&ixlib.rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy art"
     },
     {
@@ -129,8 +129,8 @@
     {
       "id": "hub-bot-bg",
       "description": "Background image for the Emberlyn Bot hub card, showing a fantasy character.",
-      "imageUrl": "https://images.unsplash.com/photo-1739513235245-7bf155a094d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxmYW50YXN5JTIwY2hhcmFjdGVyfGVufDB8fHx8fDE3NTg2MjE0MjJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "fantasy character"
+      "imageUrl": "https://images.unsplash.com/photo-1638237413873-67797007aee1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxlbGYlMjBjb3NwbGF5fGVufDB8fHx8MTc1ODY1MjQxM3ww&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageHint": "elf cosplay"
     },
     {
       "id": "hub-artist-bg",
@@ -153,8 +153,8 @@
     {
       "id": "hub-anime-bg",
       "description": "Background image for the Anime/Fandom Hub card, showing a roleplay scene.",
-      "imageUrl": "https://images.unsplash.com/photo-1720185619858-4e26245347c7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxmYW50YXN5JTIwc2NlbmV8ZW58MHx8fHwxNzU4NjM0NTk1fDA&ixlib.rb-4.1.0&q=80&w=1080",
-      "imageHint": "fantasy scene"
+      "imageUrl": "https://images.unsplash.com/photo-1739513235245-7bf155a094d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxmYW50YXN5JTIwY2hhcmFjdGVyfGVufDB8fHx8fDE3NTg2MjE0MjJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fantasy character"
     },
     {
       "id": "hub-creator-bg",
