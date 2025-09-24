@@ -1,3 +1,4 @@
+
 'use server';
 
 import { unstable_noStore as noStore } from 'next/cache';
@@ -5,6 +6,8 @@ import { unstable_noStore as noStore } from 'next/cache';
 const API_BASE = 'https://discord.com/api/v10';
 const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const GUILD_ID = process.env.DISCORD_GUILD_ID;
+
+const GENERIC_CONFIG_ERROR = "Discord integration not configured.";
 
 if (!BOT_TOKEN) {
   console.warn("DISCORD_BOT_TOKEN is not set. Discord integration will not work.");
@@ -70,7 +73,7 @@ export interface GuildRole {
 }
 
 export async function getGuildRoles(): Promise<{ roles: GuildRole[] | null, error: string | null}> {
-    if (!GUILD_ID) return { roles: null, error: 'Guild ID not configured.' };
+    if (!GUILD_ID) return { roles: null, error: GENERIC_CONFIG_ERROR };
     const { data, error } = await discordApiFetch(`/guilds/${GUILD_ID}/roles`);
     if (error || !data) return { roles: null, error };
     
@@ -94,7 +97,7 @@ export interface GuildDetails {
 }
 
 export async function getGuildDetails(): Promise<{ details: GuildDetails | null, error: string | null }> {
-  if (!GUILD_ID) return { details: null, error: 'Guild ID not configured.' };
+  if (!GUILD_ID) return { details: null, error: GENERIC_CONFIG_ERROR };
 
   const [guildRes, widgetRes] = await Promise.all([
      discordApiFetch(`/guilds/${GUILD_ID}?with_counts=true`),
@@ -138,7 +141,7 @@ export interface DiscordMember {
 }
 
 async function getGuildMember(userId: string): Promise<{member: DiscordMember | null, error: string | null}> {
-    if (!GUILD_ID) return { member: null, error: 'Guild ID not configured.' };
+    if (!GUILD_ID) return { member: null, error: GENERIC_CONFIG_ERROR };
     const { data, error } = await discordApiFetch(`/guilds/${GUILD_ID}/members/${userId}`);
     return { member: data, error };
 }
@@ -235,7 +238,7 @@ export interface DiscordWidgetData {
 }
 
 export async function getGuildWidget(): Promise<{ widget: DiscordWidgetData | null, error: string | null }> {
-    if (!GUILD_ID) return { widget: null, error: 'Guild ID not configured.' };
+    if (!GUILD_ID) return { widget: null, error: GENERIC_CONFIG_ERROR };
     const { data, error } = await discordApiFetch(`/guilds/${GUILD_ID}/widget.json`);
     return { widget: data, error };
 }

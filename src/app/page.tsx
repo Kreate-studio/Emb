@@ -19,7 +19,7 @@ export default async function Home() {
         widgetData = await getGuildWidget();
     } else {
         // Ensure widgetData is not null and has a default structure to avoid client-side errors.
-        widgetData = { widget: null, error: "Guild ID not configured." };
+        widgetData = { widget: null, error: "Discord not configured." };
     }
 
     return (
