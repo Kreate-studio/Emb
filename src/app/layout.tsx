@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: siteTitle,
     description: siteDescription,
-    url: 'https://dlast-sanctuary.com', // Replace with your actual domain
+    url: 'https://sanctyr.netlify.app', // Replace with your actual domain
     siteName: siteTitle,
     images: [
       {
