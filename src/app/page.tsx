@@ -13,14 +13,9 @@ import { DiscordIntegrationSection } from '@/components/discord-integration-sect
 import { getGuildWidget } from '@/lib/discord-service';
 
 export default async function Home() {
-    const guildId = process.env.DISCORD_GUILD_ID;
-    let widgetData = null;
-    if (guildId) {
-        widgetData = await getGuildWidget();
-    } else {
-        // Ensure widgetData is not null and has a default structure to avoid client-side errors.
-        widgetData = { widget: null, error: "Discord not configured." };
-    }
+    // The check for the guild ID is now handled within getGuildWidget to ensure
+    // the environment variable is never accessed in a way that could be exposed to the client.
+    const widgetData = await getGuildWidget();
 
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
