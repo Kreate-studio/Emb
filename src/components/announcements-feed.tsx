@@ -14,10 +14,24 @@ interface AnnouncementsFeedProps {
     error: string | null;
 }
 
+function getTenorGif(content: string): string | null {
+    const tenorRegex = /https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+/g;
+    const match = content.match(tenorRegex);
+    if (match) {
+        const parts = match[0].split('-');
+        const gifId = parts[parts.length - 1];
+        if (gifId) {
+            return `https://i.imgur.com/${gifId}.gif`;
+        }
+    }
+    return null;
+}
+
 function FeedMessage({ message }: { message: ChannelMessage }) {
     const firstAttachment = message.attachments?.[0];
     const isImage = firstAttachment?.content_type?.startsWith('image/');
     const isVideo = firstAttachment?.content_type?.startsWith('video/');
+    const tenorGifUrl = getTenorGif(message.content);
 
     return (
         <div className="flex items-start gap-3">
@@ -33,11 +47,11 @@ function FeedMessage({ message }: { message: ChannelMessage }) {
                     </p>
                 </div>
                 {message.content && (
-                    <p className="text-sm text-muted-foreground prose prose-sm prose-invert max-w-none">
+                    <p className="text-sm text-muted-foreground prose prose-sm prose-invert max-w-none break-words">
                         {message.content}
                     </p>
                 )}
-                 {firstAttachment && (isImage || isVideo) && (
+                 {(firstAttachment && (isImage || isVideo)) ? (
                      <div className="mt-2 rounded-lg overflow-hidden border border-border">
                         {isImage ? (
                             <Image 
@@ -51,7 +65,18 @@ function FeedMessage({ message }: { message: ChannelMessage }) {
                             <video controls src={firstAttachment.url} className="max-h-60 w-auto" />
                         ): null}
                     </div>
-                )}
+                ) : tenorGifUrl ? (
+                     <div className="mt-2 rounded-lg overflow-hidden border border-border">
+                        <Image 
+                            src={tenorGifUrl} 
+                            alt="Tenor GIF"
+                            width={220}
+                            height={124}
+                            unoptimized
+                            className="max-h-60 w-auto object-contain"
+                        />
+                    </div>
+                ) : null}
             </div>
         </div>
     );
@@ -66,14 +91,14 @@ export function AnnouncementsFeed({ initialData, error }: AnnouncementsFeedProps
                     Announcements
                 </CardTitle>
             </CardHeader>
-            <CardContent className="flex-1 flex flex-col min-h-0">
+            <CardContent className="flex-1 overflow-hidden">
                 {error || !initialData || initialData.length === 0 ? (
                     <div className="m-auto text-center">
                          <AlertTriangle className="h-8 w-8 mx-auto text-muted-foreground" />
                         <p className="text-muted-foreground mt-2 text-sm">{error || 'No announcements found.'}</p>
                     </div>
                 ) : (
-                    <ScrollArea className="flex-grow pr-4 -mr-4">
+                    <ScrollArea className="h-full pr-4">
                         <div className="space-y-4">
                             {initialData.map((msg, index) => (
                                 <React.Fragment key={msg.id}>
