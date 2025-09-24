@@ -22,7 +22,7 @@ export function Header() {
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full transition-all duration-300 py-3'
+        'absolute md:sticky top-0 z-50 w-full transition-all duration-300 py-3'
       )}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
