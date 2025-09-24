@@ -10,30 +10,41 @@ if (!BOT_TOKEN) {
   console.warn("DISCORD_BOT_TOKEN is not set. Discord integration will not work.");
 }
 
-async function discordApiFetch(endpoint: string) {
+async function discordApiFetch(endpoint: string, options: RequestInit = {}) {
   noStore();
-  if (!BOT_TOKEN) {
+  if (!BOT_TOKEN && !endpoint.includes('widget.json')) {
     return { data: null, error: 'Discord bot token not configured.' };
   }
 
+  const defaultHeaders: HeadersInit = endpoint.includes('widget.json') 
+    ? {} 
+    : { Authorization: `Bot ${BOT_TOKEN}` };
+
   try {
     const response = await fetch(`${API_BASE}${endpoint}`, {
+      ...options,
       headers: {
-        Authorization: `Bot ${BOT_TOKEN}`,
+        ...defaultHeaders,
+        ...options.headers,
       },
       next: { revalidate: 10 } // Revalidate more frequently for live data
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`Discord API Error (${response.status}): ${errorText}`);
+      console.error(`Discord API Error (${response.status}) fetching ${endpoint}: ${errorText}`);
       return { data: null, error: `Failed to fetch from Discord API: ${response.statusText}` };
+    }
+    
+    // widget.json can return a 204 No Content if disabled
+    if (response.status === 204) {
+      return { data: null, error: 'Widget is disabled for this server.'};
     }
 
     const data = await response.json();
     return { data, error: null };
   } catch (err) {
-    console.error('Error fetching from Discord API:', err);
+    console.error(`Error fetching from Discord API (${endpoint}):`, err);
     return { data: null, error: 'An unexpected error occurred while fetching from Discord.' };
   }
 }
@@ -70,12 +81,11 @@ export interface GuildDetails {
 }
 
 export async function getGuildDetails(): Promise<{ details: GuildDetails | null, error: string | null }> {
-  const guildId = process.env.DISCORD_GUILD_ID;
-  if (!guildId) return { details: null, error: 'Guild ID not configured.' };
+  if (!GUILD_ID) return { details: null, error: 'Guild ID not configured.' };
 
   const [guildRes, widgetRes] = await Promise.all([
-     discordApiFetch(`/guilds/${guildId}?with_counts=true`),
-     discordApiFetch(`/guilds/${guildId}/widget.json`)
+     discordApiFetch(`/guilds/${GUILD_ID}?with_counts=true`),
+     discordApiFetch(`/guilds/${GUILD_ID}/widget.json`)
   ]);
 
   if (guildRes.error || !guildRes.data) {
@@ -87,7 +97,7 @@ export async function getGuildDetails(): Promise<{ details: GuildDetails | null,
   }
 
   const iconHash = guildRes.data.icon;
-  const iconUrl = iconHash ? `https://cdn.discordapp.com/icons/${guildId}/${iconHash}.png` : null;
+  const iconUrl = iconHash ? `https://cdn.discordapp.com/icons/${GUILD_ID}/${iconHash}.png` : null;
 
   return {
     details: {
@@ -174,7 +184,6 @@ export async function getChannelMessagesWithUsers(channelId: string, limit: numb
         highestRole = userRoles.length > 0 ? userRoles[0] : undefined; // roles are pre-sorted by position
     }
 
-
     const displayName = member?.nick || author.global_name || author.username;
     
     return {
@@ -199,4 +208,21 @@ export async function getChannelMessagesWithUsers(channelId: string, limit: numb
   }));
   
   return { messages: enhancedMessages, error: null };
+}
+
+export interface DiscordWidgetData {
+  name: string;
+  instant_invite: string;
+  presence_count: number;
+  members: {
+    id: string;
+    username: string;
+    avatar_url: string;
+  }[];
+}
+
+export async function getGuildWidget(): Promise<{ widget: DiscordWidgetData | null, error: string | null }> {
+    if (!GUILD_ID) return { widget: null, error: 'Guild ID not configured.' };
+    const { data, error } = await discordApiFetch(`/guilds/${GUILD_ID}/widget.json`);
+    return { widget: data, error };
 }

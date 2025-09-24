@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { ChannelMessageWithUser } from '@/lib/discord-service';
-import type { getGuildDetails } from '@/lib/discord-service';
+import type { getGuildDetails, getGuildWidget } from '@/lib/discord-service';
 import SectionWrapper from './section-wrapper';
 import { ServerStats } from './server-stats';
 import { AnnouncementsFeed } from './announcements-feed';
@@ -13,11 +13,13 @@ import {
   CarouselItem,
 } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
+import { JoinCTAContent } from './join-cta-content';
 
 type DiscordIntegrationSectionProps = {
   guildData: Awaited<ReturnType<typeof getGuildDetails>>;
   announcementsData: { messages: ChannelMessageWithUser[] | null, error: string | null };
   liveFeedData: { messages: ChannelMessageWithUser[] | null, error: string | null };
+  widgetData: Awaited<ReturnType<typeof getGuildWidget>>;
   announcementsChannelId: string;
   liveFeedChannelId: string;
 };
@@ -26,6 +28,7 @@ export function DiscordIntegrationSectionContent({
     guildData,
     announcementsData,
     liveFeedData,
+    widgetData,
     announcementsChannelId,
     liveFeedChannelId
 }: DiscordIntegrationSectionProps) {
@@ -96,6 +99,9 @@ export function DiscordIntegrationSectionContent({
                     error={liveFeedData.error}
                     channelId={liveFeedChannelId}
                 />
+            </div>
+            <div className='mt-12'>
+                <JoinCTAContent widgetData={widgetData} />
             </div>
         </SectionWrapper>
     );
