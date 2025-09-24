@@ -22,7 +22,7 @@ export function PartnershipsCarousel() {
     ...PlaceHolderImages.find((img) => img.id === partner.imageId),
   }));
 
-   const plugin = React.useRef(
+  const plugin = React.useRef(
     Autoplay({
       delay: 3000,
       stopOnInteraction: true,
@@ -51,14 +51,21 @@ export function PartnershipsCarousel() {
       >
         <CarouselContent>
           {partnerImages.map((partner, index) => (
-            <CarouselItem key={index} className="basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
+            <CarouselItem
+              key={index}
+              className="basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+            >
               <div className="p-1">
                 <Card className="overflow-hidden group">
                   <CardContent className="flex flex-col items-center p-0 relative">
                     {partner.tags && (
                       <div className="absolute top-2 left-2 z-10 flex flex-wrap gap-1">
-                        {partner.tags.map(tag => (
-                          <Badge key={tag} variant="secondary" className="text-xs backdrop-blur-sm bg-black/30">
+                        {partner.tags.map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant="secondary"
+                            className="text-xs backdrop-blur-sm bg-black/30"
+                          >
                             {tag}
                           </Badge>
                         ))}
@@ -81,8 +88,17 @@ export function PartnershipsCarousel() {
                       <h3 className="text-base md:text-xl font-bold font-headline text-white">
                         {partner.name}
                       </h3>
-                       <Button asChild className="mt-2 md:mt-4" size="sm" variant="secondary">
-                        <a href={partner.joinLink} target="_blank" rel="noopener noreferrer">
+                      <Button
+                        asChild
+                        className="mt-2 md:mt-4"
+                        size="sm"
+                        variant="secondary"
+                      >
+                        <a
+                          href={partner.joinLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           Join Server
                         </a>
                       </Button>
