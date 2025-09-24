@@ -20,7 +20,7 @@ async function discordApiFetch(endpoint: string) {
       headers: {
         Authorization: `Bot ${BOT_TOKEN}`,
       },
-      next: { revalidate: 60 } // Revalidate every 60 seconds
+      next: { revalidate: 10 } // Revalidate more frequently for live data
     });
 
     if (!response.ok) {
@@ -80,6 +80,7 @@ export interface ChannelMessage {
     content: string;
     author: {
         username: string;
+        displayName: string;
         avatarUrl: string;
     };
     timestamp: string;
@@ -90,11 +91,14 @@ export interface ChannelMessage {
         height: number;
         content_type: string;
     }[];
+    mentions: {
+      roles: { id: string; name: string; color: number}[];
+    }
 }
 
 export async function getChannelMessages(channelId: string, limit: number = 5): Promise<{ messages: ChannelMessage[] | null, error: string | null }> {
   noStore();
-   if (!channelId) return { messages: null, error: 'Channel ID not provided.' };
+  if (!channelId) return { messages: null, error: 'Channel ID not provided.' };
   
   const { data, error } = await discordApiFetch(`/channels/${channelId}/messages?limit=${limit}`);
 
@@ -102,18 +106,31 @@ export async function getChannelMessages(channelId: string, limit: number = 5): 
     return { messages: null, error };
   }
 
-  const messages: ChannelMessage[] = data.map((msg: any) => ({
-    id: msg.id,
-    content: msg.content,
-    author: {
-      username: msg.author.username,
-      avatarUrl: msg.author.avatar
-        ? `https://cdn.discordapp.com/avatars/${msg.author.id}/${msg.author.avatar}.png`
-        : `https://cdn.discordapp.com/embed/avatars/${parseInt(msg.author.discriminator) % 5}.png`
-    },
-    timestamp: msg.timestamp,
-    attachments: msg.attachments || []
-  }));
+  const messages: ChannelMessage[] = data.map((msg: any) => {
+    const author = msg.member?.user || msg.author;
+    const displayName = msg.member?.nick || author.global_name || author.username;
+    
+    return {
+      id: msg.id,
+      content: msg.content,
+      author: {
+        username: author.username,
+        displayName: displayName,
+        avatarUrl: author.avatar
+          ? `https://cdn.discordapp.com/avatars/${author.id}/${author.avatar}.png`
+          : `https://cdn.discordapp.com/embed/avatars/${parseInt(author.discriminator) % 5}.png`
+      },
+      timestamp: msg.timestamp,
+      attachments: msg.attachments || [],
+      mentions: {
+        roles: msg.mention_roles?.map((role: any) => ({
+          id: role.id,
+          name: role.name,
+          color: role.color
+        })) || []
+      }
+    }
+  });
   
   return { messages, error: null };
 }

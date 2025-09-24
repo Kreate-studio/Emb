@@ -17,7 +17,7 @@ interface LiveChannelFeedProps {
 }
 
 function getTenorGifId(content: string): string | null {
-    const tenorRegex = /https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+-(\d+)/g;
+    const tenorRegex = /https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+-(\d+)/;
     const match = tenorRegex.exec(content);
     return match ? match[1] : null;
 }
@@ -53,11 +53,11 @@ function FeedMessage({ message }: { message: ChannelMessage }) {
         <div className="flex items-start gap-3">
             <Avatar className="h-8 w-8 border">
                 <AvatarImage src={message.author.avatarUrl} alt={message.author.username} />
-                <AvatarFallback>{message.author.username.charAt(0)}</AvatarFallback>
+                <AvatarFallback>{message.author.displayName.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex-1 space-y-2">
                 <div className="flex items-baseline gap-2">
-                    <p className="font-semibold text-sm">{message.author.username}</p>
+                    <p className="font-semibold text-sm">{message.author.displayName}</p>
                     <p className="text-xs text-muted-foreground">
                         {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
                     </p>
@@ -106,13 +106,13 @@ export function LiveChannelFeed({ initialData, error: initialError, channelId }:
     useEffect(() => {
         const fetchData = async () => {
             setIsUpdating(true);
-            const { messages, error } = await getChannelMessages(channelId, 5);
+            const { messages, error } = await getChannelMessages(channelId, 15);
             if (messages) setData(messages);
             if (error) setError(error);
             setIsUpdating(false);
         };
 
-        const interval = setInterval(fetchData, 30000); // 30 seconds
+        const interval = setInterval(fetchData, 5000); // Fetch more frequently for live feel
         return () => clearInterval(interval);
     }, [channelId]);
 

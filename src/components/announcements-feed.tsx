@@ -17,7 +17,7 @@ interface AnnouncementsFeedProps {
 }
 
 function getTenorGifId(content: string): string | null {
-    const tenorRegex = /https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+-(\d+)/g;
+    const tenorRegex = /https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+-(\d+)/;
     const match = tenorRegex.exec(content);
     return match ? match[1] : null;
 }
@@ -32,6 +32,34 @@ async function fetchTenorGifUrl(gifId: string): Promise<string | null> {
         console.error("Failed to fetch tenor gif", e);
         return null;
     }
+}
+
+function intToHex(int: number | undefined) {
+    if (int === undefined || int === 0) return '#FFFFFF'; // Default to white if color is undefined or 0
+    return '#' + int.toString(16).padStart(6, '0');
+}
+
+function MessageContent({ message }: { message: ChannelMessage }) {
+    let content = message.content;
+
+    // Replace role mentions
+    if (message.mentions.roles) {
+        message.mentions.roles.forEach(role => {
+            const hexColor = intToHex(role.color);
+            const mention = `<span class="text-[${hexColor}] bg-[${hexColor}]/20 px-1 rounded-sm">@${role.name}</span>`;
+            content = content.replace(new RegExp(`<@&${role.id}>`, 'g'), mention);
+        });
+    }
+
+    // Remove Tenor URL from content
+    content = content.replace(/https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+/g, '');
+
+    return (
+        <p 
+            className="text-sm text-muted-foreground prose prose-sm prose-invert max-w-none break-words"
+            dangerouslySetInnerHTML={{ __html: content }}
+        />
+    );
 }
 
 function FeedMessage({ message }: { message: ChannelMessage }) {
@@ -51,20 +79,16 @@ function FeedMessage({ message }: { message: ChannelMessage }) {
         <div className="flex items-start gap-3">
             <Avatar className="h-8 w-8 border">
                 <AvatarImage src={message.author.avatarUrl} alt={message.author.username} />
-                <AvatarFallback>{message.author.username.charAt(0)}</AvatarFallback>
+                <AvatarFallback>{message.author.displayName.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex-1 space-y-2">
                 <div className="flex items-baseline gap-2">
-                    <p className="font-semibold text-sm">{message.author.username}</p>
+                    <p className="font-semibold text-sm">{message.author.displayName}</p>
                     <p className="text-xs text-muted-foreground">
                         {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
                     </p>
                 </div>
-                {message.content && (
-                    <p className="text-sm text-muted-foreground prose prose-sm prose-invert max-w-none break-words">
-                        {message.content.replace(/https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+/g, '')}
-                    </p>
-                )}
+                {message.content && <MessageContent message={message} />}
                  {(firstAttachment && (isImage || isVideo)) ? (
                      <div className="mt-2 rounded-lg overflow-hidden border border-border">
                         {isImage ? (
@@ -104,7 +128,7 @@ export function AnnouncementsFeed({ initialData, error: initialError, channelId 
     useEffect(() => {
         const fetchData = async () => {
             setIsUpdating(true);
-            const { messages, error } = await getChannelMessages(channelId, 3);
+            const { messages, error } = await getChannelMessages(channelId, 10);
             if (messages) setData(messages);
             if (error) setError(error);
             setIsUpdating(false);
