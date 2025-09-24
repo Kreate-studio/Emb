@@ -6,6 +6,7 @@ import { FlameIcon } from '@/components/flame-icon';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Menu, X } from 'lucide-react';
+import { ThemeToggle } from './theme-toggle';
 
 const navLinks = [
   { href: '#ecosystem', label: 'Ecosystem' },
@@ -46,7 +47,8 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-2">
+             <ThemeToggle />
             <Button asChild className="rounded-full">
               <a
                 href="https://discord.gg/PruRXZ7zkF"
@@ -58,7 +60,8 @@ export function Header() {
             </Button>
           </div>
 
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center gap-2">
+             <ThemeToggle />
             <Button
               variant="ghost"
               size="icon"
