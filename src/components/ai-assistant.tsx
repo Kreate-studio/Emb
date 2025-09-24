@@ -34,17 +34,13 @@ export function AIAssistant() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        if (scrollAreaRef.current) {
-          scrollAreaRef.current.scrollTo({
-            top: scrollAreaRef.current.scrollHeight,
-            behavior: 'smooth',
-          });
-        }
-      }, 100);
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTo({
+        top: scrollAreaRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
     }
-  }, [messages, isOpen]);
+  }, [messages]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,51 +54,26 @@ export function AIAssistant() {
       role: 'user',
       content: currentInput,
     };
-    const loadingMessage: Message = {
-      id: `loading-${Date.now()}`,
-      role: 'assistant',
-      content: '...',
-    };
-
-    setMessages((prev) => [...prev, userMessage, loadingMessage]);
+    setMessages((prev) => [...prev, userMessage]);
 
     startTransition(async () => {
       const result = await getAIResponse(currentInput);
       
-      setMessages((prev) => {
-        const newMessages = [...prev];
-        const loadingIndex = newMessages.findIndex(m => m.id.startsWith('loading-'));
-        
-        if (result.error) {
-          const errorMessage: Message = {
-            id: `error-${Date.now()}`,
-            role: 'error',
-            content: result.error,
-          };
-          if (loadingIndex !== -1) {
-            newMessages.splice(loadingIndex, 1, errorMessage);
-          } else {
-            newMessages.push(errorMessage);
-          }
-        } else if (result.response) {
-           const assistantMessage: Message = {
-            id: `assistant-${Date.now()}`,
-            role: 'assistant',
-            content: result.response,
-          };
-           if (loadingIndex !== -1) {
-            newMessages.splice(loadingIndex, 1, assistantMessage);
-          } else {
-             newMessages.push(assistantMessage);
-          }
-        } else {
-            // Remove loading if no response
-            if (loadingIndex !== -1) {
-                newMessages.splice(loadingIndex, 1);
-            }
-        }
-        return newMessages;
-      });
+      if (result.error) {
+        const errorMessage: Message = {
+          id: `error-${Date.now()}`,
+          role: 'error',
+          content: result.error,
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      } else if (result.response) {
+         const assistantMessage: Message = {
+          id: `assistant-${Date.now()}`,
+          role: 'assistant',
+          content: result.response,
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+      }
     });
   };
 
@@ -168,11 +139,7 @@ export function AIAssistant() {
                       message.role === 'error' && 'bg-destructive/20 text-destructive-foreground rounded-tl-none'
                     )}
                   >
-                    {message.content === '...' && message.role === 'assistant' ? (
-                       <Loader2 className="h-5 w-5 animate-spin" />
-                    ) : (
-                      <div className="text-sm prose prose-sm prose-invert" dangerouslySetInnerHTML={{ __html: message.content}}/>
-                    )}
+                    <div className="text-sm prose prose-sm prose-invert" dangerouslySetInnerHTML={{ __html: message.content.replace(/\n/g, '<br />')}}/>
                   </div>
                   {message.role === 'user' && (
                     <Avatar className="w-8 h-8 border border-border">
@@ -183,6 +150,18 @@ export function AIAssistant() {
                   )}
                 </div>
               ))}
+               {isPending && (
+                <div className="flex items-start gap-3">
+                   <Avatar className="w-8 h-8 border border-border">
+                      <AvatarFallback>
+                        <Bot size={20} />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="bg-secondary p-3 rounded-lg rounded-tl-none max-w-[85%]">
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                    </div>
+                </div>
+              )}
             </div>
           </ScrollArea>
           <SheetFooter className="p-4 border-t bg-background">
