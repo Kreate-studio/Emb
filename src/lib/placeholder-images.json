@@ -51,13 +51,13 @@
     {
       "id": "community-writing-1",
       "description": "Image representing a fantasy story.",
-      "imageUrl": "https://images.unsplash.com/photo-1569826302896-9fc21fc56ac7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwc3Rvcnl8ZW58MHx8fHwxNzU4NjUyNDEyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1569826302896-9fc21fc56ac7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYW50YXN5JTIwc3Rvcnl8ZW58MHx8fHwxNzU4NjUyNDEyfDA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "fantasy story"
     },
     {
       "id": "community-cosplay-2",
       "description": "User submitted cosplay 2.",
-      "imageUrl": "https://images.unsplash.com/photo-1638237413873-67797007aee1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxlbGYlMjBjb3NwbGF5fGVufDB8fHx8MTc1ODY1MjQxM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1638237413873-67797007aee1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxlbGYlMjBjb3NwbGF5fGVufDB8fHx8MTc1ODY1MjQxM3ww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "elf cosplay"
     },
     {
@@ -69,7 +69,7 @@
     {
       "id": "community-video-1",
       "description": "Image representing a gameplay video.",
-      "imageUrl": "https://images.unsplash.com/photo-1649425371500-19385ad5f7d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxnYW1lcGxheSUyMHZpZGVvfGVufDB8fHx8MTc1ODY1MjQxMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1649425371500-19385ad5f7d1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxnYW1lcGxheSUyMHZpZGVvfGVufDB8fHx8MTc1ODY1MjQxMnww&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "gameplay video"
     },
     {
@@ -81,7 +81,7 @@
     {
       "id": "event-contest",
       "description": "Banner for an art contest.",
-      "imageUrl": "https://images.unsplash.com/photo-1718648078148-64ce09167e91?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhcnQlMjBjb250ZXN0fGVufDB8fHx8fDE3NTg2MzQ1OTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1718648078148-64ce09167e91?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxhcnQlMjBjb250ZXN0fGVufDB8fHx8fDE3NTg2MzQ1OTV8MA&ixlib-rb-4.1.0&q=80&w=1080",
       "imageHint": "art contest"
     },
     {
@@ -128,8 +128,8 @@
     },
     {
       "id": "hub-bot-bg",
-      "description": "Background image for the Emberlyn Bot hub card, showing a robot.",
-      "imageUrl": "https://images.unsplash.com/photo-1678483747899-e6f1359ac222?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "description": "Background image for the Emberlyn Bot hub card, showing a robot mascot.",
+      "imageUrl": "https://images.unsplash.com/photo-1507146426996-321341aa18ac?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "imageHint": "robot mascot"
     },
     {
@@ -141,8 +141,8 @@
     {
       "id": "hub-gaming-bg",
       "description": "Background image for the Gaming Hub card, showing a gaming setup.",
-      "imageUrl": "https://images.unsplash.com/photo-1550745165-9bc0b252726a?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "gaming controller"
+      "imageUrl": "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "gaming setup"
     },
     {
       "id": "hub-music-bg",
@@ -153,8 +153,8 @@
     {
       "id": "hub-anime-bg",
       "description": "Background image for the Anime/Fandom Hub card, showing an anime-style cityscape.",
-      "imageUrl": "https://images.unsplash.com/photo-1613376023733-0a73375d8628?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "imageHint": "anime cityscape"
+      "imageUrl": "https://images.unsplash.com/photo-1578632767115-450a1dfe3f73?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "imageHint": "anime style"
     },
     {
       "id": "hub-creator-bg",
