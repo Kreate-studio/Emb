@@ -2,9 +2,9 @@
 'use server';
 
 import {
-  discordBotIntegration,
-  type DiscordBotIntegrationInput,
-} from '@/ai/flows/discord-bot-integration';
+  askSanctuaryGuide,
+  type SanctuaryGuideInput,
+} from '@/ai/flows/sanctuary-guide';
 import { z } from 'zod';
 import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';
@@ -86,8 +86,8 @@ export async function getAIResponse(query: string): Promise<AIState> {
   }
 
   try {
-    const input: DiscordBotIntegrationInput = { query: validatedFields.data.query };
-    const result = await discordBotIntegration(input);
+    const input: SanctuaryGuideInput = { query: validatedFields.data.query };
+    const result = await askSanctuaryGuide(input);
     return { response: result.response };
   } catch (error) {
     console.error('AI response error:', error);

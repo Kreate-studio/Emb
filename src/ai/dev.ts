@@ -1,4 +1,4 @@
 import { config } from 'dotenv';
 config();
 
-import '@/ai/flows/discord-bot-integration.ts';
+import '@/ai/flows/sanctuary-guide.ts';
