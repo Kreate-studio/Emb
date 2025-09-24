@@ -6,6 +6,7 @@ import type { GuildDetails } from '@/lib/discord-service';
 import { getGuildDetails } from '@/lib/discord-service';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Button } from './ui/button';
+import { Separator } from './ui/separator';
 
 interface ServerStatsProps {
     initialData: GuildDetails | null;
@@ -13,7 +14,7 @@ interface ServerStatsProps {
 }
 
 const tierMap: Record<number, string> = {
-    0: 'None',
+    0: 'No Tier',
     1: 'Tier 1',
     2: 'Tier 2',
     3: 'Tier 3',
@@ -39,61 +40,58 @@ export function ServerStats({ initialData, error: initialError }: ServerStatsPro
 
     if (error || !data) {
         return (
-            <Card className="h-full flex flex-col justify-center items-center text-center">
-                 <CardHeader>
-                    <div className="flex items-center justify-center h-14 w-14 rounded-full bg-muted border">
-                        <Crown className="h-8 w-8 text-muted-foreground" />
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <CardTitle className="text-xl">Server Stats</CardTitle>
-                    <p className="text-muted-foreground mt-2 text-sm">{error || 'Could not load server statistics.'}</p>
-                     <Button variant="outline" size="sm" className="mt-4" onClick={fetchData} disabled={isUpdating}>
-                        <RefreshCw className={`mr-2 h-4 w-4 ${isUpdating ? 'animate-spin' : ''}`} />
-                        Try Again
-                    </Button>
-                </CardContent>
+            <Card className="h-96 flex flex-col justify-center items-center text-center p-4">
+                 <div className="flex items-center justify-center h-14 w-14 rounded-full bg-muted border mb-4">
+                    <Crown className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <CardTitle className="text-xl font-headline">Server Stats</CardTitle>
+                <p className="text-muted-foreground mt-2 text-sm">{error || 'Could not load server statistics.'}</p>
+                 <Button variant="outline" size="sm" className="mt-4" onClick={fetchData} disabled={isUpdating}>
+                    <RefreshCw className={`mr-2 h-4 w-4 ${isUpdating ? 'animate-spin' : ''}`} />
+                    Try Again
+                </Button>
             </Card>
         );
     }
 
     return (
-        <Card className="h-full flex flex-col">
-            <CardHeader className="flex-row items-center justify-between gap-4 space-y-0 pb-4">
+        <Card className="h-96 flex flex-col">
+            <CardHeader className="flex-row items-center justify-between gap-4 space-y-0 pb-2">
                 <div className='flex items-center gap-4'>
-                    <Avatar className="h-14 w-14 border-2 border-border">
+                    <Avatar className="h-14 w-14 border-2 border-primary">
                         {data.iconUrl && <AvatarImage src={data.iconUrl} alt={data.name} />}
                         <AvatarFallback>{data.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                      <div>
                         <CardTitle className="text-2xl font-headline">{data.name}</CardTitle>
-                        <p className="text-sm text-muted-foreground">{tierMap[data.premiumTier]}</p>
+                        <p className="text-sm text-muted-foreground flex items-center gap-1.5">
+                            <Crown className='w-4 h-4 text-yellow-400' />
+                            {tierMap[data.premiumTier]}
+                        </p>
                     </div>
                 </div>
                  <Button variant="ghost" size="icon" onClick={fetchData} disabled={isUpdating}>
                     <RefreshCw className={`h-4 w-4 text-muted-foreground ${isUpdating ? 'animate-spin' : ''}`} />
                  </Button>
             </CardHeader>
-            <CardContent className="flex flex-col justify-around flex-1">
-                <div className="flex items-center">
-                    <Users className="mr-4 h-6 w-6 text-primary" />
-                    <div className="flex-1">
-                        <p className="text-sm font-medium leading-none text-muted-foreground">Total Members</p>
-                        <p className="text-2xl font-bold">{data.memberCount.toLocaleString()}</p>
-                    </div>
+            <CardContent className="flex flex-col justify-center flex-1 pt-4">
+                <div className='text-center'>
+                    <p className='text-4xl md:text-5xl font-bold tracking-tighter'>{data.memberCount.toLocaleString()}</p>
+                    <p className='text-sm text-muted-foreground'>Total Members</p>
                 </div>
-                <div className="flex items-center">
-                    <Wifi className="mr-4 h-6 w-6 text-primary" />
-                     <div className="flex-1">
-                        <p className="text-sm font-medium leading-none text-muted-foreground">Online</p>
+                <Separator className='my-6' />
+                <div className="grid grid-cols-2 gap-4 text-center">
+                    <div>
                         <p className="text-2xl font-bold">{data.onlineCount.toLocaleString()}</p>
+                        <p className="text-xs text-muted-foreground flex items-center justify-center gap-1.5">
+                            <Wifi className='w-3 h-3 text-green-500'/> Online
+                        </p>
                     </div>
-                </div>
-                 <div className="flex items-center">
-                    <Gem className="mr-4 h-6 w-6 text-primary" />
-                     <div className="flex-1">
-                        <p className="text-sm font-medium leading-none text-muted-foreground">Server Boosts</p>
+                     <div>
                         <p className="text-2xl font-bold">{data.premiumSubscriptionCount}</p>
+                        <p className="text-xs text-muted-foreground flex items-center justify-center gap-1.5">
+                            <Gem className='w-3 h-3 text-pink-500' /> Boosts
+                        </p>
                     </div>
                 </div>
             </CardContent>
