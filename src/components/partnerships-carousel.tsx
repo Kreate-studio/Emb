@@ -158,6 +158,10 @@ export function PartnershipsCarousel() {
               <Label htmlFor="server-name">Server Name</Label>
               <Input id="server-name" name="server-name" placeholder="Your community's name" required />
             </div>
+             <div className="space-y-2">
+              <Label htmlFor="discord-username">Your Discord Username</Label>
+              <Input id="discord-username" name="discord-username" placeholder="e.g. username or @username" required />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="server-link">Discord Invite Link</Label>
               <Input id="server-link" name="server-link" placeholder="https://discord.gg/your-invite" required />
