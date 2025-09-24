@@ -2,13 +2,14 @@
 
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { handleNewsletterSignup } from '@/app/actions';
 import SectionWrapper from './section-wrapper';
 import { useToast } from '@/hooks/use-toast';
 import { FlameIcon } from './flame-icon';
+import { Users } from 'lucide-react';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -17,6 +18,78 @@ function SubmitButton() {
       {pending ? 'Joining...' : 'Join the Waitlist'}
     </Button>
   );
+}
+
+interface DiscordWidgetData {
+  name: string;
+  instant_invite: string;
+  presence_count: number;
+}
+
+function DiscordWidget() {
+  const [data, setData] = useState<DiscordWidgetData | null>(null);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    async function fetchWidgetData() {
+      try {
+        const response = await fetch('https://discord.com/api/guilds/1409095756438175816/widget.json');
+        if (!response.ok) {
+          throw new Error('Failed to fetch Discord widget data');
+        }
+        const jsonData = await response.json();
+        setData(jsonData);
+      } catch (err) {
+        console.error(err);
+        setError(true);
+      }
+    }
+    fetchWidgetData();
+  }, []);
+
+  const content = () => {
+    if (error) {
+      return <p className="text-muted-foreground">Could not load Discord status. Please join us directly!</p>;
+    }
+    if (!data) {
+      return (
+        <div className="h-full flex items-center justify-center">
+           <div className="animate-pulse flex flex-col items-center gap-4">
+              <div className="h-8 w-48 bg-muted rounded-md"></div>
+              <div className="h-6 w-32 bg-muted rounded-md"></div>
+           </div>
+        </div>
+      );
+    }
+    return (
+      <div className='text-center'>
+        <h3 className="text-2xl md:text-3xl font-headline font-bold text-foreground">
+          {data.name}
+        </h3>
+        <div className="my-4 flex items-center justify-center gap-2 text-muted-foreground">
+          <span className="relative flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+          </span>
+          <span>{data.presence_count} Members Online</span>
+        </div>
+      </div>
+    );
+  };
+  
+  const inviteLink = data?.instant_invite || "https://discord.gg/PruRXZ7zkF";
+
+  return (
+    <div className="lg:col-span-2 bg-card/50 border border-border/50 rounded-2xl p-6 md:p-12 shadow-lg backdrop-blur-md h-full flex flex-col justify-center items-center gap-6">
+        {content()}
+         <Button asChild size="lg" className='w-full'>
+          <a href={inviteLink} target="_blank" rel="noopener noreferrer">
+            <Users className='mr-2'/>
+            Join Server
+          </a>
+        </Button>
+    </div>
+  )
 }
 
 export function JoinCTA() {
@@ -73,17 +146,7 @@ export function JoinCTA() {
               </div>
             </form>
           </div>
-          <div className="lg:col-span-2">
-            <iframe
-              src="https://discord.com/widget?id=1409095756438175816&theme=dark"
-              width="100%"
-              height="500"
-              allowTransparency={true}
-              frameBorder="0"
-              sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
-              className='rounded-2xl shadow-lg'
-            ></iframe>
-          </div>
+          <DiscordWidget />
         </div>
       </div>
     </SectionWrapper>
