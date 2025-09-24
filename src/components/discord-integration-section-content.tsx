@@ -13,7 +13,6 @@ import {
   CarouselItem,
 } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
-import { JoinCTAContent } from './join-cta-content';
 
 type DiscordIntegrationSectionProps = {
   guildData: Awaited<ReturnType<typeof getGuildDetails>>;
@@ -64,7 +63,8 @@ export function DiscordIntegrationSectionContent({
                         <CarouselItem>
                              <ServerStats 
                                 initialData={guildData.details} 
-                                error={guildData.error} 
+                                error={guildData.error}
+                                widgetData={widgetData.widget} 
                             />
                         </CarouselItem>
                          <CarouselItem>
@@ -87,7 +87,8 @@ export function DiscordIntegrationSectionContent({
             <div className="hidden lg:grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                 <ServerStats 
                     initialData={guildData.details} 
-                    error={guildData.error} 
+                    error={guildData.error}
+                    widgetData={widgetData.widget}
                 />
                 <AnnouncementsFeed 
                     initialData={announcementsData.messages} 
@@ -99,9 +100,6 @@ export function DiscordIntegrationSectionContent({
                     error={liveFeedData.error}
                     channelId={liveFeedChannelId}
                 />
-            </div>
-            <div className='mt-12'>
-                <JoinCTAContent widgetData={widgetData} />
             </div>
         </SectionWrapper>
     );

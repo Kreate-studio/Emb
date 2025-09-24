@@ -1,8 +1,8 @@
 'use client';
 import React, { useEffect, useState, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Users, Wifi, RefreshCw, Gem, Crown } from 'lucide-react';
-import type { GuildDetails } from '@/lib/discord-service';
+import type { GuildDetails, DiscordWidgetData } from '@/lib/discord-service';
 import { getGuildDetails } from '@/lib/discord-service';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Button } from './ui/button';
@@ -11,6 +11,7 @@ import { Separator } from './ui/separator';
 interface ServerStatsProps {
     initialData: GuildDetails | null;
     error: string | null;
+    widgetData: DiscordWidgetData | null;
 }
 
 const tierMap: Record<number, string> = {
@@ -20,10 +21,11 @@ const tierMap: Record<number, string> = {
     3: 'Tier 3',
 };
 
-export function ServerStats({ initialData, error: initialError }: ServerStatsProps) {
+export function ServerStats({ initialData, error: initialError, widgetData }: ServerStatsProps) {
     const [data, setData] = useState(initialData);
     const [error, setError] = useState(initialError);
     const [isUpdating, setIsUpdating] = useState(false);
+    const inviteLink = widgetData?.instant_invite || 'https://discord.gg/PruRXZ7zkF';
 
     const fetchData = useCallback(async () => {
         setIsUpdating(true);
@@ -95,6 +97,14 @@ export function ServerStats({ initialData, error: initialError }: ServerStatsPro
                     </div>
                 </div>
             </CardContent>
+            <CardFooter>
+                 <Button asChild size="lg" className="w-full">
+                    <a href={inviteLink} target="_blank" rel="noopener noreferrer">
+                    <Users className="mr-2" />
+                    Join Server
+                    </a>
+                </Button>
+            </CardFooter>
         </Card>
     );
 }

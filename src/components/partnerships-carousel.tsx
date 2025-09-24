@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import React from 'react';
+import React, {useRef} from 'react';
 import Autoplay from 'embla-carousel-autoplay';
 import {
   Carousel,
@@ -9,12 +9,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import SectionWrapper from './section-wrapper';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { partners } from '@/lib/site-data';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export function PartnershipsCarousel() {
   const partnerImages = partners.map((partner) => ({
@@ -22,13 +24,18 @@ export function PartnershipsCarousel() {
     ...PlaceHolderImages.find((img) => img.id === partner.imageId),
   }));
 
-  const plugin = React.useRef(
+  const plugin = useRef(
     Autoplay({
       delay: 3000,
       stopOnInteraction: true,
       stopOnMouseEnter: true,
     })
   );
+
+  const handlePartnerSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    alert('Partnership submitted!');
+  }
 
   return (
     <SectionWrapper id="partnerships">
@@ -112,6 +119,28 @@ export function PartnershipsCarousel() {
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
+
+      <Card className="mt-12 max-w-2xl mx-auto bg-card/50 border-border/50 backdrop-blur-md">
+        <CardHeader>
+          <CardTitle>Partner With Us</CardTitle>
+          <CardDescription>
+            Want to see your community here? Fill out the form below to send a partnership request to our High Council.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handlePartnerSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="server-name">Server Name</Label>
+              <Input id="server-name" placeholder="Your community's name" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="server-link">Discord Invite Link</Label>
+              <Input id="server-link" placeholder="https://discord.gg/your-invite" required />
+            </div>
+            <Button type="submit" className="w-full">Submit Partnership Request</Button>
+          </form>
+        </CardContent>
+      </Card>
     </SectionWrapper>
   );
 }
