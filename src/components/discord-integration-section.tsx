@@ -1,4 +1,4 @@
-import { getGuildDetails, getChannelMessages, getGuildRoles } from '@/lib/discord-service';
+import { getGuildDetails, getChannelMessagesWithUsers } from '@/lib/discord-service';
 import { DiscordIntegrationSectionContent } from './discord-integration-section-content';
 
 
@@ -15,18 +15,16 @@ export async function DiscordIntegrationSection() {
     }
 
     // Fetch initial data on the server
-    const [guildData, announcementsData, liveFeedData, rolesData] = await Promise.all([
+    const [guildData, announcementsData, liveFeedData] = await Promise.all([
         getGuildDetails(),
-        getChannelMessages(announcementsChannelId, 3),
-        getChannelMessages(liveFeedChannelId, 5),
-        getGuildRoles()
+        getChannelMessagesWithUsers(announcementsChannelId, 3),
+        getChannelMessagesWithUsers(liveFeedChannelId, 5),
     ]);
 
     return <DiscordIntegrationSectionContent 
         guildData={guildData}
         announcementsData={announcementsData}
         liveFeedData={liveFeedData}
-        rolesData={rolesData}
         announcementsChannelId={announcementsChannelId}
         liveFeedChannelId={liveFeedChannelId}
     />

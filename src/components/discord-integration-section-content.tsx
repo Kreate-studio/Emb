@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import type { getGuildDetails, getChannelMessages, getGuildRoles } from '@/lib/discord-service';
+import type { ChannelMessageWithUser } from '@/lib/discord-service';
+import type { getGuildDetails } from '@/lib/discord-service';
 import SectionWrapper from './section-wrapper';
 import { ServerStats } from './server-stats';
 import { AnnouncementsFeed } from './announcements-feed';
@@ -15,9 +16,8 @@ import Autoplay from 'embla-carousel-autoplay';
 
 type DiscordIntegrationSectionProps = {
   guildData: Awaited<ReturnType<typeof getGuildDetails>>;
-  announcementsData: Awaited<ReturnType<typeof getChannelMessages>>;
-  liveFeedData: Awaited<ReturnType<typeof getChannelMessages>>;
-  rolesData: Awaited<ReturnType<typeof getGuildRoles>>;
+  announcementsData: { messages: ChannelMessageWithUser[] | null, error: string | null };
+  liveFeedData: { messages: ChannelMessageWithUser[] | null, error: string | null };
   announcementsChannelId: string;
   liveFeedChannelId: string;
 };
@@ -26,7 +26,6 @@ export function DiscordIntegrationSectionContent({
     guildData,
     announcementsData,
     liveFeedData,
-    rolesData,
     announcementsChannelId,
     liveFeedChannelId
 }: DiscordIntegrationSectionProps) {
@@ -70,8 +69,6 @@ export function DiscordIntegrationSectionContent({
                                 initialData={announcementsData.messages} 
                                 error={announcementsData.error}
                                 channelId={announcementsChannelId}
-                                initialRoles={rolesData.roles}
-                                rolesError={rolesData.error}
                             />
                         </CarouselItem>
                          <CarouselItem>
@@ -93,8 +90,6 @@ export function DiscordIntegrationSectionContent({
                     initialData={announcementsData.messages} 
                     error={announcementsData.error}
                     channelId={announcementsChannelId}
-                    initialRoles={rolesData.roles}
-                    rolesError={rolesData.error}
                 />
                 <LiveChannelFeed 
                     initialData={liveFeedData.messages} 

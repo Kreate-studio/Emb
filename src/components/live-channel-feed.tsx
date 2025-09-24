@@ -3,8 +3,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MessageCircle, AlertTriangle, RefreshCw } from 'lucide-react';
-import type { ChannelMessage } from '@/lib/discord-service';
-import { getChannelMessages } from '@/lib/discord-service';
+import type { ChannelMessageWithUser } from '@/lib/discord-service';
+import { getChannelMessagesWithUsers } from '@/lib/discord-service';
 import { getTenorGifUrl } from '@/app/actions';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -13,16 +13,22 @@ import Image from 'next/image';
 import { Button } from './ui/button';
 
 interface LiveChannelFeedProps {
-    initialData: ChannelMessage[] | null;
+    initialData: ChannelMessageWithUser[] | null;
     error: string | null;
     channelId: string;
 }
 
-function FeedMessage({ message }: { message: ChannelMessage }) {
+function intToHex(int: number | undefined) {
+    if (int === undefined || int === null || int === 0) return '#FFFFFF'; // Default to white
+    return '#' + int.toString(16).padStart(6, '0');
+}
+
+
+function FeedMessage({ message }: { message: ChannelMessageWithUser }) {
     const firstAttachment = message.attachments?.[0];
     const isImage = firstAttachment?.content_type?.startsWith('image/');
     const isVideo = firstAttachment?.content_type?.startsWith('video/');
-    const tenorUrl = message.content.match(/https?:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+|https?:\/\/tenor\.com\/[a-zA-Z0-9-]+\/[a-zA-Z0-9-]+/)?.[0];
+    const tenorUrl = message.content.match(/https?:\/\/tenor\.com\/(view\/[a-zA-Z0-9-]+|b\w+\/[a-zA-Z0-9-]+\.gif)/)?.[0];
     const [gifUrl, setGifUrl] = useState<string | null>(null);
 
     useEffect(() => {
@@ -33,6 +39,8 @@ function FeedMessage({ message }: { message: ChannelMessage }) {
         }
     }, [tenorUrl]);
     
+    const roleColor = intToHex(message.user?.highestRole?.color);
+
     return (
         <div className="flex items-start gap-3">
             <Avatar className="h-8 w-8 border">
@@ -41,7 +49,9 @@ function FeedMessage({ message }: { message: ChannelMessage }) {
             </Avatar>
             <div className="flex-1 space-y-2">
                 <div className="flex items-baseline gap-2">
-                    <p className="font-semibold text-sm">{message.author.displayName}</p>
+                     <p className="font-semibold text-sm" style={{ color: roleColor }}>
+                        {message.user?.highestRole?.name || message.author.displayName}
+                    </p>
                     <p className="text-xs text-muted-foreground">
                         {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
                     </p>
@@ -89,7 +99,7 @@ export function LiveChannelFeed({ initialData, error: initialError, channelId }:
 
     const fetchData = useCallback(async () => {
         setIsUpdating(true);
-        const { messages, error } = await getChannelMessages(channelId, 15);
+        const { messages, error } = await getChannelMessagesWithUsers(channelId, 15);
         if (messages) setData(messages);
         if (error) setError(error);
         setIsUpdating(false);

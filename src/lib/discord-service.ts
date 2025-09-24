@@ -42,6 +42,7 @@ export interface GuildRole {
     id: string;
     name: string;
     color: number;
+    position: number;
 }
 
 export async function getGuildRoles(): Promise<{ roles: GuildRole[] | null, error: string | null}> {
@@ -53,7 +54,8 @@ export async function getGuildRoles(): Promise<{ roles: GuildRole[] | null, erro
         id: role.id,
         name: role.name,
         color: role.color,
-    }));
+        position: role.position,
+    })).sort((a: GuildRole, b: GuildRole) => b.position - a.position); // Sort by position descending
     
     return { roles, error: null };
 }
@@ -100,6 +102,25 @@ export async function getGuildDetails(): Promise<{ details: GuildDetails | null,
   };
 }
 
+export interface DiscordMember {
+  user: {
+    id: string;
+    username: string;
+    global_name: string;
+    avatar: string;
+  };
+  roles: string[];
+  nick: string | null;
+  highestRole?: GuildRole;
+}
+
+async function getGuildMember(userId: string): Promise<{member: DiscordMember | null, error: string | null}> {
+    if (!GUILD_ID) return { member: null, error: 'Guild ID not configured.' };
+    const { data, error } = await discordApiFetch(`/guilds/${GUILD_ID}/members/${userId}`);
+    return { member: data, error };
+}
+
+
 export interface ChannelMessage {
     id: string;
     content: string;
@@ -122,21 +143,39 @@ export interface ChannelMessage {
     }
 }
 
-export async function getChannelMessages(channelId: string, limit: number = 5): Promise<{ messages: ChannelMessage[] | null, error: string | null }> {
+export type ChannelMessageWithUser = ChannelMessage & { user: DiscordMember | null; allRoles: GuildRole[] };
+
+
+export async function getChannelMessagesWithUsers(channelId: string, limit: number = 5): Promise<{ messages: ChannelMessageWithUser[] | null, error: string | null }> {
   if (!channelId) return { messages: null, error: 'Channel ID not provided.' };
   
-  const { data, error } = await discordApiFetch(`/channels/${channelId}/messages?limit=${limit}`);
+  const { data: messagesData, error: messagesError } = await discordApiFetch(`/channels/${channelId}/messages?limit=${limit}`);
 
-  if (error || !data) {
-    return { messages: null, error };
+  if (messagesError || !messagesData) {
+    return { messages: null, error: messagesError };
+  }
+    
+  const { roles, error: rolesError } = await getGuildRoles();
+  if (rolesError || !roles) {
+      return { messages: null, error: rolesError };
   }
 
-  const messages: ChannelMessage[] = data.map((msg: any) => {
+  const enhancedMessages: ChannelMessageWithUser[] = await Promise.all(messagesData.map(async (msg: any) => {
     const author = msg.author;
-    // The `member` object is partial and only contains `nick` if the message is from a guild.
-    // The `author` object contains the global user details.
-    // We prioritize the server-specific nickname (`member.nick`) if it exists.
-    const displayName = msg.member?.nick || author.global_name || author.username;
+    const { member, error: memberError } = await getGuildMember(author.id);
+    
+    if (memberError) {
+      console.warn(`Could not fetch member ${author.id}: ${memberError}`)
+    }
+
+    let highestRole: GuildRole | undefined = undefined;
+    if(member && member.roles.length > 0) {
+        const userRoles = roles.filter(r => member.roles.includes(r.id));
+        highestRole = userRoles.length > 0 ? userRoles[0] : undefined; // roles are pre-sorted by position
+    }
+
+
+    const displayName = member?.nick || author.global_name || author.username;
     
     return {
       id: msg.id,
@@ -153,9 +192,11 @@ export async function getChannelMessages(channelId: string, limit: number = 5): 
       attachments: msg.attachments || [],
       mentions: {
         roles: msg.mention_roles || [],
-      }
+      },
+      user: member ? { ...member, highestRole } : null,
+      allRoles: roles,
     }
-  });
+  }));
   
-  return { messages, error: null };
+  return { messages: enhancedMessages, error: null };
 }
