@@ -1,4 +1,3 @@
-
 'use server';
 
 import { unstable_noStore as noStore } from 'next/cache';
@@ -84,6 +83,13 @@ export interface ChannelMessage {
         avatarUrl: string;
     };
     timestamp: string;
+    attachments: {
+        url: string;
+        proxy_url: string;
+        width: number;
+        height: number;
+        content_type: string;
+    }[];
 }
 
 export async function getChannelMessages(channelId: string, limit: number = 5): Promise<{ messages: ChannelMessage[] | null, error: string | null }> {
@@ -105,7 +111,8 @@ export async function getChannelMessages(channelId: string, limit: number = 5): 
         ? `https://cdn.discordapp.com/avatars/${msg.author.id}/${msg.author.avatar}.png`
         : `https://cdn.discordapp.com/embed/avatars/${parseInt(msg.author.discriminator) % 5}.png`
     },
-    timestamp: msg.timestamp
+    timestamp: msg.timestamp,
+    attachments: msg.attachments || []
   }));
   
   return { messages, error: null };

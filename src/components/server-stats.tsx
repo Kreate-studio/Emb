@@ -12,7 +12,7 @@ interface ServerStatsProps {
 export function ServerStats({ initialData, error }: ServerStatsProps) {
     if (error || !initialData) {
         return (
-            <Card className="flex flex-col justify-center items-center text-center">
+            <Card className="h-96 flex flex-col justify-center items-center text-center">
                 <CardHeader>
                     <Server className="h-10 w-10 mx-auto text-muted-foreground" />
                 </CardHeader>
@@ -25,8 +25,8 @@ export function ServerStats({ initialData, error }: ServerStatsProps) {
     }
 
     return (
-        <Card>
-            <CardHeader className="flex-row items-center gap-4 space-y-0 pb-2">
+        <Card className="h-96">
+            <CardHeader className="flex-row items-center gap-4 space-y-0 pb-4">
                  <Avatar className="h-14 w-14 border-2 border-border">
                     {initialData.iconUrl && <AvatarImage src={initialData.iconUrl} alt={initialData.name} />}
                     <AvatarFallback>{initialData.name.charAt(0)}</AvatarFallback>
@@ -34,19 +34,19 @@ export function ServerStats({ initialData, error }: ServerStatsProps) {
                 <CardTitle className="text-2xl font-headline">{initialData.name}</CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-6">
                     <div className="flex items-center">
-                        <Users className="mr-3 h-5 w-5 text-primary" />
+                        <Users className="mr-4 h-6 w-6 text-primary" />
                         <div className="flex-1">
-                            <p className="text-sm font-medium leading-none">Total Members</p>
-                            <p className="text-lg font-bold">{initialData.memberCount.toLocaleString()}</p>
+                            <p className="text-sm font-medium leading-none text-muted-foreground">Total Members</p>
+                            <p className="text-2xl font-bold">{initialData.memberCount.toLocaleString()}</p>
                         </div>
                     </div>
                     <div className="flex items-center">
-                        <Wifi className="mr-3 h-5 w-5 text-primary" />
+                        <Wifi className="mr-4 h-6 w-6 text-primary" />
                          <div className="flex-1">
-                            <p className="text-sm font-medium leading-none">Online</p>
-                            <p className="text-lg font-bold">{initialData.onlineCount.toLocaleString()}</p>
+                            <p className="text-sm font-medium leading-none text-muted-foreground">Online</p>
+                            <p className="text-2xl font-bold">{initialData.onlineCount.toLocaleString()}</p>
                         </div>
                     </div>
                 </div>
