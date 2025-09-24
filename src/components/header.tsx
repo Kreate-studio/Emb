@@ -47,7 +47,7 @@ export function Header() {
           </nav>
 
           <div className="hidden md:block">
-            <Button asChild>
+            <Button asChild className="rounded-full">
               <a
                 href="https://discord.gg/PruRXZ7zkF"
                 target="_blank"
@@ -90,7 +90,7 @@ export function Header() {
                 ))}
               </nav>
               <div className="mt-4 pt-4 border-t border-border/50">
-                <Button asChild className="w-full">
+                <Button asChild className="w-full rounded-full">
                   <a
                     href="https://discord.gg/PruRXZ7zkF"
                     target="_blank"
