@@ -63,7 +63,7 @@ export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
     function init() {
       resizeCanvas();
       particles = [];
-      const numberOfParticles = canvas.width / 50;
+      const numberOfParticles = canvas.width / 25;
       for (let i = 0; i < numberOfParticles; i++) {
         const x = Math.random() * canvas.width;
         const y = Math.random() * canvas.height;
