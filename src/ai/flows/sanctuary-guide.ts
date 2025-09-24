@@ -33,6 +33,7 @@ const sanctuaryGuidePrompt = ai.definePrompt({
   name: 'sanctuaryGuidePrompt',
   input: {schema: SanctuaryGuideInputSchema},
   output: {schema: SanctuaryGuideOutputSchema},
+  model: 'googleai/gemini-2.5-flash',
   prompt: `You are an AI-powered guide for the D’Last Sanctuary (DLS) website. Your name is the "Sanctuary Guide".
 
 Your purpose is to answer user questions about the site, guide users to relevant sections, and provide snippets of lore. You have extensive knowledge about D'Last Sanctuary.
