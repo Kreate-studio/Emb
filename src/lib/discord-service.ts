@@ -132,7 +132,7 @@ export async function getChannelMessages(channelId: string, limit: number = 5): 
 
   const messages: ChannelMessage[] = data.map((msg: any) => {
     const author = msg.author;
-    // The `member` object is partial and only contains `nick` and other fields if the message is from a guild.
+    // The `member` object is partial and only contains `nick` if the message is from a guild.
     // The `author` object contains the global user details.
     // We prioritize the server-specific nickname (`member.nick`) if it exists.
     const displayName = msg.member?.nick || author.global_name || author.username;
