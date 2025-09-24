@@ -39,31 +39,52 @@ export function JoinCTA() {
 
   return (
     <SectionWrapper id="join">
-      <div className="max-w-4xl mx-auto text-center bg-card/50 border border-border/50 rounded-2xl p-6 md:p-12 shadow-lg backdrop-blur-md">
+      <div className="max-w-6xl mx-auto text-center">
         <FlameIcon className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 animate-pulse" />
         <h2 className="text-3xl md:text-4xl font-headline font-bold">
           Claim Your Place in the Realm
         </h2>
         <p className="mt-3 max-w-2xl mx-auto text-muted-foreground text-base md:text-lg">
-          Sign up for early access to our upcoming apps and get exclusive news
-          and updates from the High Council.
+          Join our Discord to connect with the community, or sign up for our newsletter for exclusive updates.
         </p>
-        <form
-          ref={formRef}
-          action={formAction}
-          className="mt-8 max-w-lg mx-auto"
-        >
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Input
-              type="email"
-              name="email"
-              placeholder="Enter your email address"
-              required
-              className="flex-grow text-base"
-            />
-            <SubmitButton />
+
+        <div className="mt-8 grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-center">
+          <div className="lg:col-span-3 bg-card/50 border border-border/50 rounded-2xl p-6 md:p-12 shadow-lg backdrop-blur-md h-full flex flex-col justify-center">
+             <h3 className="text-2xl md:text-3xl font-headline font-bold mb-4">
+              Stay Informed
+            </h3>
+            <p className="text-muted-foreground mb-6">
+              Sign up for early access to our upcoming apps and get exclusive news and updates from the High Council.
+            </p>
+            <form
+              ref={formRef}
+              action={formAction}
+              className="w-full"
+            >
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Input
+                  type="email"
+                  name="email"
+                  placeholder="Enter your email address"
+                  required
+                  className="flex-grow text-base"
+                />
+                <SubmitButton />
+              </div>
+            </form>
           </div>
-        </form>
+          <div className="lg:col-span-2">
+            <iframe
+              src="https://discord.com/widget?id=1409095756438175816&theme=dark"
+              width="100%"
+              height="500"
+              allowTransparency={true}
+              frameBorder="0"
+              sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+              className='rounded-2xl shadow-lg'
+            ></iframe>
+          </div>
+        </div>
       </div>
     </SectionWrapper>
   );
