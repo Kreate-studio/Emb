@@ -1,41 +1,53 @@
-
+'use client';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle, AlertTriangle } from 'lucide-react';
+import { MessageCircle, AlertTriangle, RefreshCw } from 'lucide-react';
 import type { ChannelMessage } from '@/lib/discord-service';
+import { getChannelMessages } from '@/lib/discord-service';
 import { formatDistanceToNow } from 'date-fns';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Separator } from './ui/separator';
-import React from 'react';
 import Image from 'next/image';
 
 interface LiveChannelFeedProps {
     initialData: ChannelMessage[] | null;
     error: string | null;
+    channelId: string;
 }
 
-function getTenorGif(content: string): string | null {
-    const tenorRegex = /https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+/g;
-    const match = content.match(tenorRegex);
-    if (match) {
-        // This is a simplified approach. A real implementation would fetch the URL
-        // and then get the GIF from the response, which requires a Tenor API key.
-        // For now, we'll try to guess the GIF URL. This may not always work.
-        const parts = match[0].split('-');
-        const gifId = parts[parts.length - 1];
-        if (gifId) {
-             // This is a common but not guaranteed URL format for Tenor GIFs on Imgur
-            return `https://i.imgur.com/${gifId}.gif`;
-        }
-    }
-    return null;
+function getTenorGifId(content: string): string | null {
+    const tenorRegex = /https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+-(\d+)/g;
+    const match = tenorRegex.exec(content);
+    return match ? match[1] : null;
 }
+
+async function fetchTenorGifUrl(gifId: string): Promise<string | null> {
+    try {
+        // NOTE: This requires a Tenor API key to be set in the environment.
+        const response = await fetch(`https://tenor.googleapis.com/v2/posts?ids=${gifId}&key=${process.env.NEXT_PUBLIC_TENOR_API_KEY}&media_filter=gif`);
+        if (!response.ok) return null;
+        const data = await response.json();
+        return data?.results?.[0]?.media_formats?.gif?.url || null;
+    } catch (e) {
+        console.error("Failed to fetch tenor gif", e);
+        return null;
+    }
+}
+
 
 function FeedMessage({ message }: { message: ChannelMessage }) {
     const firstAttachment = message.attachments?.[0];
     const isImage = firstAttachment?.content_type?.startsWith('image/');
     const isVideo = firstAttachment?.content_type?.startsWith('video/');
-    const tenorGifUrl = getTenorGif(message.content);
+    const tenorGifId = getTenorGifId(message.content);
+    const [tenorGifUrl, setTenorGifUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (tenorGifId) {
+            fetchTenorGifUrl(tenorGifId).then(setTenorGifUrl);
+        }
+    }, [tenorGifId]);
 
     return (
         <div className="flex items-start gap-3">
@@ -52,7 +64,7 @@ function FeedMessage({ message }: { message: ChannelMessage }) {
                 </div>
                 {message.content && (
                     <p className="text-sm text-muted-foreground prose prose-sm prose-invert max-w-none break-words">
-                        {message.content}
+                        {message.content.replace(/https:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+/g, '')}
                     </p>
                 )}
                  {(firstAttachment && (isImage || isVideo)) ? (
@@ -86,28 +98,48 @@ function FeedMessage({ message }: { message: ChannelMessage }) {
     );
 }
 
-export function LiveChannelFeed({ initialData, error }: LiveChannelFeedProps) {
+export function LiveChannelFeed({ initialData, error: initialError, channelId }: LiveChannelFeedProps) {
+    const [data, setData] = useState(initialData);
+    const [error, setError] = useState(initialError);
+    const [isUpdating, setIsUpdating] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsUpdating(true);
+            const { messages, error } = await getChannelMessages(channelId, 5);
+            if (messages) setData(messages);
+            if (error) setError(error);
+            setIsUpdating(false);
+        };
+
+        const interval = setInterval(fetchData, 30000); // 30 seconds
+        return () => clearInterval(interval);
+    }, [channelId]);
+
     return (
         <Card className="flex flex-col h-96">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <MessageCircle className="h-6 w-6 text-primary" />
-                    Live Feed
-                </CardTitle>
+            <CardHeader className='pb-2'>
+                <div className='flex justify-between items-center'>
+                    <CardTitle className="flex items-center gap-2">
+                        <MessageCircle className="h-6 w-6 text-primary" />
+                        Live Feed
+                    </CardTitle>
+                    <RefreshCw className={`h-4 w-4 text-muted-foreground ${isUpdating ? 'animate-spin' : ''}`} />
+                </div>
             </CardHeader>
-            <CardContent className="flex-1 overflow-hidden">
-                 {error || !initialData || initialData.length === 0 ? (
+            <CardContent className="flex-1 overflow-hidden flex flex-col">
+                 {error || !data || data.length === 0 ? (
                     <div className="m-auto text-center">
                          <AlertTriangle className="h-8 w-8 mx-auto text-muted-foreground" />
                         <p className="text-muted-foreground mt-2 text-sm">{error || 'Could not load live feed.'}</p>
                     </div>
                 ) : (
-                    <ScrollArea className="h-full pr-4">
+                    <ScrollArea className="h-full pr-4 -mr-4">
                         <div className="space-y-4">
-                           {initialData.map((msg, index) => (
+                           {data.map((msg, index) => (
                                 <React.Fragment key={msg.id}>
                                     <FeedMessage message={msg} />
-                                    {index < initialData.length - 1 && <Separator className="my-4"/>}
+                                    {index < data.length - 1 && <Separator className="my-4"/>}
                                 </React.Fragment>
                             ))}
                         </div>

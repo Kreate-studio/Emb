@@ -14,6 +14,7 @@ export async function DiscordIntegrationSection() {
         return null;
     }
 
+    // Fetch initial data on the server
     const [guildData, announcementsData, liveFeedData] = await Promise.all([
         getGuildDetails(),
         getChannelMessages(announcementsChannelId, 3),
@@ -31,9 +32,20 @@ export async function DiscordIntegrationSection() {
                 </p>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-                <ServerStats initialData={guildData.details} error={guildData.error} />
-                <AnnouncementsFeed initialData={announcementsData.messages} error={announcementsData.error} />
-                <LiveChannelFeed initialData={liveFeedData.messages} error={liveFeedData.error} />
+                <ServerStats 
+                    initialData={guildData.details} 
+                    error={guildData.error} 
+                />
+                <AnnouncementsFeed 
+                    initialData={announcementsData.messages} 
+                    error={announcementsData.error}
+                    channelId={announcementsChannelId}
+                />
+                <LiveChannelFeed 
+                    initialData={liveFeedData.messages} 
+                    error={liveFeedData.error}
+                    channelId={liveFeedChannelId}
+                />
             </div>
         </SectionWrapper>
     );
