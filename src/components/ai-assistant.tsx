@@ -139,7 +139,7 @@ export function AIAssistant() {
                       message.role === 'error' && 'bg-destructive/20 text-destructive-foreground rounded-tl-none'
                     )}
                   >
-                    <div className="text-sm prose prose-sm prose-invert" dangerouslySetInnerHTML={{ __html: message.content.replace(/\n/g, '<br />')}}/>
+                    <div className="text-sm prose prose-sm prose-invert whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: message.content}}/>
                   </div>
                   {message.role === 'user' && (
                     <Avatar className="w-8 h-8 border border-border">
