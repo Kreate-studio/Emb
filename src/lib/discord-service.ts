@@ -104,6 +104,7 @@ export interface ChannelMessage {
     id: string;
     content: string;
     author: {
+        id: string;
         username: string;
         displayName: string;
         avatarUrl: string;
@@ -141,6 +142,7 @@ export async function getChannelMessages(channelId: string, limit: number = 5): 
       id: msg.id,
       content: msg.content,
       author: {
+        id: author.id,
         username: author.username,
         displayName: displayName,
         avatarUrl: author.avatar

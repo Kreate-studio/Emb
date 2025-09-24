@@ -39,6 +39,14 @@ function MessageContent({ message, roles }: { message: ChannelMessage, roles: Gu
             }
         });
     }
+    
+    // Replace user mentions
+    // This is a simplified version, a full implementation would need to fetch member data
+    content = content.replace(/<@!?(\d+)>/g, (match, userId) => {
+        // In a real app, you might look up the user's nickname from a pre-fetched list
+        return `<span class="text-primary bg-primary/20 px-1 rounded-sm">@user</span>`;
+    });
+
 
     return (
         <p 
@@ -52,7 +60,7 @@ function FeedMessage({ message, roles }: { message: ChannelMessage, roles: Guild
     const firstAttachment = message.attachments?.[0];
     const isImage = firstAttachment?.content_type?.startsWith('image/');
     const isVideo = firstAttachment?.content_type?.startsWith('video/');
-    const tenorUrl = message.content.match(/https?:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+/)?.[0];
+    const tenorUrl = message.content.match(/https?:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+|https?:\/\/tenor\.com\/[a-zA-Z0-9-]+\/[a-zA-Z0-9-]+/)?.[0];
     const [gifUrl, setGifUrl] = useState<string | null>(null);
 
     useEffect(() => {

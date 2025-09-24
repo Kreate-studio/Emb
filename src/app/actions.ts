@@ -100,18 +100,33 @@ export async function getAIResponse(query: string): Promise<AIState> {
 
 export async function getTenorGifUrl(url: string) {
     noStore();
+    if (!url.startsWith('https://tenor.com/')) {
+        return { url: null, error: 'Invalid Tenor URL' };
+    }
+    
+    // Some tenor URLs don't end in the GIF ID, but have it in the path
+    // e.g. https://tenor.com/view/a-b-c-d-12345
+    // or https://tenor.com/bDERd/fun.gif
+    // The redirect logic handles both cases.
+    
     try {
-        const response = await fetch(`${url}.gif`, {
+        const fetchUrl = url.endsWith('.gif') ? url : `${url}.gif`;
+        const response = await fetch(fetchUrl, {
             method: 'HEAD', // We only need the headers to find the redirect
             redirect: 'manual', // We handle the redirect manually
         });
-
-        // The 'location' header will contain the final GIF URL
+        
         const finalUrl = response.headers.get('location');
-
+        
         if (finalUrl) {
             return { url: finalUrl };
         }
+        
+        // If there's no redirect, it might be the direct URL already, though unlikely for base tenor links
+        if (response.status >= 200 && response.status < 300) {
+             return { url: fetchUrl };
+        }
+
         return { url: null, error: 'Could not find GIF URL' };
     } catch (error) {
         console.error('Failed to get Tenor GIF URL:', error);

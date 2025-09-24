@@ -22,7 +22,7 @@ function FeedMessage({ message }: { message: ChannelMessage }) {
     const firstAttachment = message.attachments?.[0];
     const isImage = firstAttachment?.content_type?.startsWith('image/');
     const isVideo = firstAttachment?.content_type?.startsWith('video/');
-    const tenorUrl = message.content.match(/https?:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+/)?.[0];
+    const tenorUrl = message.content.match(/https?:\/\/tenor\.com\/view\/[a-zA-Z0-9-]+|https?:\/\/tenor\.com\/[a-zA-Z0-9-]+\/[a-zA-Z0-9-]+/)?.[0];
     const [gifUrl, setGifUrl] = useState<string | null>(null);
 
     useEffect(() => {
