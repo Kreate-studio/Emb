@@ -19,7 +19,7 @@ export const ecosystemItems: EcosystemItem[] = [
     description:
       'A versatile Discord bot to manage your community and enhance engagement.',
     comingSoon: false,
-    imageId: 'hub-bot-bg',
+    imageId: 'community-cosplay-2',
     modalContent: {
       description:
         'Emberlyn is the official bot of D\'Last Sanctuary, packed with features for moderation, engagement, and utility. She is an integral part of our community, helping to keep the realm safe and vibrant.',
@@ -62,7 +62,7 @@ export const ecosystemItems: EcosystemItem[] = [
     description:
       'A central place for all things anime and fandom, from discussions to fan art.',
     comingSoon: true,
-    imageId: 'hub-anime-bg',
+    imageId: 'community-art-1',
   },
   {
     icon: Users,
@@ -79,26 +79,31 @@ export const partners = [
     name: 'Mythic Realms',
     joinLink: 'https://discord.gg/PruRXZ7zkF',
     imageId: 'partner-mythic-realms',
+    tags: ['Official', 'Fantasy'],
   },
   {
     name: 'Cyber Scape',
     joinLink: 'https://discord.gg/PruRXZ7zkF',
     imageId: 'partner-cyber-scape',
+    tags: ['Sci-Fi', '18+'],
   },
   {
     name: 'Pixel Perfect',
     joinLink: 'https://discord.gg/PruRXZ7zkF',
     imageId: 'partner-pixel-perfect',
+    tags: ['Art', 'Community'],
   },
   {
     name: 'Bardic Tales',
     joinLink: 'https://discord.gg/PruRXZ7zkF',
     imageId: 'partner-bardic-tales',
+    tags: ['Roleplay', 'Influential'],
   },
   {
     name: 'Aesthetic Valley',
     joinLink: 'https://discord.gg/PruRXZ7zkF',
     imageId: 'partner-aesthetic-valley',
+    tags: ['Exclusive', 'Chill'],
   },
 ];
 

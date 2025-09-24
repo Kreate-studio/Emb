@@ -14,6 +14,7 @@ import SectionWrapper from './section-wrapper';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { partners } from '@/lib/site-data';
+import { Badge } from '@/components/ui/badge';
 
 export function PartnershipsCarousel() {
   const partnerImages = partners.map((partner) => ({
@@ -54,6 +55,15 @@ export function PartnershipsCarousel() {
               <div className="p-1">
                 <Card className="overflow-hidden group">
                   <CardContent className="flex flex-col items-center p-0 relative">
+                    {partner.tags && (
+                      <div className="absolute top-2 left-2 z-10 flex flex-wrap gap-1">
+                        {partner.tags.map(tag => (
+                          <Badge key={tag} variant="secondary" className="text-xs backdrop-blur-sm bg-black/30">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
                     {partner.imageUrl && (
                       <div className="w-full aspect-[3/4] overflow-hidden">
                         <Image
