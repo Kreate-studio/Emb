@@ -62,7 +62,7 @@ export const ecosystemItems: EcosystemItem[] = [
     description:
       'A central place for all things anime and fandom, from discussions to fan art.',
     comingSoon: true,
-imageId: 'hub-anime-bg',
+    imageId: 'hub-anime-bg',
   },
   {
     icon: Users,
@@ -77,27 +77,27 @@ imageId: 'hub-anime-bg',
 export const partners = [
   {
     name: 'Mythic Realms',
-    joinLink: '#',
+    joinLink: 'https://discord.gg/PruRXZ7zkF',
     imageId: 'partner-mythic-realms',
   },
   {
     name: 'Cyber Scape',
-    joinLink: '#',
+    joinLink: 'https://discord.gg/PruRXZ7zkF',
     imageId: 'partner-cyber-scape',
   },
   {
     name: 'Pixel Perfect',
-    joinLink: '#',
-imageId: 'partner-pixel-perfect',
+    joinLink: 'https://discord.gg/PruRXZ7zkF',
+    imageId: 'partner-pixel-perfect',
   },
   {
     name: 'Bardic Tales',
-    joinLink: '#',
+    joinLink: 'https://discord.gg/PruRXZ7zkF',
     imageId: 'partner-bardic-tales',
   },
   {
     name: 'Aesthetic Valley',
-    joinLink: '#',
+    joinLink: 'https://discord.gg/PruRXZ7zkF',
     imageId: 'partner-aesthetic-valley',
   },
 ];
