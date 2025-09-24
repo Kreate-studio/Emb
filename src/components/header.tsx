@@ -66,7 +66,7 @@ export function Header() {
               variant="ghost"
               size="icon"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="h-8 w-8"
+              className="h-8 w-8 rounded-full"
             >
               {isMobileMenuOpen ? (
                 <X className="h-5 w-5" />
