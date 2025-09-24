@@ -131,7 +131,7 @@ export async function getChannelMessages(channelId: string, limit: number = 5): 
   }
 
   const messages: ChannelMessage[] = data.map((msg: any) => {
-    const author = msg.member?.user || msg.author;
+    const author = msg.author;
     const displayName = msg.member?.nick || author.global_name || author.username;
     
     return {
