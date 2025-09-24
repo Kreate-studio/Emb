@@ -9,7 +9,15 @@ import { handleNewsletterSignup } from '@/app/actions';
 import SectionWrapper from './section-wrapper';
 import { useToast } from '@/hooks/use-toast';
 import { FlameIcon } from './flame-icon';
-import { Users } from 'lucide-react';
+import { Users, User } from 'lucide-react';
+import Image from 'next/image';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -20,10 +28,19 @@ function SubmitButton() {
   );
 }
 
+interface DiscordMember {
+  id: string;
+  username: string;
+  discriminator: string;
+  avatar_url: string;
+  status: string;
+}
+
 interface DiscordWidgetData {
   name: string;
   instant_invite: string;
   presence_count: number;
+  members: DiscordMember[];
 }
 
 function DiscordWidget() {
@@ -33,7 +50,9 @@ function DiscordWidget() {
   useEffect(() => {
     async function fetchWidgetData() {
       try {
-        const response = await fetch('https://discord.com/api/guilds/1409095756438175816/widget.json');
+        const response = await fetch(
+          'https://discord.com/api/guilds/1409095756438175816/widget.json'
+        );
         if (!response.ok) {
           throw new Error('Failed to fetch Discord widget data');
         }
@@ -49,20 +68,25 @@ function DiscordWidget() {
 
   const content = () => {
     if (error) {
-      return <p className="text-muted-foreground">Could not load Discord status. Please join us directly!</p>;
+      return (
+        <p className="text-muted-foreground">
+          Could not load Discord status. Please join us directly!
+        </p>
+      );
     }
     if (!data) {
       return (
         <div className="h-full flex items-center justify-center">
-           <div className="animate-pulse flex flex-col items-center gap-4">
-              <div className="h-8 w-48 bg-muted rounded-md"></div>
-              <div className="h-6 w-32 bg-muted rounded-md"></div>
-           </div>
+          <div className="animate-pulse flex flex-col items-center gap-4 w-full">
+            <div className="h-8 w-48 bg-muted rounded-md"></div>
+            <div className="h-6 w-32 bg-muted rounded-md"></div>
+            <div className="h-10 w-full bg-muted rounded-md"></div>
+          </div>
         </div>
       );
     }
     return (
-      <div className='text-center'>
+      <div className="text-center w-full">
         <h3 className="text-2xl md:text-3xl font-headline font-bold text-foreground">
           {data.name}
         </h3>
@@ -73,27 +97,53 @@ function DiscordWidget() {
           </span>
           <span>{data.presence_count} Members Online</span>
         </div>
+        {data.members && data.members.length > 0 && (
+          <TooltipProvider>
+            <div className="flex justify-center -space-x-4 mb-6">
+              {data.members.slice(0, 10).map((member) => (
+                <Tooltip key={member.id}>
+                  <TooltipTrigger>
+                    <Avatar className="border-2 border-background">
+                      <AvatarImage
+                        src={member.avatar_url}
+                        alt={member.username}
+                      />
+                      <AvatarFallback>
+                        <User />
+                      </AvatarFallback>
+                    </Avatar>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{member.username}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+            </div>
+          </TooltipProvider>
+        )}
       </div>
     );
   };
-  
-  const inviteLink = data?.instant_invite || "https://discord.gg/PruRXZ7zkF";
+
+  const inviteLink = data?.instant_invite || 'https://discord.gg/PruRXZ7zkF';
 
   return (
     <div className="lg:col-span-2 bg-card/50 border border-border/50 rounded-2xl p-6 md:p-12 shadow-lg backdrop-blur-md h-full flex flex-col justify-center items-center gap-6">
-        {content()}
-         <Button asChild size="lg" className='w-full'>
-          <a href={inviteLink} target="_blank" rel="noopener noreferrer">
-            <Users className='mr-2'/>
-            Join Server
-          </a>
-        </Button>
+      {content()}
+      <Button asChild size="lg" className="w-full">
+        <a href={inviteLink} target="_blank" rel="noopener noreferrer">
+          <Users className="mr-2" />
+          Join Server
+        </a>
+      </Button>
     </div>
-  )
+  );
 }
 
 export function JoinCTA() {
-  const [state, formAction] = useActionState(handleNewsletterSignup, { message: '' });
+  const [state, formAction] = useActionState(handleNewsletterSignup, {
+    message: '',
+  });
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -118,22 +168,20 @@ export function JoinCTA() {
           Claim Your Place in the Realm
         </h2>
         <p className="mt-3 max-w-2xl mx-auto text-muted-foreground text-base md:text-lg">
-          Join our Discord to connect with the community, or sign up for our newsletter for exclusive updates.
+          Join our Discord to connect with the community, or sign up for our
+          newsletter for exclusive updates.
         </p>
 
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-center">
           <div className="lg:col-span-3 bg-card/50 border border-border/50 rounded-2xl p-6 md:p-12 shadow-lg backdrop-blur-md h-full flex flex-col justify-center">
-             <h3 className="text-2xl md:text-3xl font-headline font-bold mb-4">
+            <h3 className="text-2xl md:text-3xl font-headline font-bold mb-4">
               Stay Informed
             </h3>
             <p className="text-muted-foreground mb-6">
-              Sign up for early access to our upcoming apps and get exclusive news and updates from the High Council.
+              Sign up for early access to our upcoming apps and get exclusive
+              news and updates from the High Council.
             </p>
-            <form
-              ref={formRef}
-              action={formAction}
-              className="w-full"
-            >
+            <form ref={formRef} action={formAction} className="w-full">
               <div className="flex flex-col sm:flex-row gap-4">
                 <Input
                   type="email"
@@ -152,3 +200,5 @@ export function JoinCTA() {
     </SectionWrapper>
   );
 }
+
+    
