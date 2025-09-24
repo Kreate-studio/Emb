@@ -171,7 +171,7 @@ export function AIAssistant() {
                     {message.content === '...' && message.role === 'assistant' ? (
                        <Loader2 className="h-5 w-5 animate-spin" />
                     ) : (
-                      <div className="text-sm prose prose-sm prose-invert" dangerouslySetInnerHTML={{ __html: message.content.replace(/\n/g, '<br />')}}/>
+                      <div className="text-sm prose prose-sm prose-invert" dangerouslySetInnerHTML={{ __html: message.content}}/>
                     )}
                   </div>
                   {message.role === 'user' && (
