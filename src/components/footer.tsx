@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FlameIcon } from './flame-icon';
 import { Button } from './ui/button';
-import { Github, Twitter, Youtube } from 'lucide-react';
+import { Twitter, Youtube } from 'lucide-react';
 
 const socialLinks = [
   {
@@ -22,7 +22,6 @@ const socialLinks = [
   },
   { name: 'Twitter', icon: <Twitter className="h-5 w-5" />, href: '#' },
   { name: 'YouTube', icon: <Youtube className="h-5 w-5" />, href: '#' },
-  { name: 'GitHub', icon: <Github className="h-5 w-5" />, href: '#' },
 ];
 
 export function Footer() {
