@@ -18,6 +18,7 @@ import { getAIResponse } from '@/app/actions';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { FlameIcon } from './flame-icon';
+import { marked } from 'marked';
 
 type Message = {
   id: string;
@@ -75,6 +76,15 @@ export function AIAssistant() {
         setMessages((prev) => [...prev, assistantMessage]);
       }
     });
+  };
+
+  const parseContent = (content: string) => {
+    // Sanitize and parse markdown
+    const dirtyHtml = marked.parse(content);
+    // In a real app, you should use a proper sanitizer like DOMPurify
+    // for security reasons before using dangerouslySetInnerHTML.
+    // For this prototype, we'll trust the AI output.
+    return { __html: dirtyHtml as string };
   };
 
   return (
@@ -139,7 +149,7 @@ export function AIAssistant() {
                       message.role === 'error' && 'bg-destructive/20 text-destructive-foreground rounded-tl-none'
                     )}
                   >
-                    <div className="text-sm prose prose-sm prose-invert whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: message.content}}/>
+                    <div className="text-sm prose prose-sm prose-invert max-w-none" dangerouslySetInnerHTML={parseContent(message.content)}/>
                   </div>
                   {message.role === 'user' && (
                     <Avatar className="w-8 h-8 border border-border">
