@@ -183,7 +183,7 @@ export function AnnouncementsFeed({ initialData, error: initialError, channelId,
                 ) : (
                     <ScrollArea className="h-full pr-4 -mr-4">
                         <div className="space-y-4">
-                            {data.slice().reverse().map((msg, index) => (
+                            {data.map((msg, index) => (
                                 <React.Fragment key={msg.id}>
                                     <FeedMessage message={msg} roles={roles} />
                                     {index < data.length - 1 && <Separator className="my-4"/>}
