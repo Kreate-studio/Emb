@@ -282,16 +282,19 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
       let tags: string[] = [];
 
       if (embed.fields && Array.isArray(embed.fields)) {
+        // Find invite link by looking for a field that contains a discord.gg link
         const inviteField = embed.fields.find((f: any) => f.value?.includes('https://discord.gg/'));
         if (inviteField?.value) {
+            // Try to extract from markdown link first
             const match = inviteField.value.match(markdownLinkRegex);
             if (match && match[1]) {
                 joinLink = match[1];
-            } else if (inviteField.value.includes('https://discord.gg/')) {
+            } else { // Otherwise, assume the whole value is the link
                  joinLink = inviteField.value.trim();
             }
         }
         
+        // Find tags by looking for a field that has 'tags' or 'categories' in the name
         const tagsField = embed.fields.find((f: any) => 
             f.name?.toLowerCase().includes('tags') || f.name?.toLowerCase().includes('categories')
         );
@@ -342,7 +345,7 @@ export async function getEventsFromChannel(): Promise<{ events: Event[] | null, 
                 return null;
             }
 
-            const categoryField = embed.fields?.find((f: any) => f.name?.toLowerCase() === 'tags');
+            const categoryField = embed.fields?.find((f: any) => f.name?.toLowerCase().includes('tags'));
             const linkField = embed.fields?.find((f: any) => f.name?.toLowerCase() === 'read more');
 
             let readMoreLink: string | null = null;
