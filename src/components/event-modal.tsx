@@ -25,7 +25,7 @@ export function EventModal({ isOpen, onClose, event }: EventModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-xl md:max-w-2xl">
+      <DialogContent className="max-w-md md:max-w-2xl w-[90vw]">
         <DialogHeader>
           {event.imageUrl && (
             <div className="w-full aspect-video overflow-hidden rounded-t-lg -mt-6">
@@ -45,7 +45,7 @@ export function EventModal({ isOpen, onClose, event }: EventModalProps) {
             <DialogTitle className="text-2xl font-headline mb-2">
                 {event.title}
             </DialogTitle>
-            <DialogDescription className="text-base text-muted-foreground whitespace-pre-wrap">
+            <DialogDescription className="text-base text-muted-foreground whitespace-pre-wrap max-h-[40vh] overflow-y-auto">
                 {event.description}
             </DialogDescription>
           </div>
