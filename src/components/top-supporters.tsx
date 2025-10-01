@@ -50,13 +50,13 @@ export async function TopSupporters() {
           {members.map((member) => {
             const roleColor = intToHex(member.highestRole?.color);
             return (
-              <CarouselItem key={member.user.id} className="pl-2 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
+              <CarouselItem key={member.user.id} className="pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
                 <div className="relative group">
                     <div 
                         className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"
                         style={{animationDuration: `${3 + Math.random() * 2}s`}}
                     ></div>
-                    <div className="relative p-4 bg-card/80 rounded-lg leading-none flex flex-col items-center text-center">
+                    <div className="relative p-4 bg-card/50 backdrop-blur-md rounded-lg leading-none flex flex-col items-center text-center">
                         <Avatar className="h-24 w-24 mx-auto border-4" style={{ borderColor: roleColor }}>
                         <AvatarImage src={member.avatarUrl} alt={member.displayName} />
                         <AvatarFallback>{member.displayName.charAt(0)}</AvatarFallback>
@@ -82,4 +82,5 @@ export async function TopSupporters() {
     </div>
   );
 }
+
 
