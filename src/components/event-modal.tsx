@@ -55,7 +55,7 @@ export function EventModal({ isOpen, onClose, event }: EventModalProps) {
             <div className="px-6 pb-6">
                  <Button asChild className="w-full">
                     <a href={event.readMoreLink} target="_blank" rel="noopener noreferrer">
-                        Read More <ExternalLink className='ml-2' />
+                        Learn More <ExternalLink className='ml-2' />
                     </a>
                 </Button>
             </div>
@@ -75,3 +75,5 @@ export function EventModal({ isOpen, onClose, event }: EventModalProps) {
     </Dialog>
   );
 }
+
+    

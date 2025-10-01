@@ -292,9 +292,10 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
             }
         }
         
-        const tagsField = embed.fields.find((f: any) => 
-            f.name?.toLowerCase().includes('tags')
-        );
+        const tagsField = embed.fields.find((f: any) => {
+            const lowerCaseName = f.name?.toLowerCase();
+            return lowerCaseName.includes('tags') || lowerCaseName.includes('categories');
+        });
         if (tagsField && tagsField.value) {
             tags = tagsField.value.split(',').map((t: string) => t.trim()).filter(Boolean);
         }
@@ -347,7 +348,7 @@ export async function getEventsFromChannel(): Promise<{ events: Event[] | null, 
             const categoryField = embed.fields?.find((f: any) => f.name?.toLowerCase().includes('tags'));
             const linkField = embed.fields?.find((f: any) => {
                 const lowerCaseName = f.name?.toLowerCase();
-                return lowerCaseName.includes('read more') || lowerCaseName.includes('link');
+                return lowerCaseName.includes('read more') || lowerCaseName.includes('link') || lowerCaseName.includes('learn more');
             });
 
             let readMoreLink: string | null = null;
@@ -378,3 +379,5 @@ export async function getEventsFromChannel(): Promise<{ events: Event[] | null, 
 
     return { events, error: null };
 }
+
+    
