@@ -268,12 +268,15 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
   if (error || !messages) {
     return { partners: null, error };
   }
+  
+  // *** ADDED FOR DEBUGGING ***
+  console.log("Raw messages from partners channel:", JSON.stringify(messages, null, 2));
+
 
   const partners: Partner[] = messages.map((msg: any) => {
     try {
       const embed = msg.embeds?.[0];
       if (!embed || !embed.title || !embed.image?.url) {
-        // Not a valid partner embed, skip it.
         return null;
       }
       
@@ -299,6 +302,8 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
   return { partners, error: null };
 }
 
+
+    
 
     
 
