@@ -268,7 +268,7 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
   if (error || !messages) {
     return { partners: null, error };
   }
-
+  
   const markdownLinkRegex = /\[.*?\]\((https?:\/\/[^\s]+)\)/;
 
   const partners: Partner[] = messages.map((msg: any) => {
@@ -286,12 +286,12 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
         if (inviteField?.value) {
             const match = inviteField.value.match(markdownLinkRegex);
             if (match && match[1]) {
-                joinLink = match[1]; // Use the captured URL from markdown
+                joinLink = match[1];
             } else if (inviteField.value.includes('https://discord.gg/')) {
-                joinLink = inviteField.value; // Assume it's a raw URL if no markdown
+                 joinLink = inviteField.value;
             }
         }
-
+        
         const tagsField = embed.fields.find((f: any) => 
             f.name?.toLowerCase().includes('tags') || f.name?.toLowerCase().includes('categories')
         );
@@ -315,6 +315,48 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
 
   return { partners, error: null };
 }
+
+export interface Event {
+  title: string;
+  category: string;
+  description: string;
+  imageUrl: string;
+}
+
+export async function getEventsFromChannel(): Promise<{ events: Event[] | null, error: string | null }> {
+    const channelId = process.env.DISCORD_EVENTS_CHANNEL_ID;
+    if (!channelId) {
+        return { events: null, error: 'Events channel ID not configured.' };
+    }
+
+    const { data: messages, error } = await discordApiFetch(`/channels/${channelId}/messages?limit=10`);
+    if (error || !messages) {
+        return { events: null, error };
+    }
+
+    const events: Event[] = messages.map((msg: any) => {
+        try {
+            const embed = msg.embeds?.[0];
+            if (!embed || !embed.title || !embed.description || !embed.image?.url) {
+                return null;
+            }
+
+            const categoryField = embed.fields?.find((f: any) => f.name?.toLowerCase() === 'category');
+
+            return {
+                title: embed.title,
+                category: categoryField?.value || 'General',
+                description: embed.description,
+                imageUrl: embed.image.url,
+            };
+        } catch (e) {
+            console.error(`Failed to parse event message (embed) ${msg.id}:`, e);
+            return null;
+        }
+    }).filter((e: Event | null): e is Event => e !== null);
+
+    return { events, error: null };
+}
     
 
     
@@ -322,3 +364,4 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
     
 
     
+

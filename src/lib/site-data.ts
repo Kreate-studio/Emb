@@ -87,33 +87,6 @@ export const galleryItems = [
   { id: 'community-video-1', tag: 'Video', hint: 'gameplay video' },
 ];
 
-export const events = [
-  {
-    title: 'Nexus Clash Tournament',
-    category: 'Gaming',
-    description: 'The seasonal tournament begins. Sharpen your blades!',
-    imageId: 'event-tournament',
-  },
-  {
-    title: 'Chiaroscuro Art Contest',
-    category: 'Art',
-    description: 'Showcase your mastery of light and shadow. Grand prizes await.',
-    imageId: 'event-contest',
-  },
-  {
-    title: 'The Ashen Masquerade',
-    category: 'Roleplay',
-    description: 'A realm-wide roleplaying event of intrigue and mystery.',
-    imageId: 'event-rp',
-  },
-  {
-    title: 'Artist Hub Launch',
-    category: 'Update',
-    description: 'The new Artist Hub is coming soon! Prepare your portfolios.',
-    imageId: 'event-update',
-  },
-];
-
 export const loreEntries = [
   {
     title: 'The Eternal Queen & King',

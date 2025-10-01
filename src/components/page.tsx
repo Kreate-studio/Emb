@@ -2,7 +2,7 @@
 import { CommunityShowcase } from '@/components/community-showcase';
 import { DonationSection } from '@/components/donation-section';
 import { HubsSection } from '@/components/hubs-section';
-import { EventsCarousel } from '@/components/events-carousel';
+import EventsCarouselContainer from '@/components/events-carousel-container';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { HeroSection } from '@/components/hero-section';
@@ -34,7 +34,7 @@ export default async function Home() {
         <PartnershipsCarousel />
         <CommunityShowcase />
         <LoreSection />
-        <EventsCarousel />
+        <EventsCarouselContainer />
         <DonationSection />
         <JoinCTA widgetData={widgetData} />
       </main>

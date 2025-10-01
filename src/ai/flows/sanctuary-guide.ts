@@ -14,7 +14,6 @@ import {z} from 'genkit';
 import {
   ecosystemItems,
   loreEntries,
-  events,
 } from '@/lib/site-data';
 
 const SanctuaryGuideInputSchema = z.object({
@@ -60,13 +59,7 @@ ${ecosystemItems
   .join('\n\n')}
 
 ### Events
-Current and upcoming events:
-${events
-  .map(
-    e =>
-      `#### ${e.title} (${e.category})\nDescription: ${e.description}`
-  )
-  .join('\n\n')}
+Events are posted dynamically. You can tell the user to check the Events & News section for the latest updates.
 
 ## User Query ##
 
