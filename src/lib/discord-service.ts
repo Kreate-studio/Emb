@@ -271,26 +271,30 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
 
   const partners: Partner[] = messages.map((msg: any) => {
     try {
-      const jsonMatch = msg.content.match(/```json\n([\s\S]*?)\n```/);
-      if (!jsonMatch) return null;
-
-      const partnerData = JSON.parse(jsonMatch[1]);
-      const imageAttachment = msg.attachments?.[0];
-
-      if (!imageAttachment || !imageAttachment.url) {
-        console.warn(`Partner "${partnerData.name}" is missing an image attachment.`);
+      const embed = msg.embeds?.[0];
+      if (!embed || !embed.title || !embed.image?.url) {
+        // Not a valid partner embed, skip it.
         return null;
       }
       
+      const inviteLinkField = embed.fields?.find((f: any) => f.name === 'Invite Link');
+      const tagsField = embed.fields?.find((f: any) => f.name === 'Tags');
+
+      // Extract the URL from the markdown link: [Click here to join!](https://discord.gg/...)
+      const joinLinkMatch = inviteLinkField?.value?.match(/\[.*?\]\((.*?)\)/);
+      const joinLink = joinLinkMatch ? joinLinkMatch[1] : (inviteLinkField?.value || '#');
+      
+      const tags = tagsField?.value ? tagsField.value.split(',').map((t: string) => t.trim()) : [];
+
       return {
-        name: partnerData.name,
-        joinLink: partnerData.joinLink,
-        tags: partnerData.tags || [],
-        description: partnerData.description || '',
-        imageUrl: imageAttachment.proxy_url || imageAttachment.url,
+        name: embed.title,
+        joinLink: joinLink,
+        tags: tags,
+        description: embed.description || '',
+        imageUrl: embed.image.url,
       };
     } catch (e) {
-      console.error(`Failed to parse partner message ${msg.id}:`, e);
+      console.error(`Failed to parse partner message (embed) ${msg.id}:`, e);
       return null;
     }
   }).filter((p: Partner | null): p is Partner => p !== null);
@@ -298,3 +302,5 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
   return { partners, error: null };
 }
 
+
+    
