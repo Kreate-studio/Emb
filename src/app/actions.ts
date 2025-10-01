@@ -76,10 +76,10 @@ export async function handlePartnershipRequest(
   }
 
   const { serverName, discordUsername, serverLink } = validatedFields.data;
-  const channelId = process.env.DISCORD_PARTNERS_CHANNEL_ID;
+  const channelId = process.env.DISCORD_PARTNERSHIP_REQUESTS_CHANNEL_ID;
 
   if (!channelId) {
-    console.error("DISCORD_PARTNERS_CHANNEL_ID is not set.");
+    console.error("DISCORD_PARTNERSHIP_REQUESTS_CHANNEL_ID is not set.");
     return { message: "Server configuration error. Could not submit request.", error: true };
   }
 
