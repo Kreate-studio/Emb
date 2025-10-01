@@ -31,3 +31,4 @@ export async function KingdomBoosters() {
        <KingdomBoostersCarousel members={members} />
     </div>
   );
+}
