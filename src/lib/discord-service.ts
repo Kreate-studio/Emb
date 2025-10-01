@@ -248,3 +248,53 @@ export async function getGuildWidget(): Promise<{ widget: DiscordWidgetData | nu
     const { data, error } = await discordApiFetch(`/guilds/${GUILD_ID}/widget.json`);
     return { widget: data, error };
 }
+
+
+export interface Partner {
+  name: string;
+  joinLink: string;
+  imageUrl: string;
+  tags: string[];
+  description: string;
+}
+
+export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | null, error: string | null }> {
+  const channelId = process.env.DISCORD_PARTNERS_CHANNEL_ID;
+  if (!channelId) {
+    return { partners: null, error: 'Partners channel ID not configured.' };
+  }
+
+  const { data: messages, error } = await discordApiFetch(`/channels/${channelId}/messages?limit=25`);
+  if (error || !messages) {
+    return { partners: null, error };
+  }
+
+  const partners: Partner[] = messages.map((msg: any) => {
+    try {
+      const jsonMatch = msg.content.match(/```json\n([\s\S]*?)\n```/);
+      if (!jsonMatch) return null;
+
+      const partnerData = JSON.parse(jsonMatch[1]);
+      const imageAttachment = msg.attachments?.[0];
+
+      if (!imageAttachment || !imageAttachment.url) {
+        console.warn(`Partner "${partnerData.name}" is missing an image attachment.`);
+        return null;
+      }
+      
+      return {
+        name: partnerData.name,
+        joinLink: partnerData.joinLink,
+        tags: partnerData.tags || [],
+        description: partnerData.description || '',
+        imageUrl: imageAttachment.proxy_url || imageAttachment.url,
+      };
+    } catch (e) {
+      console.error(`Failed to parse partner message ${msg.id}:`, e);
+      return null;
+    }
+  }).filter((p: Partner | null): p is Partner => p !== null);
+
+  return { partners, error: null };
+}
+

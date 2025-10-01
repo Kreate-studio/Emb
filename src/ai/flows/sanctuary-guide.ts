@@ -14,7 +14,6 @@ import {z} from 'genkit';
 import {
   ecosystemItems,
   loreEntries,
-  partners,
   events,
 } from '@/lib/site-data';
 
@@ -59,10 +58,6 @@ ${ecosystemItems
       }`
   )
   .join('\n\n')}
-
-### Partners
-Our valued partners are:
-${partners.map(p => `- ${p.name} (${p.tags.join(', ')})`).join('\n')}
 
 ### Events
 Current and upcoming events:

@@ -1,6 +1,7 @@
+
 'use client';
 import Image from 'next/image';
-import React, {useRef, useEffect, useActionState} from 'react';
+import React, {useRef, useEffect, useActionState, useState} from 'react';
 import Autoplay from 'embla-carousel-autoplay';
 import {
   Carousel,
@@ -11,15 +12,16 @@ import {
 } from '@/components/ui/carousel';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import SectionWrapper from './section-wrapper';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
-import { partners } from '@/lib/site-data';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { handlePartnershipRequest } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { useFormStatus } from 'react-dom';
+import type { Partner } from '@/lib/discord-service';
+import { getPartnersFromChannel } from '@/lib/discord-service';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -30,12 +32,8 @@ function SubmitButton() {
   );
 }
 
-export function PartnershipsCarousel() {
-  const partnerImages = partners.map((partner) => ({
-    ...partner,
-    ...PlaceHolderImages.find((img) => img.id === partner.imageId),
-  }));
 
+function PartnershipsCarouselContent({ partners, error }: { partners: Partner[] | null, error: string | null }) {
   const plugin = useRef(
     Autoplay({
       delay: 3000,
@@ -44,36 +42,18 @@ export function PartnershipsCarousel() {
     })
   );
 
-  const [state, formAction] = useActionState(handlePartnershipRequest, { message: '' });
-  const { toast } = useToast();
-  const formRef = useRef<HTMLFormElement>(null);
-
-  useEffect(() => {
-    if (state.message) {
-      toast({
-        title: state.error ? 'Error' : 'Success',
-        description: state.message,
-        variant: state.error ? 'destructive' : 'default',
-      });
-      if (!state.error) {
-        formRef.current?.reset();
-      }
-    }
-  }, [state, toast]);
-
+  if (error || !partners || partners.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center bg-card/50 border-border/50 rounded-lg p-8 min-h-48 text-center">
+        <AlertTriangle className="w-10 h-10 text-muted-foreground mb-4" />
+        <h3 className="font-semibold text-lg">Could Not Load Partners</h3>
+        <p className="text-muted-foreground text-sm">{error || "No partners found in the channel."}</p>
+      </div>
+    );
+  }
 
   return (
-    <SectionWrapper id="partnerships">
-      <div className="text-center mb-10">
-        <h2 className="text-3xl md:text-5xl font-headline font-bold">
-          Our Valued Partners
-        </h2>
-        <p className="mt-3 max-w-2xl mx-auto text-base md:text-lg text-muted-foreground">
-          Realms and communities we are proud to be allied with.
-        </p>
-      </div>
-
-      <Carousel
+    <Carousel
         opts={{
           align: 'start',
           loop: true,
@@ -82,7 +62,7 @@ export function PartnershipsCarousel() {
         className="w-full max-w-6xl mx-auto"
       >
         <CarouselContent>
-          {partnerImages.map((partner, index) => (
+          {partners.map((partner, index) => (
             <CarouselItem
               key={index}
               className="basis-1/2 sm:basis-1/3 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
@@ -108,7 +88,6 @@ export function PartnershipsCarousel() {
                         <Image
                           src={partner.imageUrl}
                           alt={partner.name}
-                          data-ai-hint={partner.imageHint}
                           width={600}
                           height={800}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -144,6 +123,61 @@ export function PartnershipsCarousel() {
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
+  )
+}
+
+export function PartnershipsCarousel() {
+  const [state, formAction] = useActionState(handlePartnershipRequest, { message: '' });
+  const { toast } = useToast();
+  const formRef = useRef<HTMLFormElement>(null);
+  
+  const [partnersData, setPartnersData] = useState<{ partners: Partner[] | null, error: string | null }>({ partners: null, error: null });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadPartners() {
+      setIsLoading(true);
+      const data = await getPartnersFromChannel();
+      setPartnersData(data);
+      setIsLoading(false);
+    }
+    loadPartners();
+  }, []);
+
+
+  useEffect(() => {
+    if (state.message) {
+      toast({
+        title: state.error ? 'Error' : 'Success',
+        description: state.message,
+        variant: state.error ? 'destructive' : 'default',
+      });
+      if (!state.error) {
+        formRef.current?.reset();
+      }
+    }
+  }, [state, toast]);
+
+
+  return (
+    <SectionWrapper id="partnerships">
+      <div className="text-center mb-10">
+        <h2 className="text-3xl md:text-5xl font-headline font-bold">
+          Our Valued Partners
+        </h2>
+        <p className="mt-3 max-w-2xl mx-auto text-base md:text-lg text-muted-foreground">
+          Realms and communities we are proud to be allied with.
+        </p>
+      </div>
+
+      {isLoading ? (
+         <div className="flex items-center justify-center min-h-48">
+            <RefreshCw className="w-8 h-8 text-muted-foreground animate-spin" />
+         </div>
+      ) : (
+        <PartnershipsCarouselContent partners={partnersData.partners} error={partnersData.error} />
+      )}
+
 
       <Card className="mt-12 max-w-2xl mx-auto bg-card/50 border-border/50 backdrop-blur-md">
         <CardHeader>

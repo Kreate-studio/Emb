@@ -74,39 +74,6 @@ export const ecosystemItems: EcosystemItem[] = [
   },
 ];
 
-export const partners = [
-  {
-    name: 'Mythic Realms',
-    joinLink: 'https://discord.gg/PruRXZ7zkF',
-    imageId: 'partner-mythic-realms',
-    tags: ['Official', 'Fantasy'],
-  },
-  {
-    name: 'Cyber Scape',
-    joinLink: 'https://discord.gg/PruRXZ7zkF',
-    imageId: 'partner-cyber-scape',
-    tags: ['Sci-Fi', '18+'],
-  },
-  {
-    name: 'Pixel Perfect',
-    joinLink: 'https://discord.gg/PruRXZ7zkF',
-    imageId: 'partner-pixel-perfect',
-    tags: ['Art', 'Community'],
-  },
-  {
-    name: 'Bardic Tales',
-    joinLink: 'https://discord.gg/PruRXZ7zkF',
-    imageId: 'partner-bardic-tales',
-    tags: ['Roleplay', 'Influential'],
-  },
-  {
-    name: 'Aesthetic Valley',
-    joinLink: 'https://discord.gg/PruRXZ7zkF',
-    imageId: 'partner-aesthetic-valley',
-    tags: ['Exclusive', 'Chill'],
-  },
-];
-
 export const galleryItems = [
   { id: 'community-art-1', tag: 'Art', hint: 'fantasy art' },
   { id: 'community-cosplay-1', tag: 'Cosplay', hint: 'fantasy cosplay' },
