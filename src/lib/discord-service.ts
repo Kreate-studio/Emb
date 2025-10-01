@@ -399,7 +399,7 @@ export async function getEventsFromChannel(): Promise<{ events: Event[] | null, 
         return { events: null, error };
     }
     
-    const markdownLinkRegex = /\[.*?\]\((https?:\/\/[^\s]+)\)/;
+    const markdownLinkRegex = /\[.*?\]\((https?:\/\/[^\s)]+)\)/;
     const urlRegex = /https?:\/\/[^\s)]+/;
 
 

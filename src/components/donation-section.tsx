@@ -2,6 +2,7 @@ import { Heart } from 'lucide-react';
 import SectionWrapper from './section-wrapper';
 import { TopSupporters } from './top-supporters';
 import { DonationTiers } from './donation-tiers';
+import { KingdomBoosters } from './kingdom-boosters';
 
 export async function DonationSection() {
   return (
@@ -18,6 +19,7 @@ export async function DonationSection() {
         </p>
 
         <TopSupporters />
+        <KingdomBoosters />
 
         <DonationTiers />
       </div>
