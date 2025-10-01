@@ -277,8 +277,8 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
         return null;
       }
       
-      const inviteLinkField = embed.fields?.find((f: any) => f.name === 'Invite Link');
-      const tagsField = embed.fields?.find((f: any) => f.name === 'Tags');
+      const inviteLinkField = embed.fields?.find((f: any) => f.name.toLowerCase() === 'invite link');
+      const tagsField = embed.fields?.find((f: any) => f.name.toLowerCase() === 'tags');
 
       const joinLink = inviteLinkField?.value || '#';
       const tags = tagsField?.value ? tagsField.value.split(',').map((t: string) => t.trim()) : [];
@@ -299,6 +299,8 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
   return { partners, error: null };
 }
 
+
+    
 
     
 
