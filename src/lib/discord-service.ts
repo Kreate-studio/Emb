@@ -268,10 +268,6 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
   if (error || !messages) {
     return { partners: null, error };
   }
-  
-  // *** ADDED FOR DEBUGGING ***
-  console.log("Raw messages from partners channel:", JSON.stringify(messages, null, 2));
-
 
   const partners: Partner[] = messages.map((msg: any) => {
     try {
@@ -280,11 +276,20 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
         return null;
       }
       
-      const inviteLinkField = embed.fields?.find((f: any) => f.name.toLowerCase() === 'invite link');
-      const tagsField = embed.fields?.find((f: any) => f.name.toLowerCase() === 'tags');
+      let joinLink = '#';
+      let tags: string[] = [];
 
-      const joinLink = inviteLinkField?.value || '#';
-      const tags = tagsField?.value ? tagsField.value.split(',').map((t: string) => t.trim()) : [];
+      if (embed.fields && Array.isArray(embed.fields)) {
+        const inviteField = embed.fields.find((f: any) => f.value?.includes('https://discord.gg/'));
+        if (inviteField) {
+            joinLink = inviteField.value;
+        }
+
+        const tagsField = embed.fields.find((f: any) => f.name?.toLowerCase() === 'tags');
+        if (tagsField && tagsField.value) {
+            tags = tagsField.value.split(',').map((t: string) => t.trim());
+        }
+      }
 
       return {
         name: embed.title,
