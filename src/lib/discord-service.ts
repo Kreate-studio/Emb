@@ -269,6 +269,8 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
     return { partners: null, error };
   }
 
+  const markdownLinkRegex = /\[.*?\]\((https?:\/\/[^\s]+)\)/;
+
   const partners: Partner[] = messages.map((msg: any) => {
     try {
       const embed = msg.embeds?.[0];
@@ -281,8 +283,13 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
 
       if (embed.fields && Array.isArray(embed.fields)) {
         const inviteField = embed.fields.find((f: any) => f.value?.includes('https://discord.gg/'));
-        if (inviteField) {
-            joinLink = inviteField.value;
+        if (inviteField?.value) {
+            const match = inviteField.value.match(markdownLinkRegex);
+            if (match && match[1]) {
+                joinLink = match[1]; // Use the captured URL from markdown
+            } else if (inviteField.value.startsWith('https://discord.gg/')) {
+                joinLink = inviteField.value; // Assume it's a raw URL if no markdown
+            }
         }
 
         const tagsField = embed.fields.find((f: any) => f.name?.toLowerCase() === 'tags');
@@ -306,8 +313,6 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
 
   return { partners, error: null };
 }
-
-
     
 
     
