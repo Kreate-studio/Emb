@@ -293,7 +293,7 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
         }
         
         const tagsField = embed.fields.find((f: any) => 
-            f.name?.toLowerCase().includes('tags') || f.name?.toLowerCase().includes('categories')
+            f.name?.toLowerCase().includes('tags')
         );
         if (tagsField && tagsField.value) {
             tags = tagsField.value.split(',').map((t: string) => t.trim()).filter(Boolean);
@@ -345,13 +345,16 @@ export async function getEventsFromChannel(): Promise<{ events: Event[] | null, 
             }
 
             const categoryField = embed.fields?.find((f: any) => f.name?.toLowerCase().includes('tags'));
-            const linkField = embed.fields?.find((f: any) => f.name?.toLowerCase() === 'read more');
+            const linkField = embed.fields?.find((f: any) => {
+                const lowerCaseName = f.name?.toLowerCase();
+                return lowerCaseName.includes('read more') || lowerCaseName.includes('link');
+            });
 
             let readMoreLink: string | null = null;
             if (linkField && linkField.value) {
-                const match = linkField.value.match(markdownLinkRegex);
-                if (match && match[1]) {
-                    readMoreLink = match[1];
+                const markdownMatch = linkField.value.match(markdownLinkRegex);
+                if (markdownMatch && markdownMatch[1]) {
+                    readMoreLink = markdownMatch[1];
                 } else {
                     const urlMatch = linkField.value.match(/https?:\/\/[^\s]+/);
                     if (urlMatch) {
