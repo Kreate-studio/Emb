@@ -342,7 +342,7 @@ export async function getEventsFromChannel(): Promise<{ events: Event[] | null, 
                 return null;
             }
 
-            const categoryField = embed.fields?.find((f: any) => f.name?.toLowerCase() === 'tag');
+            const categoryField = embed.fields?.find((f: any) => f.name?.toLowerCase() === 'tags');
             const linkField = embed.fields?.find((f: any) => f.name?.toLowerCase() === 'read more');
 
             let readMoreLink: string | null = null;
