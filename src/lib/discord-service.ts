@@ -139,6 +139,8 @@ export interface DiscordMember {
   roles: string[];
   nick: string | null;
   highestRole?: GuildRole;
+  avatarUrl: string;
+  displayName: string;
 }
 
 async function getGuildMember(userId: string): Promise<{member: DiscordMember | null, error: string | null}> {
@@ -228,6 +230,66 @@ export async function getChannelMessagesWithUsers(channelId: string, limit: numb
   return { messages: enhancedMessages, error: null };
 }
 
+export async function getMembersWithRole(roleName: string): Promise<{ members: DiscordMember[] | null, error: string | null }> {
+  const GUILD_ID = process.env.DISCORD_GUILD_ID;
+  if (!GUILD_ID) {
+    return { members: null, error: GENERIC_CONFIG_ERROR };
+  }
+
+  const { roles, error: rolesError } = await getGuildRoles();
+  if (rolesError || !roles) {
+    return { members: null, error: rolesError };
+  }
+
+  const targetRole = roles.find(r => r.name.toLowerCase() === roleName.toLowerCase());
+  if (!targetRole) {
+    return { members: null, error: `Role '${roleName}' not found.` };
+  }
+
+  // Discord's API is paginated, so we fetch in a loop.
+  let allMembers: any[] = [];
+  let lastMemberId = '0';
+  const limit = 1000;
+
+  while (true) {
+    const { data: membersChunk, error: membersError } = await discordApiFetch(
+      `/guilds/${GUILD_ID}/members?limit=${limit}&after=${lastMemberId}`
+    );
+
+    if (membersError || !membersChunk) {
+      return { members: null, error: membersError };
+    }
+
+    allMembers = allMembers.concat(membersChunk);
+
+    if (membersChunk.length < limit) {
+      break; // Last page
+    }
+    lastMemberId = membersChunk[membersChunk.length - 1].user.id;
+  }
+  
+  const membersWithRole = allMembers.filter(m => m.roles.includes(targetRole.id));
+  
+  const detailedMembers: DiscordMember[] = membersWithRole.map((member: any) => {
+    const userRoles = roles.filter(r => member.roles.includes(r.id));
+    const highestRole = userRoles.length > 0 ? userRoles[0] : undefined;
+    const displayName = member.nick || member.user.global_name || member.user.username;
+    const avatarUrl = member.user.avatar
+        ? `https://cdn.discordapp.com/avatars/${member.user.id}/${member.user.avatar}.png`
+        : `https://cdn.discordapp.com/embed/avatars/${(parseInt(member.user.id) >> 22) % 6}.png`;
+
+    return {
+        ...member,
+        displayName,
+        avatarUrl,
+        highestRole,
+    };
+  });
+
+  return { members: detailedMembers, error: null };
+}
+
+
 export interface DiscordWidgetData {
   name: string;
   instant_invite: string;
@@ -296,6 +358,7 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
             const lowerCaseName = f.name?.toLowerCase();
             return lowerCaseName.includes('tags') || lowerCaseName.includes('categories');
         });
+
         if (tagsField && tagsField.value) {
             tags = tagsField.value.split(',').map((t: string) => t.trim()).filter(Boolean);
         }
@@ -337,6 +400,8 @@ export async function getEventsFromChannel(): Promise<{ events: Event[] | null, 
     }
     
     const markdownLinkRegex = /\[.*?\]\((https?:\/\/[^\s]+)\)/;
+    const urlRegex = /https?:\/\/[^\s)]+/;
+
 
     const events: Event[] = messages.map((msg: any) => {
         try {
@@ -357,7 +422,7 @@ export async function getEventsFromChannel(): Promise<{ events: Event[] | null, 
                 if (markdownMatch && markdownMatch[1]) {
                     readMoreLink = markdownMatch[1];
                 } else {
-                    const urlMatch = linkField.value.match(/https?:\/\/[^\s]+/);
+                    const urlMatch = linkField.value.match(urlRegex);
                     if (urlMatch) {
                         readMoreLink = urlMatch[0];
                     }
@@ -379,5 +444,3 @@ export async function getEventsFromChannel(): Promise<{ events: Event[] | null, 
 
     return { events, error: null };
 }
-
-    
