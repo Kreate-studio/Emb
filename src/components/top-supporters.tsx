@@ -17,7 +17,7 @@ function intToHex(int: number | undefined) {
 
 
 export async function TopSupporters() {
-  const { members, error } = await getMembersWithRole("D'Kingdom Support");
+  const { members, error } = await getMembersWithRole("D'Kingdom Supporter");
 
   if (error || !members || members.length === 0) {
     return (
@@ -82,3 +82,4 @@ export async function TopSupporters() {
     </div>
   );
 }
+
