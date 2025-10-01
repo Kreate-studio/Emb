@@ -280,10 +280,7 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
       const inviteLinkField = embed.fields?.find((f: any) => f.name === 'Invite Link');
       const tagsField = embed.fields?.find((f: any) => f.name === 'Tags');
 
-      // Extract the URL from the markdown link: [Click here to join!](https://discord.gg/...)
-      const joinLinkMatch = inviteLinkField?.value?.match(/\[.*?\]\((.*?)\)/);
-      const joinLink = joinLinkMatch ? joinLinkMatch[1] : (inviteLinkField?.value || '#');
-      
+      const joinLink = inviteLinkField?.value || '#';
       const tags = tagsField?.value ? tagsField.value.split(',').map((t: string) => t.trim()) : [];
 
       return {
@@ -302,5 +299,7 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
   return { partners, error: null };
 }
 
+
+    
 
     
