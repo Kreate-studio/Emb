@@ -288,7 +288,7 @@ export async function getPartnersFromChannel(): Promise<{ partners: Partner[] | 
             if (match && match[1]) {
                 joinLink = match[1];
             } else if (inviteField.value.includes('https://discord.gg/')) {
-                 joinLink = inviteField.value;
+                 joinLink = inviteField.value.trim();
             }
         }
         
@@ -321,6 +321,7 @@ export interface Event {
   category: string;
   description: string;
   imageUrl: string;
+  readMoreLink: string | null;
 }
 
 export async function getEventsFromChannel(): Promise<{ events: Event[] | null, error: string | null }> {
@@ -341,13 +342,24 @@ export async function getEventsFromChannel(): Promise<{ events: Event[] | null, 
                 return null;
             }
 
-            const categoryField = embed.fields?.find((f: any) => f.name?.toLowerCase() === 'category');
+            const categoryField = embed.fields?.find((f: any) => f.name?.toLowerCase() === 'tag');
+            const linkField = embed.fields?.find((f: any) => f.name?.toLowerCase() === 'read more');
+
+            let readMoreLink: string | null = null;
+            if (linkField && linkField.value) {
+                const urlMatch = linkField.value.match(/https?:\/\/[^\s]+/);
+                if (urlMatch) {
+                    readMoreLink = urlMatch[0];
+                }
+            }
+            
 
             return {
                 title: embed.title,
                 category: categoryField?.value || 'General',
                 description: embed.description,
                 imageUrl: embed.image.url,
+                readMoreLink: readMoreLink,
             };
         } catch (e) {
             console.error(`Failed to parse event message (embed) ${msg.id}:`, e);
@@ -357,11 +369,3 @@ export async function getEventsFromChannel(): Promise<{ events: Event[] | null, 
 
     return { events, error: null };
 }
-    
-
-    
-
-    
-
-    
-
