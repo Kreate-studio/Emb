@@ -187,7 +187,7 @@ export async function getTenorGifUrl(url: string) {
 }
 
 /**
- * Placeholder function for verifying a login code.
+ * Checks if a login code has been verified by the bot.
  * In a real implementation, this would check a database (like Vercel KV)
  * to see if the bot has received the code and marked it as verified.
  */
@@ -199,31 +199,16 @@ export async function verifyLoginCode(code: string): Promise<{ success: boolean;
     }
 
     try {
-        // We will implement the check against KV in a future step.
-        // For now, let's simulate a successful verification for a specific code.
-        const MOCK_VERIFIED_USER_ID = "838092589344489532";
-        const MOCK_SUCCESS_CODE = "dls-login-success";
-
-        if (code === MOCK_SUCCESS_CODE) {
-             // In a real scenario, we'd get the userId from the KV store entry.
-            const userId = await kv.get(`login-code:${code}`);
-            if (userId && typeof userId === 'string') {
-                 // Clean up the code after use
-                await kv.del(`login-code:${code}`);
-                return { success: true, message: 'Verification successful!', userId: userId };
-            }
-             // Forcing a mock success for now.
-             return { success: true, message: 'Verification successful!', userId: MOCK_VERIFIED_USER_ID };
-        }
-        
-        // Simulate checking if the code has been verified by the bot.
+        // Check if the bot has verified the code by looking for the user ID in KV.
         const verifiedUserId = await kv.get(`login-code:${code}`);
-        if(verifiedUserId && typeof verifiedUserId === 'string') {
+        
+        if (verifiedUserId && typeof verifiedUserId === 'string') {
+            // Clean up the code after successful verification to prevent reuse.
             await kv.del(`login-code:${code}`);
             return { success: true, message: 'Verification successful!', userId: verifiedUserId };
         }
 
-
+        // If no user ID is found, the code is either invalid or not yet verified.
         return { success: false, message: 'Code not yet verified. Please make sure you have sent the code to the bot and try again in a few seconds.' };
 
     } catch (error) {
