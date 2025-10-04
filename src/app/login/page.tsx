@@ -1,7 +1,6 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -12,46 +11,20 @@ import {
 } from '@/components/ui/card';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
-import { verifyLoginCode } from '@/app/actions';
+
+const DiscordIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg {...props} viewBox="0 0 24 24" fill="currentColor">
+     <path d="M20.317 4.3698a19.7913 19.7913 0 0 0 -4.9585 -1.5432c-.3726.4528 -1.0371 1.5227 -1.2584 1.8414a17.2963 17.2963 0 0 0 -3.1804 0c-.2213-.3186 -.8858-1.3886 -1.2584-1.8414a19.7913 19.7913 0 0 0 -4.9585 1.5432c-1.422 4.6936 -1.422 9.5312 0 14.2248a19.9218 19.9218 0 0 0 5.8648 2.016c.3726-.4528.9945-1.4497 1.217-1.7883a15.6113 15.6113 0 0 0 2.9582 0c.2224.3386.8443 1.3355 1.217 1.7883a19.9218 19.9218 0 0 0 5.8648-2.016c1.422-4.6936 1.422-9.5312 0-14.2248zm-11.3634 9.8336c-1.3431 0 -2.431-1.229 -2.431-2.742s1.0879-2.742 2.431-2.742c1.343 0 2.431 1.229 2.431 2.742s-1.088 2.742-2.431 2.742zm8.0934 0c-1.3431 0 -2.431-1.229 -2.431-2.742s1.0879-2.742 2.431-2.742c1.343 0 2.431 1.229 2.431 2.742s-1.088 2.742-2.431 2.742z" />
+   </svg>
+);
+
 
 export default function LoginPage() {
-  const [uniqueCode, setUniqueCode] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isVerifying, setIsVerifying] = useState(false);
-  const router = useRouter();
 
-  useEffect(() => {
-    // Generate a unique code for the user to send to the bot
-    const code = `dls-login-${Math.random().toString(36).substring(2, 8)}`;
-    setUniqueCode(code);
-    setIsLoading(false);
-    // In a real app, we would store this code in the database with an expiry
-    // and a 'pending' status, associated with the user's session.
-    // For now, we'll handle this in a future step.
-  }, []);
-
-  const handleVerification = async () => {
-    if (!uniqueCode) return;
-    setIsVerifying(true);
-    
-    // This action will check if the bot has marked this code as verified
-    const result = await verifyLoginCode(uniqueCode);
-
-    if (result.success && result.userId) {
-      // Store session, redirect to profile
-      // This will be implemented in the next step.
-      alert(`Login successful for user ID: ${result.userId}! Redirecting...`);
-      router.push(`/profile/${result.userId}`);
-    } else {
-      alert(result.message);
-    }
-
-    setIsVerifying(false);
+  const handleLogin = () => {
+    // In the next step, we will implement the redirect to Discord's OAuth2 URL.
+    alert("The next step is to configure Discord OAuth and redirect the user.");
   };
-  
-  const botName = "Emberlyn"; // Or your bot's name
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -61,30 +34,17 @@ export default function LoginPage() {
           <CardHeader>
             <CardTitle>Realm Authentication</CardTitle>
             <CardDescription>
-              To log in, please send a Direct Message to our Discord bot with the following code.
+              Connect your Discord account to log in or create an account.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {isLoading ? (
-              <div className="flex justify-center items-center h-20">
-                <Loader2 className="h-8 w-8 animate-spin" />
-              </div>
-            ) : (
-              <div className="bg-muted p-4 rounded-lg">
-                <p className="text-sm text-muted-foreground mb-2">Your unique login code:</p>
-                <p className="text-2xl font-mono font-bold tracking-widest bg-background p-3 rounded-md">
-                  {uniqueCode}
-                </p>
-              </div>
-            )}
-            <div>
-                 <p className="text-sm text-muted-foreground">
-                    Send this code as a DM to the <strong>{botName}</strong> bot on our Discord server.
-                </p>
-            </div>
-            <Button onClick={handleVerification} disabled={isVerifying || isLoading} className="w-full">
-              {isVerifying ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Verifying...</> : 'I Have Sent the Code'}
+            <Button onClick={handleLogin} className="w-full" size="lg">
+              <DiscordIcon className="h-6 w-6 mr-2" />
+              Login with Discord
             </Button>
+            <p className="text-xs text-muted-foreground">
+                By logging in, you agree to our Terms of Service and Privacy Policy.
+            </p>
           </CardContent>
         </Card>
       </main>

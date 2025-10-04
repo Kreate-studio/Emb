@@ -185,34 +185,3 @@ export async function getTenorGifUrl(url: string) {
         return { url: null, error: 'Failed to fetch Tenor GIF' };
     }
 }
-
-/**
- * Checks if a login code has been verified by the bot.
- * In a real implementation, this would check a database (like Vercel KV)
- * to see if the bot has received the code and marked it as verified.
- */
-export async function verifyLoginCode(code: string): Promise<{ success: boolean; message: string; userId?: string }> {
-    noStore();
-
-    if (!kv) {
-        return { success: false, message: 'Verification service is currently unavailable.' };
-    }
-
-    try {
-        // Check if the bot has verified the code by looking for the user ID in KV.
-        const verifiedUserId = await kv.get(`login-code:${code}`);
-        
-        if (verifiedUserId && typeof verifiedUserId === 'string') {
-            // Clean up the code after successful verification to prevent reuse.
-            await kv.del(`login-code:${code}`);
-            return { success: true, message: 'Verification successful!', userId: verifiedUserId };
-        }
-
-        // If no user ID is found, the code is either invalid or not yet verified.
-        return { success: false, message: 'Code not yet verified. Please make sure you have sent the code to the bot and try again in a few seconds.' };
-
-    } catch (error) {
-        console.error("Error verifying login code:", error);
-        return { success: false, message: 'An unexpected error occurred during verification.' };
-    }
-}
