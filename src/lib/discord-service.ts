@@ -475,5 +475,3 @@ export async function getEventsFromChannel(): Promise<{ events: Event[] | null, 
 
     return { events, error: null };
 }
-
-    
