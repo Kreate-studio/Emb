@@ -49,6 +49,9 @@ export function Header() {
 
           <div className="hidden md:flex items-center gap-2">
              <ThemeToggle />
+            <Button variant="ghost" asChild className="rounded-full">
+                <Link href="/login">Login</Link>
+            </Button>
             <Button asChild className="rounded-full">
               <a
                 href="https://discord.gg/PruRXZ7zkF"
@@ -91,6 +94,9 @@ export function Header() {
                     {link.label}
                   </Link>
                 ))}
+                  <Link href="/login" className="text-base font-medium text-foreground hover:text-primary transition-colors w-full p-2 rounded-md" onClick={() => setIsMobileMenuOpen(false)}>
+                    Login
+                  </Link>
               </nav>
               <div className="mt-4 pt-4 border-t border-border/50">
                 <Button asChild className="w-full rounded-full">

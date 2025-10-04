@@ -15,15 +15,15 @@ const emailSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
 });
 
-type NewsletterState = {
+type FormState = {
   message: string;
   error?: boolean;
 };
 
 export async function handleNewsletterSignup(
-  prevState: NewsletterState,
+  prevState: FormState,
   formData: FormData
-): Promise<NewsletterState> {
+): Promise<FormState> {
   const validatedFields = emailSchema.safeParse({
     email: formData.get('email'),
   });
@@ -58,9 +58,9 @@ const partnershipSchema = z.object({
 });
 
 export async function handlePartnershipRequest(
-  prevState: NewsletterState,
+  prevState: FormState,
   formData: FormData
-): Promise<NewsletterState> {
+): Promise<FormState> {
   const validatedFields = partnershipSchema.safeParse({
     serverName: formData.get('server-name'),
     discordUsername: formData.get('discord-username'),
@@ -182,4 +182,41 @@ export async function getTenorGifUrl(url: string) {
         console.error('Failed to get Tenor GIF URL:', error);
         return { url: null, error: 'Failed to fetch Tenor GIF' };
     }
+}
+
+
+const discordLoginSchema = z.object({
+    discordId: z.string().regex(/^\d{17,19}$/, { message: 'Please enter a valid Discord User ID.' }),
+});
+
+export async function handleDiscordLogin(
+    prevState: FormState,
+    formData: FormData
+): Promise<FormState> {
+    const validatedFields = discordLoginSchema.safeParse({
+        discordId: formData.get('discordId'),
+    });
+
+    if (!validatedFields.success) {
+        return {
+            message: validatedFields.error.flatten().fieldErrors.discordId?.[0] || 'Invalid input.',
+            error: true,
+        };
+    }
+
+    const { discordId } = validatedFields.data;
+
+    // TODO:
+    // 1. Check if user is in the Discord server.
+    // 2. Generate a 6-digit OTP.
+    // 3. Store the OTP and discordId in KV store with an expiry (e.g., 5 mins).
+    // 4. Send a DM to the user with the OTP via the bot.
+    // 5. Redirect user to a /login/verify page.
+
+    console.log(`Starting login for Discord ID: ${discordId}`);
+
+    // For now, we'll just return a success message.
+    return {
+        message: 'A verification code has been sent to your Discord DMs. Please check your messages.',
+    };
 }
