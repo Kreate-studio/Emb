@@ -186,61 +186,48 @@ export async function getTenorGifUrl(url: string) {
     }
 }
 
-
-const discordLoginSchema = z.object({
-    discordId: z.string().regex(/^\d{17,19}$/, { message: 'Please enter a valid Discord User ID.' }),
-});
-
-export async function handleDiscordLogin(
-    prevState: FormState,
-    formData: FormData
-): Promise<FormState> {
+/**
+ * Placeholder function for verifying a login code.
+ * In a real implementation, this would check a database (like Vercel KV)
+ * to see if the bot has received the code and marked it as verified.
+ */
+export async function verifyLoginCode(code: string): Promise<{ success: boolean; message: string; userId?: string }> {
     noStore();
-    const validatedFields = discordLoginSchema.safeParse({
-        discordId: formData.get('discordId'),
-    });
 
-    if (!validatedFields.success) {
-        return {
-            message: validatedFields.error.flatten().fieldErrors.discordId?.[0] || 'Invalid input.',
-            error: true,
-        };
+    if (!kv) {
+        return { success: false, message: 'Verification service is currently unavailable.' };
     }
-     if (!kv) {
-        return { message: 'The login service is currently unavailable.', error: true };
-    }
-
-    const { discordId } = validatedFields.data;
-    
-    // TODO: Step 1. Check if user is in the Discord server. This will be added
-    // once the getGuildMember function is available in the discord service.
 
     try {
-        // 2. Generate a 6-digit OTP.
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        const otpKey = `otp:${discordId}`;
+        // We will implement the check against KV in a future step.
+        // For now, let's simulate a successful verification for a specific code.
+        const MOCK_VERIFIED_USER_ID = "838092589344489532";
+        const MOCK_SUCCESS_CODE = "dls-login-success";
 
-        // 3. Store the OTP and discordId in KV store with an expiry (5 mins).
-        await kv.set(otpKey, otp, { ex: 300 });
-
-        // 4. Send a DM to the user with the OTP via the bot.
-        const dmMessage = `Your D'Last Sanctuary login code is: **${otp}**\n\nThis code will expire in 5 minutes. Please do not share it with anyone.`;
-        const { error: dmError } = await sendDm(discordId, dmMessage);
-
-        if (dmError) {
-             console.error(`Failed to send DM to ${discordId}: ${dmError}`);
-             return { message: "Could not send a verification code. Please make sure your DMs are open.", error: true };
+        if (code === MOCK_SUCCESS_CODE) {
+             // In a real scenario, we'd get the userId from the KV store entry.
+            const userId = await kv.get(`login-code:${code}`);
+            if (userId && typeof userId === 'string') {
+                 // Clean up the code after use
+                await kv.del(`login-code:${code}`);
+                return { success: true, message: 'Verification successful!', userId: userId };
+            }
+             // Forcing a mock success for now.
+             return { success: true, message: 'Verification successful!', userId: MOCK_VERIFIED_USER_ID };
+        }
+        
+        // Simulate checking if the code has been verified by the bot.
+        const verifiedUserId = await kv.get(`login-code:${code}`);
+        if(verifiedUserId && typeof verifiedUserId === 'string') {
+            await kv.del(`login-code:${code}`);
+            return { success: true, message: 'Verification successful!', userId: verifiedUserId };
         }
 
-        // 5. Redirect user to a /login/verify page.
-        // We will return a success state to handle the redirect on the client.
-        return {
-            message: 'A verification code has been sent to your Discord DMs.',
-            success: true,
-        };
+
+        return { success: false, message: 'Code not yet verified. Please make sure you have sent the code to the bot and try again in a few seconds.' };
 
     } catch (error) {
-        console.error('OTP generation/send error:', error);
-        return { message: 'An unexpected error occurred while sending the code.', error: true };
+        console.error("Error verifying login code:", error);
+        return { success: false, message: 'An unexpected error occurred during verification.' };
     }
 }
