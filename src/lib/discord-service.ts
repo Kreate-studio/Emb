@@ -42,9 +42,14 @@ async function discordApiFetch(endpoint: string, options: RequestInit = {}) {
     if (response.status === 204) {
       return { data: null, error: 'Widget is disabled for this server.'};
     }
+    
+    if (response.headers.get('content-type')?.includes('application/json')) {
+        const data = await response.json();
+        return { data, error: null };
+    }
 
-    const data = await response.json();
-    return { data, error: null };
+    return { data: true, error: null }; // For successful responses with no body
+
   } catch (err) {
     console.error(`Error fetching from Discord API (${endpoint}):`, err);
     return { data: null, error: 'An unexpected error occurred while fetching from Discord.' };
@@ -61,6 +66,32 @@ export async function sendMessageToChannel(channelId: string, message: string): 
   });
 
   return { error };
+}
+
+export async function sendDm(userId: string, message: string): Promise<{ error: string | null }> {
+    if (!userId) return { error: 'User ID not provided.' };
+
+    try {
+        // Step 1: Create a DM channel with the user
+        const { data: channelData, error: channelError } = await discordApiFetch('/users/@me/channels', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ recipient_id: userId }),
+        });
+
+        if (channelError || !channelData?.id) {
+            console.error(`Failed to create DM channel with ${userId}:`, channelError);
+            return { error: 'Could not create a direct message channel with the user.' };
+        }
+
+        const channelId = channelData.id;
+
+        // Step 2: Send the message to the newly created channel
+        return sendMessageToChannel(channelId, message);
+    } catch (e) {
+        console.error(`Error in sendDm for user ${userId}:`, e);
+        return { error: 'An unexpected error occurred while trying to send a direct message.' };
+    }
 }
 
 

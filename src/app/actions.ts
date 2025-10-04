@@ -9,7 +9,7 @@ import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';
 import { headers } from 'next/headers';
 import {unstable_noStore as noStore} from 'next/cache';
-import { sendMessageToChannel } from '@/lib/discord-service';
+import { sendMessageToChannel, sendDm } from '@/lib/discord-service';
 
 const emailSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -18,6 +18,7 @@ const emailSchema = z.object({
 type FormState = {
   message: string;
   error?: boolean;
+  success?: boolean;
 };
 
 export async function handleNewsletterSignup(
@@ -193,6 +194,7 @@ export async function handleDiscordLogin(
     prevState: FormState,
     formData: FormData
 ): Promise<FormState> {
+    noStore();
     const validatedFields = discordLoginSchema.safeParse({
         discordId: formData.get('discordId'),
     });
@@ -203,20 +205,41 @@ export async function handleDiscordLogin(
             error: true,
         };
     }
+     if (!kv) {
+        return { message: 'The login service is currently unavailable.', error: true };
+    }
 
     const { discordId } = validatedFields.data;
+    
+    // TODO: Step 1. Check if user is in the Discord server. This will be added
+    // once the getGuildMember function is available in the discord service.
 
-    // TODO:
-    // 1. Check if user is in the Discord server.
-    // 2. Generate a 6-digit OTP.
-    // 3. Store the OTP and discordId in KV store with an expiry (e.g., 5 mins).
-    // 4. Send a DM to the user with the OTP via the bot.
-    // 5. Redirect user to a /login/verify page.
+    try {
+        // 2. Generate a 6-digit OTP.
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const otpKey = `otp:${discordId}`;
 
-    console.log(`Starting login for Discord ID: ${discordId}`);
+        // 3. Store the OTP and discordId in KV store with an expiry (5 mins).
+        await kv.set(otpKey, otp, { ex: 300 });
 
-    // For now, we'll just return a success message.
-    return {
-        message: 'A verification code has been sent to your Discord DMs. Please check your messages.',
-    };
+        // 4. Send a DM to the user with the OTP via the bot.
+        const dmMessage = `Your D'Last Sanctuary login code is: **${otp}**\n\nThis code will expire in 5 minutes. Please do not share it with anyone.`;
+        const { error: dmError } = await sendDm(discordId, dmMessage);
+
+        if (dmError) {
+             console.error(`Failed to send DM to ${discordId}: ${dmError}`);
+             return { message: "Could not send a verification code. Please make sure your DMs are open.", error: true };
+        }
+
+        // 5. Redirect user to a /login/verify page.
+        // We will return a success state to handle the redirect on the client.
+        return {
+            message: 'A verification code has been sent to your Discord DMs.',
+            success: true,
+        };
+
+    } catch (error) {
+        console.error('OTP generation/send error:', error);
+        return { message: 'An unexpected error occurred while sending the code.', error: true };
+    }
 }

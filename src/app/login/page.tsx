@@ -18,6 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -32,6 +33,7 @@ export default function LoginPage() {
   const [state, formAction] = useActionState(handleDiscordLogin, { message: '' });
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (state?.message) {
@@ -40,9 +42,13 @@ export default function LoginPage() {
         description: state.message,
         variant: state.error ? 'destructive' : 'default',
       });
-      // We don't reset the form here, in case the user needs to retry
+      if (state.success) {
+        // We will redirect to the verify page upon success
+        const discordId = formRef.current?.['discordId' as any]?.value;
+        router.push(`/login/verify?id=${discordId}`);
+      }
     }
-  }, [state, toast]);
+  }, [state, toast, router]);
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
