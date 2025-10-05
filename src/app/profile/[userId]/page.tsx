@@ -100,7 +100,6 @@ export default async function ProfilePage({ params }: { params: { userId: string
                                     <div className="p-8 border-2 border-dashed rounded-lg flex items-center justify-center h-full">
                                         <p className="text-muted-foreground">Command interface coming soon...</p>
                                     </div>
-                                d_last_sanctuary/workspace/src/lib/discord-service.ts
                                 </div>
                             </div>
                         </CardContent>
