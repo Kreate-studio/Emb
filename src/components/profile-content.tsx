@@ -4,7 +4,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, Briefcase, Calendar, Coins, Package, PiggyBank, Swords, Shield, Scroll, Gem, Fish, Apple } from 'lucide-react';
+import { AlertTriangle, Briefcase, Calendar, Coins, Package, PiggyBank, Swords, Shield, Scroll, Gem, Fish, Apple, Diamond } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -36,13 +36,13 @@ function ProfileError({ message }: { message: string }) {
     )
 }
 
-function StatCard({ icon: Icon, label, value }: { icon: React.ElementType, label: string, value: string }) {
+function StatCard({ icon: Icon, label, value }: { icon: React.ElementType, label: string, value: string | number }) {
     return (
         <div className="bg-secondary/50 rounded-lg p-4 flex items-center gap-4">
             <Icon className="w-8 h-8 text-primary" />
             <div>
                 <p className="text-sm text-muted-foreground">{label}</p>
-                <p className="text-xl font-bold">{value}</p>
+                <p className="text-xl font-bold">{typeof value === 'number' ? value.toLocaleString() : value}</p>
             </div>
         </div>
     )
@@ -160,8 +160,9 @@ export function ProfileContent({ session, member, userRoles, economyProfile, eco
                                         </div>
                                     ) : (
                                         <>
-                                            <StatCard icon={Coins} label="Wallet" value={economyProfile?.wallet.toLocaleString() ?? 'N/A'} />
-                                            <StatCard icon={PiggyBank} label="Bank" value={economyProfile?.bank.toLocaleString() ?? 'N/A'} />
+                                            <StatCard icon={Coins} label="Wallet" value={economyProfile?.wallet?.toLocaleString() ?? 'N/A'} />
+                                            <StatCard icon={PiggyBank} label="Bank" value={economyProfile?.bank?.toLocaleString() ?? 'N/A'} />
+                                            <StatCard icon={Diamond} label="Gold" value={economyProfile?.gold?.toLocaleString() ?? 'N/A'} />
                                         </>
                                     )}
                                     {isOwnProfile && (

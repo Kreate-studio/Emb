@@ -19,6 +19,7 @@ export interface EconomyProfile {
     avatar: string;
     wallet: number;
     bank: number;
+    gold: number;
     inventory: EconomyItem[];
 }
 
