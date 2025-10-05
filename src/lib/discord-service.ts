@@ -177,8 +177,24 @@ export interface DiscordMember {
 export async function getGuildMember(userId: string): Promise<{member: DiscordMember | null, error: string | null}> {
     const GUILD_ID = process.env.DISCORD_GUILD_ID;
     if (!GUILD_ID) return { member: null, error: GENERIC_CONFIG_ERROR };
-    const { data, error } = await discordApiFetch(`/guilds/${GUILD_ID}/members/${userId}`);
-    return { member: data, error };
+    const { data: memberData, error } = await discordApiFetch(`/guilds/${GUILD_ID}/members/${userId}`);
+    
+    if (error || !memberData) {
+        return { member: null, error };
+    }
+
+    const displayName = memberData.nick || memberData.user?.global_name || memberData.user?.username || 'Unknown User';
+    const avatarUrl = memberData.user?.avatar
+        ? `https://cdn.discordapp.com/avatars/${memberData.user.id}/${memberData.user.avatar}.png`
+        : `https://cdn.discordapp.com/embed/avatars/${(parseInt(memberData.user.id) >> 22) % 6}.png`;
+
+    const member: DiscordMember = {
+        ...memberData,
+        displayName,
+        avatarUrl,
+    };
+
+    return { member, error: null };
 }
 
 

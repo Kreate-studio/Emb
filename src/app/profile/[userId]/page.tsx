@@ -64,7 +64,7 @@ export default async function ProfilePage({ params }: { params: { userId: string
                         <CardHeader className="flex flex-col md:flex-row items-center gap-6 border-b p-6">
                             <Avatar className="w-32 h-32 border-4 border-background ring-4 ring-primary -mt-16 md:-mt-8">
                                 <AvatarImage src={member.avatarUrl} alt={member.displayName} />
-                                <AvatarFallback>{member.displayName.charAt(0)}</AvatarFallback>
+                                <AvatarFallback>{member.displayName?.charAt(0) || member.user.username.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <div className='text-center md:text-left'>
                                 <h1 className="text-3xl font-bold font-headline">{member.displayName}</h1>
