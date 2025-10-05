@@ -235,16 +235,17 @@ function ProfileHeader({ member, userRoles }: { member: DiscordMember, userRoles
                 />
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-background via-black/20 to-black/50" />
-            <div className="absolute inset-x-0 bottom-0 p-4 md:p-6 text-white" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                 <div className="container mx-auto flex items-end gap-4">
-                    <Avatar className="w-24 h-24 md:w-32 md:h-32 border-4 border-background ring-4 ring-primary">
-                        <AvatarImage src={member.avatarUrl} alt={member.displayName} />
-                        <AvatarFallback>{member.displayName?.charAt(0) || member.user.username.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 pb-2">
-                        <h1 className="text-3xl md:text-4xl font-bold font-headline">{member.displayName}</h1>
-                        <p className="text-white/80">@{member.user.username}</p>
-                        <div className="flex flex-wrap items-center gap-2 mt-2">
+            <div className="container mx-auto">
+                <div className="absolute inset-x-0 bottom-0 p-4 md:p-6 text-white" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                    <div className="flex items-end gap-4">
+                        <Avatar className="w-24 h-24 md:w-32 md:h-32 border-4 border-background ring-4 ring-primary">
+                            <AvatarImage src={member.avatarUrl} alt={member.displayName} />
+                            <AvatarFallback>{member.displayName?.charAt(0) || member.user.username.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 pb-2">
+                            <h1 className="text-3xl md:text-4xl font-bold font-headline">{member.displayName}</h1>
+                            <p className="text-white/80">@{member.user.username}</p>
+                             <div className="flex flex-wrap items-center gap-2 mt-2">
                             {userRoles.slice(0, 3).map(role => (
                                 <Badge
                                     key={role.id}
@@ -290,6 +291,7 @@ function ProfileHeader({ member, userRoles }: { member: DiscordMember, userRoles
                                     </AlertDialogContent>
                                 </AlertDialog>
                             )}
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -537,7 +539,5 @@ const ActionsView = ({ isOwnProfile, member, session, onRefresh, isDesktop }: { 
         </CardContent>
     </Card>
 )
-
-    
 
     
