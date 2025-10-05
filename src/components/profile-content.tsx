@@ -3,12 +3,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, Briefcase, Calendar, Coins, PiggyBank, Swords, Shield, Scroll, Gem, Fish, Apple, Diamond, LandPlot, Share2, SquareArrowOutUpRight, Package, User, Star, Wallet, LayoutGrid } from 'lucide-react';
+import { AlertTriangle, Briefcase, Calendar, Coins, PiggyBank, Swords, Shield, Scroll, Gem, Fish, Apple, Diamond, LandPlot, Share2, SquareArrowOutUpRight, Package, User, Star, Wallet, LayoutGrid, PawPrint, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { LucideIcon } from 'lucide-react';
-import React, { useEffect, useState, useTransition } from 'react';
-import { useActionState, } from 'react';
+import React, { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { handleEconomyAction } from '@/app/actions';
 import type { DiscordMember, GuildRole } from '@/lib/discord-service';
@@ -63,22 +62,19 @@ function getItemIcon(itemName: string): LucideIcon {
 
 function CommandButton({ command, userId, args, children, variant = 'default', size = 'default', className, onSuccess }: { command: string, userId: string, args?: string[], children: React.ReactNode, variant?: "default" | "secondary" | "outline" | "ghost" | "link" | null, size?: "default" | "sm" | "lg" | "icon" | null, className?: string, onSuccess?: () => void }) {
     const { toast } = useToast();
-    const [isPending, startTransition] = useTransition();
 
     const formAction = async (formData: FormData) => {
-        startTransition(async () => {
-            const result = await handleEconomyAction(undefined, formData);
-            if (result.message) {
-                toast({
-                    title: result.error ? 'Action Failed' : 'Action Successful',
-                    description: result.message,
-                    variant: result.error ? 'destructive' : 'default',
-                });
-            }
-            if (result.success && onSuccess) {
-                onSuccess();
-            }
-        });
+        const result = await handleEconomyAction(undefined, formData);
+        if (result.message) {
+            toast({
+                title: result.error ? 'Action Failed' : 'Action Successful',
+                description: result.message,
+                variant: result.error ? 'destructive' : 'default',
+            });
+        }
+        if (result.success && onSuccess) {
+            onSuccess();
+        }
     }
 
     return (
@@ -86,8 +82,8 @@ function CommandButton({ command, userId, args, children, variant = 'default', s
             <input type="hidden" name="command" value={command} />
             <input type="hidden" name="userId" value={userId} />
             {args && <input type="hidden" name="args" value={JSON.stringify(args)} />}
-            <Button type="submit" disabled={isPending} className={className} variant={variant} size={size}>
-                {isPending ? 'Running...' : children}
+            <Button type="submit" className={className} variant={variant} size={size}>
+                {children}
             </Button>
         </form>
     );
@@ -180,46 +176,43 @@ function ProfileHeader({ member, userRoles }: { member: DiscordMember, userRoles
     const joinedAt = member.joined_at ? new Date(member.joined_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A';
 
     return (
-        <div className="relative">
-            <div className="h-32 md:h-48 w-full relative">
-                {bannerImage && (
-                    <Image
-                        src={bannerImage.imageUrl}
-                        alt="Profile banner"
-                        fill
-                        className="object-cover"
-                        priority
-                    />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-            </div>
-            <div className="container mx-auto px-4 -mt-16 sm:flex sm:items-end sm:gap-6">
-                <Avatar className="w-28 h-28 md:w-36 md:h-36 border-4 border-background ring-4" style={{ ringColor: accentColor }}>
-                    <AvatarImage src={member.avatarUrl} alt={member.displayName} />
-                    <AvatarFallback>{member.displayName?.charAt(0) || member.user.username.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <div className="mt-4 sm:mt-0 sm:pb-4">
-                    <h1 className="text-3xl md:text-4xl font-bold font-headline">{member.displayName}</h1>
-                    <p className="text-muted-foreground">@{member.user.username}</p>
-                    <p className="text-sm text-muted-foreground mt-1">Joined on {joinedAt}</p>
+        <div className="relative h-48 md:h-64 w-full">
+            {bannerImage && (
+                <Image
+                    src={bannerImage.imageUrl}
+                    alt="Profile banner"
+                    fill
+                    className="object-cover"
+                    priority
+                />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/40 to-black/30" />
+            <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6">
+                 <div className="flex items-end gap-4">
+                    <Avatar className="w-24 h-24 md:w-32 md:h-32 border-4 border-background ring-4" style={{ ringColor: accentColor }}>
+                        <AvatarImage src={member.avatarUrl} alt={member.displayName} />
+                        <AvatarFallback>{member.displayName?.charAt(0) || member.user.username.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 pb-2">
+                        <h1 className="text-3xl md:text-4xl font-bold font-headline text-white drop-shadow-lg">{member.displayName}</h1>
+                        <p className="text-muted-foreground text-white/80 drop-shadow-sm">@{member.user.username}</p>
+                    </div>
                 </div>
             </div>
-             <div className="container mx-auto px-4 mt-4">
-                <div className="flex flex-wrap gap-1 justify-start">
-                    {userRoles.slice(0, 5).map(role => (
-                        <Badge
-                            key={role.id}
-                            className="border"
-                            style={{
-                                backgroundColor: `${intToHex(role.color)}20`,
-                                borderColor: intToHex(role.color),
-                                color: intToHex(role.color)
-                            }}
-                        >
-                            {role.name}
-                        </Badge>
-                    ))}
-                </div>
+             <div className="absolute bottom-4 right-4 flex flex-wrap gap-1 justify-end">
+                {userRoles.slice(0, 3).map(role => (
+                    <Badge
+                        key={role.id}
+                        className="border backdrop-blur-sm"
+                        style={{
+                            backgroundColor: `${intToHex(role.color)}40`,
+                            borderColor: `${intToHex(role.color)}80`,
+                            color: intToHex(role.color)
+                        }}
+                    >
+                        {role.name}
+                    </Badge>
+                ))}
             </div>
         </div>
     )
@@ -267,6 +260,8 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
                 return <InventoryView economyProfile={initialEconomyProfile} error={economyError} />;
             case 'pets':
                 return <PetsView />;
+            case 'shop':
+                return <ShopView />;
             case 'stats':
             default:
                 return (
@@ -288,6 +283,8 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
                     <div className="lg:col-span-1 flex flex-col gap-6">
                        <StatsView economyProfile={initialEconomyProfile} error={economyError} isDesktop />
                        <ActionsView isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} isDesktop />
+                       <PetsView isDesktop />
+                       <ShopView isDesktop />
                     </div>
                     <div className="lg:col-span-2">
                         <InventoryView economyProfile={initialEconomyProfile} error={economyError} isDesktop />
@@ -301,10 +298,11 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
                     {renderContent()}
                 </div>
                 <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50">
-                    <div className="container mx-auto px-4 grid grid-cols-3">
+                    <div className="container mx-auto px-4 grid grid-cols-4">
                         <TabButton id="stats" label="Stats" icon={Wallet} activeTab={activeTab} setActiveTab={setActiveTab} />
                         <TabButton id="inventory" label="Inventory" icon={LayoutGrid} activeTab={activeTab} setActiveTab={setActiveTab} />
-                        <TabButton id="pets" label="Pets" icon={Star} activeTab={activeTab} setActiveTab={setActiveTab} disabled />
+                        <TabButton id="pets" label="Pets" icon={PawPrint} activeTab={activeTab} setActiveTab={setActiveTab} disabled />
+                        <TabButton id="shop" label="Shop" icon={Store} activeTab={activeTab} setActiveTab={setActiveTab} disabled />
                     </div>
                 </div>
             </div>
@@ -384,14 +382,33 @@ const InventoryView = ({ economyProfile, error, isDesktop }: { economyProfile: E
     </Card>
 )
 
-const PetsView = () => (
-     <Card className="w-full">
+const PetsView = ({ isDesktop }: { isDesktop?: boolean }) => (
+     <Card className={cn(isDesktop && "w-full")}>
         <CardHeader><CardTitle>Pets</CardTitle></CardHeader>
         <CardContent>
-            <div className="border-2 border-dashed rounded-lg p-4 min-h-48 flex flex-col items-center justify-center text-muted-foreground text-center">
-                <Star className="h-10 w-10 mb-2"/>
+            <div className={cn(
+                "border-2 border-dashed rounded-lg p-4 flex flex-col items-center justify-center text-muted-foreground text-center",
+                isDesktop ? "min-h-48" : "min-h-48"
+                )}>
+                <PawPrint className="h-10 w-10 mb-2"/>
                 <p className="font-bold">Pet System Coming Soon!</p>
-                <p className="text-sm">Stay tuned for updates on our upcoming pet system.</p>
+                <p className="text-sm">Adopt and raise your own companions.</p>
+            </div>
+        </CardContent>
+    </Card>
+)
+
+const ShopView = ({ isDesktop }: { isDesktop?: boolean }) => (
+     <Card className={cn(isDesktop && "w-full")}>
+        <CardHeader><CardTitle>Shop</CardTitle></CardHeader>
+        <CardContent>
+            <div className={cn(
+                "border-2 border-dashed rounded-lg p-4 flex flex-col items-center justify-center text-muted-foreground text-center",
+                isDesktop ? "min-h-48" : "min-h-48"
+                )}>
+                <Store className="h-10 w-10 mb-2"/>
+                <p className="font-bold">Shop Coming Soon!</p>
+                <p className="text-sm">Purchase items, roles, and more.</p>
             </div>
         </CardContent>
     </Card>
