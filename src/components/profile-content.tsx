@@ -178,7 +178,7 @@ export function ProfileContent({ session, member, userRoles, economyProfile, eco
                                                 </CommandButton>
                                                 <CommandButton command="weekly" userId={member.user.id} variant="secondary">
                                                     <Calendar className="mr-2" /> Weekly
-                                                </CommandButton>
+                                                </Button>
                                             </div>
                                         </>
                                     )}
@@ -225,4 +225,3 @@ export function ProfileContent({ session, member, userRoles, economyProfile, eco
         </>
     );
 }
-

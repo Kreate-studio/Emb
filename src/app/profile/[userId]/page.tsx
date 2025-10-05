@@ -5,12 +5,13 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { getSession, type SessionUser } from '@/lib/auth';
 import { getEconomyProfile, type EconomyProfile } from '@/lib/economy-service';
-import { cookies }s from 'next/headers';
+import { cookies } from 'next/headers';
 import { ProfileContent } from '@/components/profile-content';
 
 async function getProfileData(userId: string) {
+    // This is a pure Server Component, so we can safely use server-only functions.
     const [session, memberResult, rolesResult, economyResult] = await Promise.all([
-        getSession(),
+        getSession(cookies()),
         getGuildMember(userId),
         getGuildRoles(),
         getEconomyProfile(userId),
@@ -20,6 +21,10 @@ async function getProfileData(userId: string) {
         return {
             error: memberResult.error || 'This member could not be found in the realm.',
             session,
+            member: null,
+            userRoles: null,
+            economyProfile: null,
+            economyError: null,
         };
     }
     
@@ -61,4 +66,3 @@ export default async function ProfilePage({ params }: { params: { userId: string
         </div>
     );
 }
-
