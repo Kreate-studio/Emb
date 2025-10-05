@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, Briefcase, Calendar, Coins, Package, PiggyBank, Swords, Shield, Scroll, Gem, Fish, Apple, Diamond, LandPlot, Share2, SquareArrowOutUpRight } from 'lucide-react';
+import { AlertTriangle, Briefcase, Calendar, Coins, PiggyBank, Swords, Shield, Scroll, Gem, Fish, Apple, Diamond, LandPlot, Share2, SquareArrowOutUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -173,12 +173,26 @@ function TransferDialog({ sender, recipient }: { sender: SessionUser, recipient:
 
 function ShareButton() {
     const { toast } = useToast();
-    const handleShare = () => {
-        navigator.clipboard.writeText(window.location.href);
-        toast({
-            title: "Link Copied!",
-            description: "Profile URL has been copied to your clipboard.",
-        });
+    const handleShare = async () => {
+        const shareData = {
+            title: document.title,
+            text: `Check out this profile on Sanctyr!`,
+            url: window.location.href,
+        };
+
+        if (navigator.share && navigator.canShare(shareData)) {
+            try {
+                await navigator.share(shareData);
+            } catch (error) {
+                console.error("Sharing failed", error);
+            }
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            toast({
+                title: "Link Copied!",
+                description: "Profile URL has been copied to your clipboard.",
+            });
+        }
     };
     return (
         <Button variant="secondary" size="sm" onClick={handleShare}>
@@ -290,7 +304,7 @@ export function ProfileContent({ session, member, userRoles, economyProfile, eco
                                 </div>
                             </CardHeader>
                              <CardContent>
-                                {isOwnProfile && (
+                                {isOwnProfile ? (
                                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                         <CommandButton command="work" userId={member.user.id} className="w-full">
                                             <Briefcase className="mr-2" /> Work
@@ -302,8 +316,7 @@ export function ProfileContent({ session, member, userRoles, economyProfile, eco
                                             <Calendar className="mr-2" /> Weekly
                                         </CommandButton>
                                     </div>
-                                )}
-                                {!isOwnProfile && (
+                                ) : (
                                      <p className="text-sm text-muted-foreground text-center italic">This is not your profile. Actions are limited.</p>
                                 )}
                              </CardContent>
@@ -354,3 +367,5 @@ export function ProfileContent({ session, member, userRoles, economyProfile, eco
         </>
     );
 }
+
+    
