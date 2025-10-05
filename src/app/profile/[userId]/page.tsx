@@ -1,10 +1,8 @@
 
 import { getGuildMember, getGuildRoles, type DiscordMember, type GuildRole } from '@/lib/discord-service';
 import { Header } from '@/components/header';
-import { Footer } from '@/components/footer';
 import { getSession } from '@/lib/auth';
 import { getEconomyProfile, type EconomyProfile } from '@/lib/economy-service';
-import { cookies } from 'next/headers';
 import { ProfileContent } from '@/components/profile-content';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -110,7 +108,6 @@ export default async function ProfilePage({ params }: Props) {
                     onRefresh={handleRefresh}
                 />
             </main>
-            <Footer />
         </div>
     );
 }
