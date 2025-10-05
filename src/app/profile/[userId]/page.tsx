@@ -1,18 +1,25 @@
 
-import { getGuildMember, getGuildRoles } from '@/lib/discord-service';
+'use client';
+
+import { getGuildMember, getGuildRoles, type DiscordMember, type GuildRole } from '@/lib/discord-service';
 import { notFound } from 'next/navigation';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { getSession } from '@/lib/auth';
+import { getSession, type SessionUser } from '@/lib/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, Briefcase, Calendar, Coins, Package, PiggyBank, Swords, Shield, Scroll, Gem, Fish, Apple } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { getEconomyProfile } from '@/lib/economy-service';
+import { getEconomyProfile, type EconomyProfile } from '@/lib/economy-service';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { LucideIcon } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
+import { useToast } from '@/hooks/use-toast';
+import { handleEconomyAction } from '@/app/actions';
 
 function intToHex(int: number | undefined) {
     if (int === undefined || int === null || int === 0) return '#99aab5'; // Default Discord grey
@@ -63,38 +70,43 @@ function getItemIcon(itemName: string): LucideIcon {
     return Package;
 }
 
+function CommandButton({ command, userId, children, variant = 'default' }: { command: string, userId: string, children: React.ReactNode, variant?: "default" | "secondary" }) {
+    const [state, formAction] = useActionState(handleEconomyAction, { message: '' });
+    const { pending } = useFormStatus();
+    const { toast } = useToast();
 
-export default async function ProfilePage({ params }: { params: { userId: string } }) {
-    const [session, memberResult, rolesResult, economyResult] = await Promise.all([
-        getSession(),
-        getGuildMember(params.userId),
-        getGuildRoles(),
-        getEconomyProfile(params.userId),
-    ]);
+    useEffect(() => {
+        if (state.message) {
+            toast({
+                title: state.error ? 'Action Failed' : 'Action Successful',
+                description: state.message,
+                variant: state.error ? 'destructive' : 'default',
+            });
+        }
+    }, [state, toast]);
 
-    if (memberResult.error || !memberResult.member) {
-        return (
-             <div className="flex flex-col min-h-screen bg-background text-foreground">
-                <Header session={session} />
-                <main className="flex-1 container mx-auto px-4 py-8">
-                     <ProfileError message={memberResult.error || 'This member could not be found in the realm.'} />
-                </main>
-                <Footer />
-            </div>
-        )
-    }
+    return (
+        <form action={formAction}>
+            <input type="hidden" name="command" value={command} />
+            <input type="hidden" name="userId" value={userId} />
+            <Button type="submit" disabled={pending} className="w-full" variant={variant}>
+                {pending ? 'Running...' : children}
+            </Button>
+        </form>
+    );
+}
 
-    const { member } = memberResult;
-    const { roles } = rolesResult;
-    const { profile: economyProfile, error: economyError } = economyResult;
+interface ProfileContentProps {
+  session: SessionUser | null;
+  member: DiscordMember;
+  userRoles: GuildRole[];
+  economyProfile: EconomyProfile | null;
+  economyError: string | null;
+}
 
-
-    const userRoles = roles
-        ? roles.filter(r => member.roles.includes(r.id)).sort((a, b) => b.position - a.position)
-        : [];
-    
+function ProfileContent({ session, member, userRoles, economyProfile, economyError }: ProfileContentProps) {
     const bannerColor = userRoles.length > 0 ? intToHex(userRoles[0].color) : 'hsl(var(--primary))';
-
+    const isOwnProfile = session?.id === member.user.id;
 
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -149,13 +161,23 @@ export default async function ProfilePage({ params }: { params: { userId: string
                                                 <StatCard icon={PiggyBank} label="Bank" value={economyProfile?.bank.toLocaleString() ?? 'N/A'} />
                                             </>
                                         )}
-                                        <Separator />
-                                        <h3 className="font-headline text-xl font-bold">Common Actions</h3>
-                                        <div className="flex flex-col gap-2">
-                                            <Button><Briefcase className="mr-2" /> Work</Button>
-                                            <Button variant="secondary"><Calendar className="mr-2" /> Daily</Button>
-                                            <Button variant="secondary"><Calendar className="mr-2" /> Weekly</Button>
-                                        </div>
+                                        {isOwnProfile && (
+                                            <>
+                                                <Separator />
+                                                <h3 className="font-headline text-xl font-bold">Common Actions</h3>
+                                                <div className="flex flex-col gap-2">
+                                                    <CommandButton command="work" userId={member.user.id}>
+                                                        <Briefcase className="mr-2" /> Work
+                                                    </CommandButton>
+                                                    <CommandButton command="daily" userId={member.user.id} variant="secondary">
+                                                        <Calendar className="mr-2" /> Daily
+                                                    </CommandButton>
+                                                    <CommandButton command="weekly" userId={member.user.id} variant="secondary">
+                                                        <Calendar className="mr-2" /> Weekly
+                                                    </CommandButton>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                     <div className="lg:col-span-2">
                                         <h3 className="font-headline text-xl font-bold mb-4">Inventory</h3>
@@ -200,4 +222,44 @@ export default async function ProfilePage({ params }: { params: { userId: string
             <Footer />
         </div>
     );
+}
+
+
+export default async function ProfilePage({ params }: { params: { userId: string } }) {
+    const [session, memberResult, rolesResult, economyResult] = await Promise.all([
+        getSession(),
+        getGuildMember(params.userId),
+        getGuildRoles(),
+        getEconomyProfile(params.userId),
+    ]);
+
+    if (memberResult.error || !memberResult.member) {
+        return (
+             <div className="flex flex-col min-h-screen bg-background text-foreground">
+                <Header session={session} />
+                <main className="flex-1 container mx-auto px-4 py-8">
+                     <ProfileError message={memberResult.error || 'This member could not be found in the realm.'} />
+                </main>
+                <Footer />
+            </div>
+        )
+    }
+
+    const { member } = memberResult;
+    const { roles } = rolesResult;
+    const { profile: economyProfile, error: economyError } = economyResult;
+
+    const userRoles = roles
+        ? roles.filter(r => member.roles.includes(r.id)).sort((a, b) => b.position - a.position)
+        : [];
+    
+    return (
+        <ProfileContent 
+            session={session}
+            member={member}
+            userRoles={userRoles}
+            economyProfile={economyProfile}
+            economyError={economyError}
+        />
+    )
 }

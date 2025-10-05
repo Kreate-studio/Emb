@@ -60,3 +60,39 @@ export async function getEconomyProfile(userId: string): Promise<{ profile: Econ
         return { profile: null, error: 'An unexpected error occurred while fetching economy data.' };
     }
 }
+
+export async function runEconomyCommand(userId: string, command: string): Promise<{ message: string | null, error: string | null }> {
+    noStore();
+    if (!API_URL || !API_SECRET) {
+        console.error("Economy API environment variables are not set.");
+        return { message: null, error: GENERIC_CONFIG_ERROR };
+    }
+    
+    if (!userId || !command) {
+        return { message: null, error: "User ID or command not provided." };
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/api/command`, {
+            method: 'POST',
+            headers: {
+                'X-API-Secret': API_SECRET,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId, command }),
+        });
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+            console.error(`Economy Command API Error (${response.status}):`, responseData);
+            return { message: null, error: responseData.error || `Command failed with status: ${response.statusText}` };
+        }
+        
+        return { message: responseData.message, error: null };
+
+    } catch (err) {
+        console.error(`Error running economy command '${command}' for ${userId}:`, err);
+        return { message: null, error: 'An unexpected error occurred while running the command.' };
+    }
+}

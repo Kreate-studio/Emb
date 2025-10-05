@@ -11,6 +11,7 @@ import { kv } from '@vercel/kv';
 import { headers } from 'next/headers';
 import {unstable_noStore as noStore} from 'next/cache';
 import { sendMessageToChannel, sendDm } from '@/lib/discord-service';
+import { runEconomyCommand } from '@/lib/economy-service';
 
 const emailSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -43,6 +44,7 @@ export async function handleNewsletterSignup(
 
     return {
       message: 'Thank you for joining the realm! You will be notified of updates.',
+      success: true,
     };
   } catch (error) {
     console.error('Newsletter signup error:', error);
@@ -94,7 +96,7 @@ export async function handlePartnershipRequest(
       return { message: "Could not send request to the council. Please try again later.", error: true };
     }
 
-    return { message: "Your partnership request has been sent to the High Council for review!" };
+    return { message: "Your partnership request has been sent to the High Council for review!", success: true };
   } catch (err) {
     console.error("Partnership request submission error:", err);
     return { message: "An unexpected error occurred. Please try again later.", error: true };
@@ -156,16 +158,11 @@ export async function getTenorGifUrl(url: string) {
         return { url: null, error: 'Invalid Tenor URL' };
     }
     
-    // Some tenor URLs don't end in the GIF ID, but have it in the path
-    // e.g. https://tenor.com/view/a-b-c-d-12345
-    // or https://tenor.com/bDERd/fun.gif
-    // The redirect logic handles both cases.
-    
     try {
         const fetchUrl = url.endsWith('.gif') ? url : `${url}.gif`;
         const response = await fetch(fetchUrl, {
-            method: 'HEAD', // We only need the headers to find the redirect
-            redirect: 'manual', // We handle the redirect manually
+            method: 'HEAD',
+            redirect: 'manual',
         });
         
         const finalUrl = response.headers.get('location');
@@ -174,7 +171,6 @@ export async function getTenorGifUrl(url: string) {
             return { url: finalUrl };
         }
         
-        // If there's no redirect, it might be the direct URL already, though unlikely for base tenor links
         if (response.status >= 200 && response.status < 300) {
              return { url: fetchUrl };
         }
@@ -184,4 +180,24 @@ export async function getTenorGifUrl(url: string) {
         console.error('Failed to get Tenor GIF URL:', error);
         return { url: null, error: 'Failed to fetch Tenor GIF' };
     }
+}
+
+export async function handleEconomyAction(
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  const command = formData.get('command') as string;
+  const userId = formData.get('userId') as string;
+
+  if (!command || !userId) {
+    return { message: 'Invalid action.', error: true };
+  }
+
+  const { message, error } = await runEconomyCommand(userId, command);
+
+  if (error) {
+    return { message: error, error: true };
+  }
+
+  return { message: message || 'Command executed successfully!', success: true };
 }
