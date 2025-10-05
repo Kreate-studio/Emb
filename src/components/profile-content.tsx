@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -15,7 +14,7 @@ import { handleEconomyAction } from '@/app/actions';
 import type { DiscordMember, GuildRole } from '@/lib/discord-service';
 import type { SessionUser } from '@/lib/auth';
 import type { EconomyProfile } from '@/lib/economy-service';
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import Image from 'next/image';
@@ -62,7 +61,7 @@ function getItemIcon(itemName: string): LucideIcon {
     return Package;
 }
 
-function CommandButton({ command, userId, args, children, variant = 'default', size = 'default', className, onSuccess }: { command: string, userId: string, args?: string[], children: React.ReactNode, variant?: "default" | "secondary" | "outline", size?: "default" | "sm" | "lg", className?: string, onSuccess?: () => void }) {
+function CommandButton({ command, userId, args, children, variant = 'default', size = 'default', className, onSuccess }: { command: string, userId: string, args?: string[], children: React.ReactNode, variant?: "default" | "secondary" | "outline" | "ghost" | "link" | null, size?: "default" | "sm" | "lg" | "icon" | null, className?: string, onSuccess?: () => void }) {
     const { toast } = useToast();
     const [isPending, startTransition] = useTransition();
 
@@ -254,11 +253,6 @@ interface ProfileContentProps {
 
 export function ProfileContent({ session, member, userRoles, initialEconomyProfile, economyError, pageError, onRefresh }: ProfileContentProps) {
     const [activeTab, setActiveTab] = useState('stats');
-    const [economyProfile, setEconomyProfile] = useState(initialEconomyProfile);
-    
-    useEffect(() => {
-        setEconomyProfile(initialEconomyProfile)
-    }, [initialEconomyProfile])
     
     if (pageError || !member) {
         return <ProfileError message={pageError || "An unknown error occurred."} />;
@@ -270,11 +264,17 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
     const renderContent = () => {
         switch (activeTab) {
             case 'inventory':
-                return <InventoryView economyProfile={economyProfile} error={economyError} />;
-            case 'actions':
-                return <ActionsView isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} />;
+                return <InventoryView economyProfile={initialEconomyProfile} error={economyError} />;
+            case 'pets':
+                return <PetsView />;
+            case 'stats':
             default:
-                return <StatsView economyProfile={economyProfile} error={economyError} />;
+                return (
+                    <div className="space-y-6">
+                        <StatsView economyProfile={initialEconomyProfile} error={economyError} />
+                        <ActionsView isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} />
+                    </div>
+                );
         }
     };
 
@@ -286,11 +286,11 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
             <div className="hidden md:block container mx-auto px-4 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-1 flex flex-col gap-6">
-                       <StatsView economyProfile={economyProfile} error={economyError} isDesktop />
+                       <StatsView economyProfile={initialEconomyProfile} error={economyError} isDesktop />
                        <ActionsView isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} isDesktop />
                     </div>
                     <div className="lg:col-span-2">
-                        <InventoryView economyProfile={economyProfile} error={economyError} isDesktop />
+                        <InventoryView economyProfile={initialEconomyProfile} error={economyError} isDesktop />
                     </div>
                 </div>
             </div>
@@ -304,7 +304,7 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
                     <div className="container mx-auto px-4 grid grid-cols-3">
                         <TabButton id="stats" label="Stats" icon={Wallet} activeTab={activeTab} setActiveTab={setActiveTab} />
                         <TabButton id="inventory" label="Inventory" icon={LayoutGrid} activeTab={activeTab} setActiveTab={setActiveTab} />
-                        <TabButton id="actions" label="Actions" icon={Star} activeTab={activeTab} setActiveTab={setActiveTab} />
+                        <TabButton id="pets" label="Pets" icon={Star} activeTab={activeTab} setActiveTab={setActiveTab} disabled />
                     </div>
                 </div>
             </div>
@@ -312,12 +312,14 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
     );
 }
 
-const TabButton = ({ id, label, icon: Icon, activeTab, setActiveTab }: { id: string, label: string, icon: LucideIcon, activeTab: string, setActiveTab: (id: string) => void }) => (
+const TabButton = ({ id, label, icon: Icon, activeTab, setActiveTab, disabled }: { id: string, label: string, icon: LucideIcon, activeTab: string, setActiveTab: (id: string) => void, disabled?: boolean }) => (
     <button
         onClick={() => setActiveTab(id)}
+        disabled={disabled}
         className={cn(
             "flex flex-col items-center justify-center gap-1 py-3 text-sm font-medium transition-colors",
-            activeTab === id ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+            activeTab === id ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
+            disabled && "text-muted-foreground/50 cursor-not-allowed"
         )}
     >
         <Icon className="w-6 h-6" />
@@ -382,21 +384,33 @@ const InventoryView = ({ economyProfile, error, isDesktop }: { economyProfile: E
     </Card>
 )
 
+const PetsView = () => (
+     <Card className="w-full">
+        <CardHeader><CardTitle>Pets</CardTitle></CardHeader>
+        <CardContent>
+            <div className="border-2 border-dashed rounded-lg p-4 min-h-48 flex flex-col items-center justify-center text-muted-foreground text-center">
+                <Star className="h-10 w-10 mb-2"/>
+                <p className="font-bold">Pet System Coming Soon!</p>
+                <p className="text-sm">Stay tuned for updates on our upcoming pet system.</p>
+            </div>
+        </CardContent>
+    </Card>
+)
+
+
 const ActionsView = ({ isOwnProfile, member, session, onRefresh, isDesktop }: { isOwnProfile: boolean, member: DiscordMember, session: SessionUser | null, onRefresh: () => void, isDesktop?: boolean }) => (
     <Card className={cn(isDesktop && "w-full")}>
         {isDesktop && <CardHeader><CardTitle>Actions</CardTitle></CardHeader>}
         <CardContent className={cn(!isDesktop && "pt-6")}>
             <div className="grid grid-cols-1 gap-2">
-                {isOwnProfile ? (
+                {isOwnProfile && (
                     <>
                         <CommandButton command="work" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start" variant='outline' size='lg'><Briefcase className="mr-4"/> Work</CommandButton>
                         <CommandButton command="daily" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start" variant='outline' size='lg'><Calendar className="mr-4"/> Daily</CommandButton>
                         <CommandButton command="weekly" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start" variant='outline' size='lg'><Calendar className="mr-4"/> Weekly</CommandButton>
+                        <Separator className='my-2'/>
                     </>
-                ) : (
-                    <p className="text-sm text-muted-foreground text-center italic py-4">This is not your profile. Actions are limited.</p>
                 )}
-                <Separator className='my-2'/>
                 <div className="grid grid-cols-2 gap-2">
                     {session && !isOwnProfile && <TransferDialog sender={session} recipient={member} onTransferSuccess={onRefresh} />}
                     <ShareButton />
@@ -410,5 +424,3 @@ const ActionsView = ({ isOwnProfile, member, session, onRefresh, isDesktop }: { 
         </CardContent>
     </Card>
 )
-
-    
