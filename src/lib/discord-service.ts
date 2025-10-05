@@ -169,6 +169,7 @@ export interface DiscordMember {
   };
   roles: string[];
   nick: string | null;
+  joined_at: string;
   highestRole?: GuildRole;
   avatarUrl: string;
   displayName: string;
