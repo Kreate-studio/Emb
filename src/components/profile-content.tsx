@@ -314,7 +314,7 @@ export function ProfileContent({ session, member, userRoles, economyProfile, eco
                                         </CommandButton>
                                          <CommandButton command="weekly" userId={member.user.id} variant="secondary" className="w-full">
                                             <Calendar className="mr-2" /> Weekly
-                                        </CommandButton>
+                                        </Button>
                                     </div>
                                 ) : (
                                      <p className="text-sm text-muted-foreground text-center italic">This is not your profile. Actions are limited.</p>
