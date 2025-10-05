@@ -1,4 +1,3 @@
-
 'use server';
 
 import {
@@ -188,8 +187,16 @@ export async function handleEconomyAction(
 ): Promise<FormState> {
   const command = formData.get('command') as string;
   const userId = formData.get('userId') as string;
-  // In the future, we can get args from formData as well
-  const args = [];
+  const argsString = formData.get('args') as string;
+  let args: string[] = [];
+  if (argsString) {
+    try {
+      args = JSON.parse(argsString);
+    } catch (e) {
+      return { message: 'Invalid arguments format.', error: true };
+    }
+  }
+
 
   if (!command || !userId) {
     return { message: 'Invalid action.', error: true };

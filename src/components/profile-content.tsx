@@ -1,23 +1,23 @@
-
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, Briefcase, Calendar, Coins, Package, PiggyBank, Swords, Shield, Scroll, Gem, Fish, Apple, Diamond } from 'lucide-react';
+import { AlertTriangle, Briefcase, Calendar, Coins, Package, PiggyBank, Swords, Shield, Scroll, Gem, Fish, Apple, Diamond, LandPlot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { LucideIcon } from 'lucide-react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
 import { useToast } from '@/hooks/use-toast';
 import { handleEconomyAction } from '@/app/actions';
 import type { DiscordMember, GuildRole } from '@/lib/discord-service';
 import type { SessionUser } from '@/lib/auth';
 import type { EconomyProfile } from '@/lib/economy-service';
-
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
 
 function intToHex(int: number | undefined) {
     if (int === undefined || int === null || int === 0) return '#99aab5'; // Default Discord grey
@@ -42,7 +42,7 @@ function StatCard({ icon: Icon, label, value }: { icon: React.ElementType, label
             <Icon className="w-8 h-8 text-primary" />
             <div>
                 <p className="text-sm text-muted-foreground">{label}</p>
-                <p className="text-xl font-bold">{typeof value === 'number' ? value.toLocaleString() : value}</p>
+                <p className="text-xl font-bold">{value}</p>
             </div>
         </div>
     )
@@ -95,6 +95,80 @@ function CommandButton({ command, userId, children, variant = 'default' }: { com
     );
 }
 
+function TransferDialog({ sender, recipient }: { sender: SessionUser, recipient: DiscordMember }) {
+    const [open, setOpen] = useState(false);
+    const [amount, setAmount] = useState('');
+    const formRef = useRef<HTMLFormElement>(null);
+    const { toast } = useToast();
+    const [state, formAction, isPending] = useActionState(handleEconomyAction, { message: '', success: false, error: false });
+     
+    useEffect(() => {
+        if (state.message) {
+            toast({
+                title: state.error ? 'Transfer Failed' : 'Transfer Successful',
+                description: state.message,
+                variant: state.error ? 'destructive' : 'default',
+            });
+            if (state.success) {
+                setOpen(false); // Close dialog on success
+                setAmount(''); // Reset amount
+            }
+        }
+    }, [state, toast]);
+
+    const handleFormAction = (formData: FormData) => {
+        const transferAmount = parseInt(amount, 10);
+        if (isNaN(transferAmount) || transferAmount <= 0) {
+             toast({ title: 'Invalid Amount', description: 'Please enter a valid positive number.', variant: 'destructive' });
+             return;
+        }
+        
+        formData.set('args', JSON.stringify([`<@${recipient.user.id}>`, amount]));
+        formAction(formData);
+    }
+    
+    return (
+        <AlertDialog open={open} onOpenChange={setOpen}>
+            <AlertDialogTrigger asChild>
+                <Button>
+                    <LandPlot className="mr-2" /> Transfer
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <form action={handleFormAction} ref={formRef}>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Transfer to {recipient.displayName}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Enter the amount you wish to transfer. This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <div className="my-4">
+                        <Label htmlFor="amount" className="sr-only">Amount</Label>
+                        <Input 
+                            id="amount" 
+                            name="amount" 
+                            type="number"
+                            placeholder="e.g. 100" 
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            min="1"
+                            required 
+                        />
+                    </div>
+                    <AlertDialogFooter>
+                        <input type="hidden" name="command" value="transfer" />
+                        <input type="hidden" name="userId" value={sender.id} />
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <Button type="submit" disabled={isPending}>
+                            {isPending ? "Transferring..." : "Confirm Transfer"}
+                        </Button>
+                    </AlertDialogFooter>
+                </form>
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+}
+
 interface ProfileContentProps {
   session: SessionUser | null;
   member: DiscordMember | null;
@@ -106,11 +180,13 @@ interface ProfileContentProps {
 
 export function ProfileContent({ session, member, userRoles, economyProfile, economyError, pageError }: ProfileContentProps) {
     
-    if (pageError || !member || !userRoles) {
+    if (pageError || !member) {
         return <ProfileError message={pageError || "An unknown error occurred."} />;
     }
+    
+    const safeUserRoles = userRoles || [];
 
-    const bannerColor = userRoles.length > 0 ? intToHex(userRoles[0].color) : 'hsl(var(--primary))';
+    const bannerColor = safeUserRoles.length > 0 ? intToHex(safeUserRoles[0].color) : 'hsl(var(--primary))';
     const isOwnProfile = session?.id === member.user.id;
 
     return (
@@ -123,12 +199,12 @@ export function ProfileContent({ session, member, userRoles, economyProfile, eco
                             <AvatarImage src={member.avatarUrl} alt={member.displayName} />
                             <AvatarFallback>{member.displayName?.charAt(0) || member.user.username.charAt(0)}</AvatarFallback>
                         </Avatar>
-                        <div className='text-center md:text-left'>
+                        <div className='text-center md:text-left flex-1'>
                             <h1 className="text-3xl font-bold font-headline">{member.displayName}</h1>
                             <p className="text-muted-foreground">@{member.user.username}</p>
-                            {userRoles.length > 0 ? (
+                            {safeUserRoles.length > 0 ? (
                                 <div className="flex flex-wrap gap-2 mt-2 justify-center md:justify-start">
-                                    {userRoles.map(role => (
+                                    {safeUserRoles.map(role => (
                                         <Badge 
                                             key={role.id}
                                             className="border"
@@ -146,6 +222,11 @@ export function ProfileContent({ session, member, userRoles, economyProfile, eco
                                 <p className="text-sm text-muted-foreground mt-2">No roles to display.</p>
                             )}
                         </div>
+                        {session && !isOwnProfile && (
+                            <div className="flex-shrink-0">
+                                <TransferDialog sender={session} recipient={member} />
+                            </div>
+                        )}
                     </CardHeader>
                     <CardContent className="p-6">
                          <TooltipProvider>
