@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -90,6 +91,56 @@ function CommandButton({ command, userId, args, children, variant = 'default', s
     );
 }
 
+function WithdrawDialog({ member, onActionSuccess }: { member: DiscordMember, onActionSuccess: () => void }) {
+    const [open, setOpen] = useState(false);
+    const [amount, setAmount] = useState('');
+    
+    return (
+        <AlertDialog open={open} onOpenChange={setOpen}>
+            <AlertDialogTrigger asChild>
+                <Button variant="outline" className="w-full justify-start text-base py-6"><Wallet className="mr-4"/> Withdraw</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Withdraw from Bank</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        Enter the amount you wish to move from your bank to your wallet.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="my-4">
+                    <Label htmlFor="amount" className="sr-only">Amount</Label>
+                    <Input 
+                        id="amount" 
+                        name="amount" 
+                        type="number"
+                        placeholder="e.g. 100" 
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        min="1"
+                        required 
+                    />
+                </div>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <CommandButton
+                        command="withdraw"
+                        userId={member.user.id}
+                        args={[amount]}
+                        onSuccess={() => {
+                            setOpen(false);
+                            setAmount('');
+                            onActionSuccess();
+                        }}
+                    >
+                        Confirm Withdraw
+                    </CommandButton>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    );
+}
+
+
 function TransferDialog({ sender, recipient, onTransferSuccess }: { sender: SessionUser, recipient: DiscordMember, onTransferSuccess: () => void }) {
     const [open, setOpen] = useState(false);
     const [amount, setAmount] = useState('');
@@ -171,8 +222,7 @@ function ShareButton() {
 
 function ProfileHeader({ member, userRoles }: { member: DiscordMember, userRoles: GuildRole[] }) {
     const bannerImage = PlaceHolderImages.find((img) => img.id === 'lore-bg');
-    const primaryRole = userRoles.length > 0 ? userRoles[0] : null;
-
+    
     return (
         <div className="relative h-48 md:h-64 w-full">
             {bannerImage && (
@@ -187,7 +237,7 @@ function ProfileHeader({ member, userRoles }: { member: DiscordMember, userRoles
             <div className="absolute inset-0 bg-gradient-to-t from-background via-black/20 to-black/50" />
             <div className="absolute inset-x-0 bottom-0 p-4 md:p-6 text-white" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                  <div className="container mx-auto flex items-end gap-4">
-                    <Avatar className="w-24 h-24 md:w-32 md:h-32 border-4 border-background ring-4" style={{ ringColor: primaryRole ? intToHex(primaryRole.color) : 'hsl(var(--primary))' }}>
+                    <Avatar className="w-24 h-24 md:w-32 md:h-32 border-4 border-background ring-4 ring-primary">
                         <AvatarImage src={member.avatarUrl} alt={member.displayName} />
                         <AvatarFallback>{member.displayName?.charAt(0) || member.user.username.charAt(0)}</AvatarFallback>
                     </Avatar>
@@ -472,6 +522,7 @@ const ActionsView = ({ isOwnProfile, member, session, onRefresh, isDesktop }: { 
                         <CommandButton command="work" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start text-base py-6" variant='outline'><Briefcase className="mr-4"/> Work</CommandButton>
                         <CommandButton command="daily" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start text-base py-6" variant='outline'><Calendar className="mr-4"/> Daily</CommandButton>
                         <CommandButton command="weekly" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start text-base py-6" variant='outline'><Star className="mr-4"/> Weekly</CommandButton>
+                        <WithdrawDialog member={member} onActionSuccess={onRefresh} />
                         <Separator className='my-2'/>
                     </>
                 )}
@@ -486,5 +537,7 @@ const ActionsView = ({ isOwnProfile, member, session, onRefresh, isDesktop }: { 
         </CardContent>
     </Card>
 )
+
+    
 
     
