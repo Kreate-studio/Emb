@@ -1,17 +1,24 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
+import { setSession, type SessionUser } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
   const error = searchParams.get('error');
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002';
+  const loginUrl = new URL('/login', appUrl);
+
+
   if (error) {
-    return NextResponse.redirect(new URL(`/login?error=${error}`, request.url));
+    loginUrl.searchParams.set('error', error);
+    return NextResponse.redirect(loginUrl);
   }
 
   if (!code) {
-    return NextResponse.redirect(new URL('/login?error=No code provided', request.url));
+    loginUrl.searchParams.set('error', 'No code provided');
+    return NextResponse.redirect(loginUrl);
   }
 
   const clientId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
@@ -20,7 +27,8 @@ export async function GET(request: NextRequest) {
 
   if (!clientId || !clientSecret || !redirectUri) {
     console.error('Discord OAuth environment variables are not set.');
-    return NextResponse.redirect(new URL('/login?error=Server configuration error.', request.url));
+    loginUrl.searchParams.set('error', 'Server configuration error');
+    return NextResponse.redirect(loginUrl);
   }
 
   const params = new URLSearchParams();
@@ -43,7 +51,8 @@ export async function GET(request: NextRequest) {
     if (!tokenResponse.ok) {
       const errorBody = await tokenResponse.json();
       console.error('Failed to exchange code for token:', errorBody);
-      return NextResponse.redirect(new URL(`/login?error=Failed to authenticate with Discord.`, request.url));
+      loginUrl.searchParams.set('error', 'Failed to authenticate with Discord');
+      return NextResponse.redirect(loginUrl);
     }
 
     const tokenData = await tokenResponse.json();
@@ -58,27 +67,27 @@ export async function GET(request: NextRequest) {
 
     if (!userResponse.ok) {
       console.error('Failed to fetch user info from Discord.');
-      return NextResponse.redirect(new URL('/login?error=Failed to fetch user information.', request.url));
+      loginUrl.searchParams.set('error', 'Failed to fetch user information');
+      return NextResponse.redirect(loginUrl);
     }
 
     const userData = await userResponse.json();
+    const sessionUser: SessionUser = {
+        id: userData.id,
+        username: userData.username,
+        avatar: userData.avatar,
+        discriminator: userData.discriminator,
+    }
 
-    // 3. TODO: Create a session for the user (e.g., set a cookie)
-
-    // For now, just display success and user data.
-    return new Response(
-      `<h1>Login Successful!</h1>
-       <p>Welcome, ${userData.username}#${userData.discriminator}</p>
-       <p>Your User ID is: ${userData.id}</p>
-       <pre>${JSON.stringify(userData, null, 2)}</pre>
-       <a href="/">Go to Homepage</a>`,
-      {
-        headers: { 'Content-Type': 'text/html' },
-      }
-    );
+    // 3. Create a session for the user
+    await setSession(sessionUser);
+    
+    // 4. Redirect to the homepage
+    return NextResponse.redirect(new URL('/', appUrl));
 
   } catch (err) {
     console.error('Discord callback error:', err);
-    return NextResponse.redirect(new URL('/login?error=An unexpected server error occurred.', request.url));
+    loginUrl.searchParams.set('error', 'An unexpected server error occurred');
+    return NextResponse.redirect(loginUrl);
   }
 }

@@ -50,7 +50,7 @@ export default function LoginPage() {
           return;
         }
 
-        const scope = 'identify email guilds';
+        const scope = 'identify email';
         const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}`;
 
         window.location.href = authUrl;
@@ -59,7 +59,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <Header />
+      <Header session={null} />
       <main className="flex-1 flex items-center justify-center p-4">
         <Card className="w-full max-w-md text-center">
           <CardHeader>
