@@ -1,7 +1,7 @@
 
 import { getGuildMember, getGuildRoles, type DiscordMember, type GuildRole } from '@/lib/discord-service';
 import { Header } from '@/components/header';
-import { getSession } from '@/lib/auth';
+import { getSession } from '@/lib/auth-actions';
 import { getEconomyProfile, type EconomyProfile } from '@/lib/economy-service';
 import { ProfileContent } from '@/components/profile-content';
 import type { Metadata, ResolvingMetadata } from 'next';

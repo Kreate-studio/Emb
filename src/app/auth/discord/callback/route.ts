@@ -1,6 +1,6 @@
 
 import { type NextRequest, NextResponse } from 'next/server';
-import { setSession, type SessionUser } from '@/lib/auth';
+import { setSession, type SessionUser } from '@/lib/auth-actions';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);

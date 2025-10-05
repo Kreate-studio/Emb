@@ -11,7 +11,7 @@ import { LoreSection } from '@/components/lore-section';
 import { PartnershipsCarousel } from '@/components/partnerships-carousel';
 import { DiscordIntegrationSection } from '@/components/discord-integration-section';
 import { getGuildWidget } from '@/lib/discord-service';
-import { getSession } from '@/lib/auth';
+import { getSession } from '@/lib/auth-actions';
 import { AIAssistant } from '@/components/ai-assistant';
 
 export default async function Home() {
