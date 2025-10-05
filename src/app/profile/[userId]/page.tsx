@@ -1,15 +1,16 @@
 
-import { getGuildMember, getGuildRoles, type GuildRole } from '@/lib/discord-service';
+import { getGuildMember, getGuildRoles } from '@/lib/discord-service';
 import { notFound } from 'next/navigation';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { getSession } from '@/lib/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, Briefcase, Calendar, Coins, Package, PiggyBank } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { getEconomyProfile } from '@/lib/economy-service';
 
 function intToHex(int: number | undefined) {
     if (int === undefined || int === null || int === 0) return '#99aab5'; // Default Discord grey
@@ -40,10 +41,11 @@ function StatCard({ icon: Icon, label, value }: { icon: React.ElementType, label
 }
 
 export default async function ProfilePage({ params }: { params: { userId: string } }) {
-    const [session, memberResult, rolesResult] = await Promise.all([
+    const [session, memberResult, rolesResult, economyResult] = await Promise.all([
         getSession(),
         getGuildMember(params.userId),
         getGuildRoles(),
+        getEconomyProfile(params.userId),
     ]);
 
     if (memberResult.error || !memberResult.member) {
@@ -60,6 +62,8 @@ export default async function ProfilePage({ params }: { params: { userId: string
 
     const { member } = memberResult;
     const { roles } = rolesResult;
+    const { profile: economyProfile, error: economyError } = economyResult;
+
 
     const userRoles = roles
         ? roles.filter(r => member.roles.includes(r.id)).sort((a, b) => b.position - a.position)
@@ -108,8 +112,18 @@ export default async function ProfilePage({ params }: { params: { userId: string
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                 <div className="lg:col-span-1 flex flex-col gap-4">
                                      <h3 className="font-headline text-xl font-bold">Economy Profile</h3>
-                                    <StatCard icon={Coins} label="Balance" value="1,250" />
-                                    <StatCard icon={PiggyBank} label="Bank" value="15,800" />
+                                      {economyError ? (
+                                        <div className="bg-destructive/20 border border-destructive/50 rounded-lg p-4 text-center">
+                                            <AlertTriangle className="mx-auto h-8 w-8 text-destructive mb-2"/>
+                                            <p className="text-sm font-semibold text-destructive-foreground">Could not load economy data</p>
+                                            <p className="text-xs text-muted-foreground">{economyError}</p>
+                                        </div>
+                                     ) : (
+                                        <>
+                                            <StatCard icon={Coins} label="Wallet" value={economyProfile?.wallet.toLocaleString() ?? 'N/A'} />
+                                            <StatCard icon={PiggyBank} label="Bank" value={economyProfile?.bank.toLocaleString() ?? 'N/A'} />
+                                        </>
+                                     )}
                                     <Separator />
                                      <h3 className="font-headline text-xl font-bold">Common Actions</h3>
                                      <div className="flex flex-col gap-2">
@@ -121,14 +135,22 @@ export default async function ProfilePage({ params }: { params: { userId: string
                                 <div className="lg:col-span-2">
                                      <h3 className="font-headline text-xl font-bold mb-4">Inventory</h3>
                                     <div className="border-2 border-dashed rounded-lg p-6 min-h-48 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
-                                        {Array.from({ length: 5 }).map((_, index) => (
-                                            <div key={index} className="aspect-square bg-secondary rounded-md flex items-center justify-center">
-                                                <Package className="h-8 w-8 text-muted-foreground"/>
+                                        {economyProfile?.inventory && economyProfile.inventory.length > 0 ? (
+                                             economyProfile.inventory.map((item, index) => (
+                                                <div key={index} className="aspect-square bg-secondary rounded-md flex flex-col items-center justify-center p-2 text-center group relative">
+                                                    <Package className="h-8 w-8 text-muted-foreground"/>
+                                                    <p className='text-xs font-bold truncate w-full mt-1'>{item.name}</p>
+                                                    <div className="absolute bottom-0 right-0 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-tl-md rounded-br-md">
+                                                        {item.quantity}
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="col-span-full flex flex-col items-center justify-center text-muted-foreground">
+                                                <Package className="h-10 w-10 mb-2"/>
+                                                <p>Inventory is empty</p>
                                             </div>
-                                        ))}
-                                         <div className="aspect-square bg-secondary/50 border border-dashed rounded-md"/>
-                                         <div className="aspect-square bg-secondary/50 border border-dashed rounded-md"/>
-                                         <div className="aspect-square bg-secondary/50 border border-dashed rounded-md"/>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -140,4 +162,3 @@ export default async function ProfilePage({ params }: { params: { userId: string
         </div>
     );
 }
-
