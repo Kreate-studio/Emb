@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import { AIAssistant } from '@/components/ai-assistant';
 import { ThemeProvider } from '@/components/theme-provider';
 
 const siteTitle = 'Sanctyr';
@@ -69,7 +68,6 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
-          <AIAssistant />
           <Toaster />
         </ThemeProvider>
       </body>
