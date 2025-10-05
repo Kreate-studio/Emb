@@ -11,6 +11,9 @@ import {
 } from '@/components/ui/card';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
+import { useToast } from '@/hooks/use-toast';
+import {useEffect} from "react";
+import {useSearchParams} from "next/navigation";
 
 const DiscordIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg {...props} viewBox="0 0 24 24" fill="currentColor">
@@ -20,11 +23,39 @@ const DiscordIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 
 export default function LoginPage() {
+    const { toast } = useToast();
+    const searchParams = useSearchParams();
 
-  const handleLogin = () => {
-    // In the next step, we will implement the redirect to Discord's OAuth2 URL.
-    alert("The next step is to configure Discord OAuth and redirect the user.");
-  };
+    useEffect(() => {
+        const error = searchParams.get('error');
+        if (error) {
+            toast({
+                title: 'Login Failed',
+                description: error,
+                variant: 'destructive',
+            });
+        }
+    }, [searchParams, toast]);
+
+    const handleLogin = () => {
+        const clientId = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID;
+        const redirectUri = process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI;
+
+        if (!clientId || !redirectUri) {
+          toast({
+            title: 'Configuration Error',
+            description: 'Discord login is not configured correctly. Please contact an administrator.',
+            variant: 'destructive',
+          });
+          return;
+        }
+
+        const scope = 'identify email guilds';
+        const authUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}`;
+
+        window.location.href = authUrl;
+    };
+
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
