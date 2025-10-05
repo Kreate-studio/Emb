@@ -184,7 +184,7 @@ function ProfileHeader({ member, userRoles }: { member: DiscordMember, userRoles
                     priority
                 />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-black/20 to-black/50" />
             <div className="absolute inset-x-0 bottom-0 p-4 md:p-6 text-white" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                  <div className="container mx-auto flex items-end gap-4">
                     <Avatar className="w-24 h-24 md:w-32 md:h-32 border-4 border-background ring-4" style={{ ringColor: primaryRole ? intToHex(primaryRole.color) : 'hsl(var(--primary))' }}>
@@ -194,6 +194,53 @@ function ProfileHeader({ member, userRoles }: { member: DiscordMember, userRoles
                     <div className="flex-1 pb-2">
                         <h1 className="text-3xl md:text-4xl font-bold font-headline">{member.displayName}</h1>
                         <p className="text-white/80">@{member.user.username}</p>
+                        <div className="flex flex-wrap items-center gap-2 mt-2">
+                            {userRoles.slice(0, 3).map(role => (
+                                <Badge
+                                    key={role.id}
+                                    className="border text-xs"
+                                    style={{
+                                        backgroundColor: `${intToHex(role.color)}20`,
+                                        borderColor: `${intToHex(role.color)}80`,
+                                        color: intToHex(role.color)
+                                    }}
+                                >
+                                    {role.name}
+                                </Badge>
+                            ))}
+                            {userRoles.length > 3 && (
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button size="sm" variant="outline" className="h-auto px-2 py-0.5 text-xs bg-black/20 border-white/30 text-white/80 hover:bg-black/40 hover:text-white">
+                                            +{userRoles.length - 3} more
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>All Roles ({userRoles.length})</AlertDialogTitle>
+                                        </AlertDialogHeader>
+                                        <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto">
+                                            {userRoles.map(role => (
+                                                <Badge
+                                                    key={role.id}
+                                                    className="border"
+                                                    style={{
+                                                        backgroundColor: `${intToHex(role.color)}20`,
+                                                        borderColor: `${intToHex(role.color)}80`,
+                                                        color: intToHex(role.color)
+                                                    }}
+                                                >
+                                                    {role.name}
+                                                </Badge>
+                                            ))}
+                                        </div>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Close</AlertDialogCancel>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -245,7 +292,7 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
                 return (
                     <div className="space-y-6">
                         <StatsView economyProfile={initialEconomyProfile} error={economyError} />
-                        <RolesView userRoles={userRoles || []} />
+                        <ActionsView isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} />
                     </div>
                 );
         }
@@ -260,7 +307,6 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-1 flex flex-col gap-6">
                        <StatsView economyProfile={initialEconomyProfile} error={economyError} isDesktop />
-                       <RolesView userRoles={userRoles || []} isDesktop />
                        <ActionsView isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} isDesktop />
                     </div>
                     <div className="lg:col-span-2 flex flex-col gap-6">
@@ -335,29 +381,6 @@ const StatsView = ({ economyProfile, error, isDesktop }: { economyProfile: Econo
                 <Stat icon={PiggyBank} label="Bank" value={economyProfile?.bank?.toLocaleString() ?? null} error={!!error} />
                 <Stat icon={Diamond} label="Gold" value={economyProfile?.gold?.toLocaleString() ?? null} error={!!error} />
              </div>
-        </CardContent>
-    </Card>
-)
-
-const RolesView = ({ userRoles, isDesktop }: { userRoles: GuildRole[], isDesktop?: boolean}) => (
-     <Card className={cn(isDesktop && "w-full")}>
-        <CardHeader><CardTitle>Roles</CardTitle></CardHeader>
-        <CardContent>
-            <div className="flex flex-wrap gap-2">
-                {userRoles.length > 0 ? userRoles.map(role => (
-                    <Badge
-                        key={role.id}
-                        className="border"
-                        style={{
-                            backgroundColor: `${intToHex(role.color)}20`,
-                            borderColor: `${intToHex(role.color)}80`,
-                            color: intToHex(role.color)
-                        }}
-                    >
-                        {role.name}
-                    </Badge>
-                )) : <p className="text-sm text-muted-foreground">No roles to display.</p>}
-            </div>
         </CardContent>
     </Card>
 )
@@ -463,3 +486,5 @@ const ActionsView = ({ isOwnProfile, member, session, onRefresh, isDesktop }: { 
         </CardContent>
     </Card>
 )
+
+    
