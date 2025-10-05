@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { FlameIcon } from '@/components/flame-icon';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Menu, X, LogOut } from 'lucide-react';
+import { Menu, X, LogOut, User as UserIcon } from 'lucide-react';
 import { ThemeToggle } from './theme-toggle';
 import type { SessionUser } from '@/lib/auth';
 import {
@@ -55,6 +55,13 @@ function UserNav({ session }: { session: SessionUser }) {
             </p>
           </div>
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href={`/profile/${session.id}`}>
+            <UserIcon className="mr-2 h-4 w-4" />
+            <span>Profile</span>
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => handleLogout()}>
           <LogOut className="mr-2 h-4 w-4" />
