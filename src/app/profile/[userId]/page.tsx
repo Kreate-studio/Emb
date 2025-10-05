@@ -1,22 +1,22 @@
 
 import { getGuildMember, getGuildRoles, type DiscordMember, type GuildRole } from '@/lib/discord-service';
-import { notFound } from 'next/navigation';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { getSession, type SessionUser } from '@/lib/auth';
+import { getSession } from '@/lib/auth';
 import { getEconomyProfile, type EconomyProfile } from '@/lib/economy-service';
 import { cookies } from 'next/headers';
 import { ProfileContent } from '@/components/profile-content';
 import type { Metadata, ResolvingMetadata } from 'next';
+import { unstable_noStore as noStore } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 type Props = {
   params: { userId: string }
 }
 
 async function getProfileData(userId: string) {
-    const sessionCookie = cookies();
     const [session, memberResult, rolesResult, economyResult] = await Promise.all([
-        getSession(sessionCookie),
+        getSession(),
         getGuildMember(userId),
         getGuildRoles(),
         getEconomyProfile(userId),
@@ -28,7 +28,7 @@ async function getProfileData(userId: string) {
             session,
             member: null,
             userRoles: null,
-            economyProfile: null,
+            initialEconomyProfile: null,
             economyError: null,
         };
     }
@@ -44,7 +44,7 @@ async function getProfileData(userId: string) {
         session,
         member,
         userRoles,
-        economyProfile: economyResult.profile,
+        initialEconomyProfile: economyResult.profile,
         economyError: economyResult.error,
         error: null,
     };
@@ -86,22 +86,33 @@ export async function generateMetadata(
 
 
 export default async function ProfilePage({ params }: Props) {
+    noStore();
     const data = await getProfileData(params.userId);
+    
+    async function handleRefresh() {
+        'use server';
+        // This is a bit of a workaround to trigger a re-render of the server component
+        // A more robust solution might involve revalidating paths/tags
+        redirect(`/profile/${params.userId}?t=${Date.now()}`);
+    }
 
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
             <Header session={data.session} />
-            <main className="flex-1">
+            <main className="flex-1 pb-20 md:pb-0">
                 <ProfileContent 
                     session={data.session}
                     member={data.member}
                     userRoles={data.userRoles}
-                    economyProfile={data.economyProfile}
+                    initialEconomyProfile={data.initialEconomyProfile}
                     economyError={data.economyError}
                     pageError={data.error}
+                    onRefresh={handleRefresh}
                 />
             </main>
             <Footer />
         </div>
     );
 }
+
+    

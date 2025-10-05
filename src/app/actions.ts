@@ -1,3 +1,4 @@
+
 'use server';
 
 import {
@@ -182,7 +183,7 @@ export async function getTenorGifUrl(url: string) {
 }
 
 export async function handleEconomyAction(
-  prevState: FormState,
+  prevState: FormState | undefined,
   formData: FormData
 ): Promise<FormState> {
   const command = formData.get('command') as string;
@@ -210,3 +211,5 @@ export async function handleEconomyAction(
 
   return { message: message || 'Command executed successfully!', success: true };
 }
+
+    
