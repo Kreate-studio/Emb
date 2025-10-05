@@ -3,7 +3,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, Briefcase, Calendar, Coins, PiggyBank, Swords, Shield, Scroll, Gem, Fish, Apple, Diamond, LandPlot, Share2, SquareArrowOutUpRight, Package, User, Star, Wallet, LayoutGrid, PawPrint, Store } from 'lucide-react';
+import { AlertTriangle, Briefcase, Calendar, Coins, PiggyBank, Swords, Shield, Scroll, Gem, Fish, Apple, Diamond, LandPlot, Share2, SquareArrowOutUpRight, Package, User, Star, Wallet, LayoutGrid, PawPrint, Store, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { LucideIcon } from 'lucide-react';
@@ -14,6 +14,7 @@ import type { DiscordMember, GuildRole } from '@/lib/discord-service';
 import type { SessionUser } from '@/lib/auth';
 import type { EconomyProfile } from '@/lib/economy-service';
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './ui/alert-dialog';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import Image from 'next/image';
@@ -96,45 +97,43 @@ function TransferDialog({ sender, recipient, onTransferSuccess }: { sender: Sess
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
-                 <Button variant="outline" size="sm" className="w-full">
-                    <LandPlot className="mr-2" /> Transfer
-                </Button>
+                <Button variant="outline" className="w-full justify-start text-base py-6"><LandPlot className="mr-4"/> Transfer</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Transfer to {recipient.displayName}</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Enter the amount you wish to transfer. This action cannot be undone.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <div className="my-4">
-                        <Label htmlFor="amount" className="sr-only">Amount</Label>
-                        <Input 
-                            id="amount" 
-                            name="amount" 
-                            type="number"
-                            placeholder="e.g. 100" 
-                            value={amount}
-                            onChange={(e) => setAmount(e.target.value)}
-                            min="1"
-                            required 
-                        />
-                    </div>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                         <CommandButton
-                            command="transfer"
-                            userId={sender.id}
-                            args={[`<@${recipient.user.id}>`, amount]}
-                            onSuccess={() => {
-                                setOpen(false);
-                                setAmount('');
-                                onTransferSuccess();
-                            }}
-                         >
-                            Confirm Transfer
-                         </CommandButton>
-                    </AlertDialogFooter>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Transfer to {recipient.displayName}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        Enter the amount you wish to transfer. This action cannot be undone.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className="my-4">
+                    <Label htmlFor="amount" className="sr-only">Amount</Label>
+                    <Input 
+                        id="amount" 
+                        name="amount" 
+                        type="number"
+                        placeholder="e.g. 100" 
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                        min="1"
+                        required 
+                    />
+                </div>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <CommandButton
+                        command="transfer"
+                        userId={sender.id}
+                        args={[`<@${recipient.user.id}>`, amount]}
+                        onSuccess={() => {
+                            setOpen(false);
+                            setAmount('');
+                            onTransferSuccess();
+                        }}
+                    >
+                        Confirm Transfer
+                    </CommandButton>
+                </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
     );
@@ -164,16 +163,15 @@ function ShareButton() {
         }
     };
     return (
-        <Button variant="outline" size="sm" onClick={handleShare} className="w-full">
-            <Share2 className="mr-2" /> Share
+        <Button variant="outline" onClick={handleShare} className="w-full justify-start text-base py-6">
+            <Share2 className="mr-4" /> Share
         </Button>
     )
 }
 
 function ProfileHeader({ member, userRoles }: { member: DiscordMember, userRoles: GuildRole[] }) {
     const bannerImage = PlaceHolderImages.find((img) => img.id === 'lore-bg');
-    const accentColor = userRoles.length > 0 ? intToHex(userRoles[0].color) : 'hsl(var(--primary))';
-    const joinedAt = member.joined_at ? new Date(member.joined_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A';
+    const primaryRole = userRoles.length > 0 ? userRoles[0] : null;
 
     return (
         <div className="relative h-48 md:h-64 w-full">
@@ -186,52 +184,36 @@ function ProfileHeader({ member, userRoles }: { member: DiscordMember, userRoles
                     priority
                 />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/40 to-black/30" />
-            <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6">
-                 <div className="flex items-end gap-4">
-                    <Avatar className="w-24 h-24 md:w-32 md:h-32 border-4 border-background ring-4" style={{ ringColor: accentColor }}>
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-black/30" />
+            <div className="absolute inset-x-0 bottom-0 p-4 md:p-6 text-white" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                 <div className="container mx-auto flex items-end gap-4">
+                    <Avatar className="w-24 h-24 md:w-32 md:h-32 border-4 border-background ring-4" style={{ ringColor: primaryRole ? intToHex(primaryRole.color) : 'hsl(var(--primary))' }}>
                         <AvatarImage src={member.avatarUrl} alt={member.displayName} />
                         <AvatarFallback>{member.displayName?.charAt(0) || member.user.username.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div className="flex-1 pb-2">
-                        <h1 className="text-3xl md:text-4xl font-bold font-headline text-white drop-shadow-lg">{member.displayName}</h1>
-                        <p className="text-muted-foreground text-white/80 drop-shadow-sm">@{member.user.username}</p>
+                        <h1 className="text-3xl md:text-4xl font-bold font-headline">{member.displayName}</h1>
+                        <p className="text-white/80">@{member.user.username}</p>
                     </div>
                 </div>
-            </div>
-             <div className="absolute bottom-4 right-4 flex flex-wrap gap-1 justify-end">
-                {userRoles.slice(0, 3).map(role => (
-                    <Badge
-                        key={role.id}
-                        className="border backdrop-blur-sm"
-                        style={{
-                            backgroundColor: `${intToHex(role.color)}40`,
-                            borderColor: `${intToHex(role.color)}80`,
-                            color: intToHex(role.color)
-                        }}
-                    >
-                        {role.name}
-                    </Badge>
-                ))}
             </div>
         </div>
     )
 }
 
-const Stat = ({ icon: Icon, label, value, error }: { icon: LucideIcon, label: string, value: string | number | null, error?: boolean }) => (
-    <div className="flex justify-between items-center py-4">
-        <div className="flex items-center gap-4">
-            <Icon className="w-5 h-5 text-muted-foreground" />
-            <p className="font-medium">{label}</p>
+const Stat = ({ icon: Icon, label, value, error, valueClass }: { icon: LucideIcon, label: string, value: string | number | null, error?: boolean, valueClass?: string }) => (
+    <div className="flex items-center gap-4 py-4">
+        <Icon className="w-6 h-6 text-primary" />
+        <div className='flex-1'>
+            <p className="text-sm text-muted-foreground">{label}</p>
+            {error ? (
+                <span className="text-lg font-bold text-destructive">N/A</span>
+            ) : (
+                <p className={cn("font-bold font-mono text-2xl", valueClass)}>{value}</p>
+            )}
         </div>
-        {error ? (
-            <span className="text-sm text-destructive">Unavailable</span>
-        ) : (
-            <p className="font-bold font-mono text-lg">{value}</p>
-        )}
     </div>
 )
-
 
 interface ProfileContentProps {
   session: SessionUser | null;
@@ -245,29 +227,25 @@ interface ProfileContentProps {
 
 
 export function ProfileContent({ session, member, userRoles, initialEconomyProfile, economyError, pageError, onRefresh }: ProfileContentProps) {
-    const [activeTab, setActiveTab] = useState('stats');
+    const [activeTab, setActiveTab] = useState('profile');
     
     if (pageError || !member) {
         return <ProfileError message={pageError || "An unknown error occurred."} />;
     }
 
-    const safeUserRoles = userRoles || [];
     const isOwnProfile = session?.id === member.user.id;
 
-    const renderContent = () => {
+    const renderMobileContent = () => {
         switch (activeTab) {
-            case 'inventory':
-                return <InventoryView economyProfile={initialEconomyProfile} error={economyError} />;
-            case 'pets':
-                return <PetsView />;
-            case 'shop':
-                return <ShopView />;
-            case 'stats':
+            case 'inventory': return <InventoryView economyProfile={initialEconomyProfile} error={economyError} />;
+            case 'pets': return <PetsView />;
+            case 'shop': return <ShopView />;
+            case 'profile':
             default:
                 return (
                     <div className="space-y-6">
                         <StatsView economyProfile={initialEconomyProfile} error={economyError} />
-                        <ActionsView isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} />
+                        <RolesView userRoles={userRoles || []} />
                     </div>
                 );
         }
@@ -275,32 +253,36 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
 
     return (
         <>
-            <ProfileHeader member={member} userRoles={safeUserRoles} />
+            <ProfileHeader member={member} userRoles={userRoles || []} />
             
             {/* Desktop Layout */}
             <div className="hidden md:block container mx-auto px-4 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-1 flex flex-col gap-6">
                        <StatsView economyProfile={initialEconomyProfile} error={economyError} isDesktop />
+                       <RolesView userRoles={userRoles || []} isDesktop />
                        <ActionsView isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} isDesktop />
-                       <PetsView isDesktop />
-                       <ShopView isDesktop />
                     </div>
-                    <div className="lg:col-span-2">
+                    <div className="lg:col-span-2 flex flex-col gap-6">
                         <InventoryView economyProfile={initialEconomyProfile} error={economyError} isDesktop />
+                        <div className='grid grid-cols-2 gap-6'>
+                            <PetsView isDesktop />
+                            <ShopView isDesktop />
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Mobile Layout */}
             <div className="md:hidden">
-                <div className="container mx-auto px-4 py-6 min-h-[40vh]">
-                    {renderContent()}
+                <div className="container mx-auto px-4 py-6 min-h-[40vh] mb-20">
+                    {renderMobileContent()}
                 </div>
-                <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border z-50">
-                    <div className="container mx-auto px-4 grid grid-cols-4">
-                        <TabButton id="stats" label="Stats" icon={Wallet} activeTab={activeTab} setActiveTab={setActiveTab} />
+                <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-lg border-t border-border z-50">
+                    <div className="container mx-auto grid grid-cols-5">
+                        <TabButton id="profile" label="Profile" icon={User} activeTab={activeTab} setActiveTab={setActiveTab} />
                         <TabButton id="inventory" label="Inventory" icon={LayoutGrid} activeTab={activeTab} setActiveTab={setActiveTab} />
+                        <ActionSheet isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} />
                         <TabButton id="pets" label="Pets" icon={PawPrint} activeTab={activeTab} setActiveTab={setActiveTab} disabled />
                         <TabButton id="shop" label="Shop" icon={Store} activeTab={activeTab} setActiveTab={setActiveTab} disabled />
                     </div>
@@ -315,15 +297,34 @@ const TabButton = ({ id, label, icon: Icon, activeTab, setActiveTab, disabled }:
         onClick={() => setActiveTab(id)}
         disabled={disabled}
         className={cn(
-            "flex flex-col items-center justify-center gap-1 py-3 text-sm font-medium transition-colors",
+            "flex flex-col items-center justify-center gap-1 py-3 text-xs font-medium transition-colors",
             activeTab === id ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
             disabled && "text-muted-foreground/50 cursor-not-allowed"
         )}
     >
-        <Icon className="w-6 h-6" />
+        <Icon className="w-5 h-5" />
         <span>{label}</span>
     </button>
 )
+
+const ActionSheet = ({ isOwnProfile, member, session, onRefresh }: { isOwnProfile: boolean, member: DiscordMember, session: SessionUser | null, onRefresh: () => void}) => {
+    return (
+        <Sheet>
+            <SheetTrigger asChild>
+                <button className="flex flex-col items-center justify-center gap-1 py-3 text-xs font-medium transition-colors text-muted-foreground hover:text-foreground">
+                    <MoreHorizontal className='w-5 h-5'/>
+                    <span>Actions</span>
+                </button>
+            </SheetTrigger>
+            <SheetContent side="bottom" className="rounded-t-lg">
+                <SheetHeader className='text-left mb-4'>
+                    <SheetTitle>Actions</SheetTitle>
+                </SheetHeader>
+                <ActionsView isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh}/>
+            </SheetContent>
+        </Sheet>
+    )
+}
 
 const StatsView = ({ economyProfile, error, isDesktop }: { economyProfile: EconomyProfile | null, error: string | null, isDesktop?: boolean }) => (
     <Card className={cn(isDesktop && "w-full")}>
@@ -338,12 +339,35 @@ const StatsView = ({ economyProfile, error, isDesktop }: { economyProfile: Econo
     </Card>
 )
 
+const RolesView = ({ userRoles, isDesktop }: { userRoles: GuildRole[], isDesktop?: boolean}) => (
+     <Card className={cn(isDesktop && "w-full")}>
+        <CardHeader><CardTitle>Roles</CardTitle></CardHeader>
+        <CardContent>
+            <div className="flex flex-wrap gap-2">
+                {userRoles.length > 0 ? userRoles.map(role => (
+                    <Badge
+                        key={role.id}
+                        className="border"
+                        style={{
+                            backgroundColor: `${intToHex(role.color)}20`,
+                            borderColor: `${intToHex(role.color)}80`,
+                            color: intToHex(role.color)
+                        }}
+                    >
+                        {role.name}
+                    </Badge>
+                )) : <p className="text-sm text-muted-foreground">No roles to display.</p>}
+            </div>
+        </CardContent>
+    </Card>
+)
+
 const InventoryView = ({ economyProfile, error, isDesktop }: { economyProfile: EconomyProfile | null, error: string | null, isDesktop?: boolean }) => (
      <Card className={cn(isDesktop && "w-full")}>
         <CardHeader><CardTitle>Inventory</CardTitle></CardHeader>
         <CardContent>
             <div className={cn(
-                "border-2 border-dashed rounded-lg p-4 grid grid-cols-4 sm:grid-cols-6 gap-4",
+                "border-2 border-dashed border-border/50 rounded-lg p-4 grid grid-cols-4 sm:grid-cols-6 gap-4",
                  isDesktop ? "min-h-96" : "min-h-48"
             )}>
                 {economyProfile?.inventory && economyProfile.inventory.length > 0 ? (
@@ -367,14 +391,14 @@ const InventoryView = ({ economyProfile, error, isDesktop }: { economyProfile: E
                         </TooltipProvider>
                     )})
                 ) : error ? (
-                        <div className="col-span-full flex flex-col items-center justify-center text-muted-foreground text-center">
-                        <AlertTriangle className="h-10 w-10 mb-2 text-destructive"/>
-                        <p>Could not load inventory</p>
+                        <div className="col-span-full flex flex-col items-center justify-center text-muted-foreground text-center gap-2">
+                        <AlertTriangle className="h-10 w-10 text-destructive"/>
+                        <p className='font-semibold'>Could not load inventory</p>
                     </div>
                 ) : (
-                    <div className="col-span-full flex flex-col items-center justify-center text-muted-foreground text-center">
-                        <Package className="h-10 w-10 mb-2"/>
-                        <p>Inventory is empty</p>
+                    <div className="col-span-full flex flex-col items-center justify-center text-muted-foreground text-center gap-2">
+                        <Package className="h-10 w-10"/>
+                        <p className='font-semibold'>Inventory is empty</p>
                     </div>
                 )}
             </div>
@@ -387,7 +411,7 @@ const PetsView = ({ isDesktop }: { isDesktop?: boolean }) => (
         <CardHeader><CardTitle>Pets</CardTitle></CardHeader>
         <CardContent>
             <div className={cn(
-                "border-2 border-dashed rounded-lg p-4 flex flex-col items-center justify-center text-muted-foreground text-center",
+                "border-2 border-dashed border-border/50 rounded-lg p-4 flex flex-col items-center justify-center text-muted-foreground text-center",
                 isDesktop ? "min-h-48" : "min-h-48"
                 )}>
                 <PawPrint className="h-10 w-10 mb-2"/>
@@ -403,7 +427,7 @@ const ShopView = ({ isDesktop }: { isDesktop?: boolean }) => (
         <CardHeader><CardTitle>Shop</CardTitle></CardHeader>
         <CardContent>
             <div className={cn(
-                "border-2 border-dashed rounded-lg p-4 flex flex-col items-center justify-center text-muted-foreground text-center",
+                "border-2 border-dashed border-border/50 rounded-lg p-4 flex flex-col items-center justify-center text-muted-foreground text-center",
                 isDesktop ? "min-h-48" : "min-h-48"
                 )}>
                 <Store className="h-10 w-10 mb-2"/>
@@ -418,25 +442,23 @@ const ShopView = ({ isDesktop }: { isDesktop?: boolean }) => (
 const ActionsView = ({ isOwnProfile, member, session, onRefresh, isDesktop }: { isOwnProfile: boolean, member: DiscordMember, session: SessionUser | null, onRefresh: () => void, isDesktop?: boolean }) => (
     <Card className={cn(isDesktop && "w-full")}>
         {isDesktop && <CardHeader><CardTitle>Actions</CardTitle></CardHeader>}
-        <CardContent className={cn(!isDesktop && "pt-6")}>
+        <CardContent className={cn(!isDesktop && "pt-0")}>
             <div className="grid grid-cols-1 gap-2">
                 {isOwnProfile && (
                     <>
-                        <CommandButton command="work" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start" variant='outline' size='lg'><Briefcase className="mr-4"/> Work</CommandButton>
-                        <CommandButton command="daily" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start" variant='outline' size='lg'><Calendar className="mr-4"/> Daily</CommandButton>
-                        <CommandButton command="weekly" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start" variant='outline' size='lg'><Calendar className="mr-4"/> Weekly</CommandButton>
+                        <CommandButton command="work" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start text-base py-6" variant='outline'><Briefcase className="mr-4"/> Work</CommandButton>
+                        <CommandButton command="daily" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start text-base py-6" variant='outline'><Calendar className="mr-4"/> Daily</CommandButton>
+                        <CommandButton command="weekly" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start text-base py-6" variant='outline'><Star className="mr-4"/> Weekly</CommandButton>
                         <Separator className='my-2'/>
                     </>
                 )}
-                <div className="grid grid-cols-2 gap-2">
-                    {session && !isOwnProfile && <TransferDialog sender={session} recipient={member} onTransferSuccess={onRefresh} />}
-                    <ShareButton />
-                    <Button asChild variant="outline" size="sm" className="w-full">
-                        <a href={`https://discord.com/users/${member.user.id}`} target="_blank" rel="noopener noreferrer">
-                            <SquareArrowOutUpRight className="mr-2" /> Discord
-                        </a>
-                    </Button>
-                </div>
+                {session && !isOwnProfile && <TransferDialog sender={session} recipient={member} onTransferSuccess={onRefresh} />}
+                <ShareButton />
+                <Button asChild variant="outline" className="w-full justify-start text-base py-6">
+                    <a href={`https://discord.com/users/${member.user.id}`} target="_blank" rel="noopener noreferrer">
+                        <SquareArrowOutUpRight className="mr-4" /> Discord
+                    </a>
+                </Button>
             </div>
         </CardContent>
     </Card>
