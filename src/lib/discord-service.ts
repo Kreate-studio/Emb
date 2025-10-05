@@ -174,7 +174,7 @@ export interface DiscordMember {
   displayName: string;
 }
 
-async function getGuildMember(userId: string): Promise<{member: DiscordMember | null, error: string | null}> {
+export async function getGuildMember(userId: string): Promise<{member: DiscordMember | null, error: string | null}> {
     const GUILD_ID = process.env.DISCORD_GUILD_ID;
     if (!GUILD_ID) return { member: null, error: GENERIC_CONFIG_ERROR };
     const { data, error } = await discordApiFetch(`/guilds/${GUILD_ID}/members/${userId}`);
