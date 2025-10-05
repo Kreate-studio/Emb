@@ -188,12 +188,14 @@ export async function handleEconomyAction(
 ): Promise<FormState> {
   const command = formData.get('command') as string;
   const userId = formData.get('userId') as string;
+  // In the future, we can get args from formData as well
+  const args = [];
 
   if (!command || !userId) {
     return { message: 'Invalid action.', error: true };
   }
 
-  const { message, error } = await runEconomyCommand(userId, command);
+  const { message, error } = await runEconomyCommand(userId, command, args);
 
   if (error) {
     return { message: error, error: true };

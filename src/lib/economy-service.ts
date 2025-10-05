@@ -61,7 +61,7 @@ export async function getEconomyProfile(userId: string): Promise<{ profile: Econ
     }
 }
 
-export async function runEconomyCommand(userId: string, command: string): Promise<{ message: string | null, error: string | null }> {
+export async function runEconomyCommand(userId: string, command: string, args: string[] = []): Promise<{ message: string | null, error: string | null }> {
     noStore();
     if (!API_URL || !API_SECRET) {
         console.error("Economy API environment variables are not set.");
@@ -79,7 +79,7 @@ export async function runEconomyCommand(userId: string, command: string): Promis
                 'X-API-Secret': API_SECRET,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ userId, command }),
+            body: JSON.stringify({ userId, command, args }),
         });
 
         const responseData = await response.json();

@@ -71,10 +71,9 @@ function getItemIcon(itemName: string): LucideIcon {
 }
 
 function CommandButton({ command, userId, children, variant = 'default' }: { command: string, userId: string, children: React.ReactNode, variant?: "default" | "secondary" }) {
-    const [state, formAction] = useActionState(handleEconomyAction, { message: '', success: false, error: false });
-    const { pending } = useFormStatus();
     const { toast } = useToast();
-
+    const [state, formAction, isPending] = useActionState(handleEconomyAction, { message: '', success: false, error: false });
+    
     useEffect(() => {
         if (state.message) {
             toast({
@@ -89,8 +88,8 @@ function CommandButton({ command, userId, children, variant = 'default' }: { com
         <form action={formAction}>
             <input type="hidden" name="command" value={command} />
             <input type="hidden" name="userId" value={userId} />
-            <Button type="submit" disabled={pending} className="w-full" variant={variant}>
-                {pending ? 'Running...' : children}
+            <Button type="submit" disabled={isPending} className="w-full" variant={variant}>
+                {isPending ? 'Running...' : children}
             </Button>
         </form>
     );
