@@ -4,7 +4,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, Briefcase, Calendar, Coins, PiggyBank, Swords, Shield, Scroll, Gem, Fish, Apple, Diamond, LandPlot, Share2, SquareArrowOutUpRight, Package, User, Star, Wallet, LayoutGrid, PawPrint, Store, MoreHorizontal } from 'lucide-react';
+import { AlertTriangle, Briefcase, Calendar, Coins, PiggyBank, Swords, Shield, Scroll, Gem, Fish, Apple, Diamond, LandPlot, Share2, SquareArrowOutUpRight, Package, User, Star, Wallet, LayoutGrid, PawPrint, Store, MoreHorizontal, Axe, Skull, Hand, Tent, Landmark, Banknote, VenetianMask, Scale, Users, Bot, Gamepad2, CircleDollarSign, Ticket, Trophy, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { LucideIcon } from 'lucide-react';
@@ -22,6 +22,7 @@ import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
 import { Separator } from './ui/separator';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 
 function intToHex(int: number | undefined) {
     if (int === undefined || int === null || int === 0) return '#99aab5';
@@ -62,7 +63,7 @@ function getItemIcon(itemName: string): LucideIcon {
     return Package;
 }
 
-function CommandButton({ command, userId, args, children, variant = 'default', size = 'default', className, onSuccess }: { command: string, userId: string, args?: string[], children: React.ReactNode, variant?: "default" | "secondary" | "outline" | "ghost" | "link" | null, size?: "default" | "sm" | "lg" | "icon" | null, className?: string, onSuccess?: () => void }) {
+function CommandButton({ command, userId, args, children, variant = 'outline', size = 'default', className, onSuccess, ...props }: { command: string, userId: string, args?: string[], children: React.ReactNode, variant?: "default" | "secondary" | "outline" | "ghost" | "link" | null, size?: "default" | "sm" | "lg" | "icon" | null, className?: string, onSuccess?: () => void }) {
     const { toast } = useToast();
 
     const formAction = async (formData: FormData) => {
@@ -84,55 +85,76 @@ function CommandButton({ command, userId, args, children, variant = 'default', s
             <input type="hidden" name="command" value={command} />
             <input type="hidden" name="userId" value={userId} />
             {args && <input type="hidden" name="args" value={JSON.stringify(args)} />}
-            <Button type="submit" className={className} variant={variant} size={size}>
+            <Button type="submit" className={cn("w-full justify-start text-base py-6", className)} variant={variant} size={size} {...props}>
                 {children}
             </Button>
         </form>
     );
 }
 
-function WithdrawDialog({ member, onActionSuccess }: { member: DiscordMember, onActionSuccess: () => void }) {
+function ArgumentDialog({ triggerButton, title, description, inputPlaceholder, command, userId, onActionSuccess, hasRecipient = false }: { triggerButton: React.ReactNode, title: string, description: string, inputPlaceholder: string, command: string, userId: string, onActionSuccess: () => void, hasRecipient?: boolean }) {
     const [open, setOpen] = useState(false);
     const [amount, setAmount] = useState('');
+    const [recipient, setRecipient] = useState('');
     
+    const args = hasRecipient ? [recipient, amount] : [amount];
+
     return (
         <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
-                <Button variant="outline" className="w-full justify-start text-base py-6"><Wallet className="mr-4"/> Withdraw</Button>
+                {triggerButton}
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Withdraw from Bank</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        Enter the amount you wish to move from your bank to your wallet.
-                    </AlertDialogDescription>
+                    <AlertDialogTitle>{title}</AlertDialogTitle>
+                    <AlertDialogDescription>{description}</AlertDialogDescription>
                 </AlertDialogHeader>
-                <div className="my-4">
-                    <Label htmlFor="amount" className="sr-only">Amount</Label>
-                    <Input 
-                        id="amount" 
-                        name="amount" 
-                        type="number"
-                        placeholder="e.g. 100" 
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        min="1"
-                        required 
-                    />
+                <div className="my-4 space-y-4">
+                    {hasRecipient && (
+                         <div>
+                            <Label htmlFor="recipient" className="sr-only">Recipient</Label>
+                            <Input 
+                                id="recipient" 
+                                name="recipient" 
+                                type="text"
+                                placeholder="e.g. @username or User ID" 
+                                value={recipient}
+                                onChange={(e) => setRecipient(e.target.value)}
+                                required 
+                            />
+                        </div>
+                    )}
+                    <div>
+                        <Label htmlFor="amount" className="sr-only">Amount</Label>
+                        <Input 
+                            id="amount" 
+                            name="amount" 
+                            type="number"
+                            placeholder={inputPlaceholder} 
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            min="1"
+                            required 
+                        />
+                    </div>
                 </div>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <CommandButton
-                        command="withdraw"
-                        userId={member.user.id}
-                        args={[amount]}
+                        command={command}
+                        userId={userId}
+                        args={args}
+                        variant="default"
+                        size="default"
+                        className='w-auto justify-center'
                         onSuccess={() => {
                             setOpen(false);
                             setAmount('');
+                            if(hasRecipient) setRecipient('');
                             onActionSuccess();
                         }}
                     >
-                        Confirm Withdraw
+                        Confirm
                     </CommandButton>
                 </AlertDialogFooter>
             </AlertDialogContent>
@@ -140,55 +162,6 @@ function WithdrawDialog({ member, onActionSuccess }: { member: DiscordMember, on
     );
 }
 
-
-function TransferDialog({ sender, recipient, onTransferSuccess }: { sender: SessionUser, recipient: DiscordMember, onTransferSuccess: () => void }) {
-    const [open, setOpen] = useState(false);
-    const [amount, setAmount] = useState('');
-    
-    return (
-        <AlertDialog open={open} onOpenChange={setOpen}>
-            <AlertDialogTrigger asChild>
-                <Button variant="outline" className="w-full justify-start text-base py-6"><LandPlot className="mr-4"/> Transfer</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Transfer to {recipient.displayName}</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        Enter the amount you wish to transfer. This action cannot be undone.
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <div className="my-4">
-                    <Label htmlFor="amount" className="sr-only">Amount</Label>
-                    <Input 
-                        id="amount" 
-                        name="amount" 
-                        type="number"
-                        placeholder="e.g. 100" 
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        min="1"
-                        required 
-                    />
-                </div>
-                <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <CommandButton
-                        command="transfer"
-                        userId={sender.id}
-                        args={[`<@${recipient.user.id}>`, amount]}
-                        onSuccess={() => {
-                            setOpen(false);
-                            setAmount('');
-                            onTransferSuccess();
-                        }}
-                    >
-                        Confirm Transfer
-                    </CommandButton>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
-    );
-}
 
 function ShareButton() {
     const { toast } = useToast();
@@ -344,7 +317,6 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
                 return (
                     <div className="space-y-6">
                         <StatsView economyProfile={initialEconomyProfile} error={economyError} />
-                        <ActionsView isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} />
                     </div>
                 );
         }
@@ -373,7 +345,7 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
 
             {/* Mobile Layout */}
             <div className="md:hidden">
-                <div className="container mx-auto px-4 py-6 min-h-[40vh] mb-20">
+                <div className="container mx-auto px-4 py-6 min-h-[40vh] mb-20 mt-4">
                     {renderMobileContent()}
                 </div>
                 <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-lg border-t border-border z-50">
@@ -382,7 +354,7 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
                         <TabButton id="inventory" label="Inventory" icon={LayoutGrid} activeTab={activeTab} setActiveTab={setActiveTab} />
                         <ActionSheet isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} />
                         <TabButton id="pets" label="Pets" icon={PawPrint} activeTab={activeTab} setActiveTab={setActiveTab} disabled />
-                        <TabButton id="shop" label="Shop" icon={Store} activeTab={activeTab} setActiveTab={setActiveTab} disabled />
+                        <TabButton id="shop" label="Shop" icon={Store} activeTab={activeTab} setActiveTab={setActiveTab} />
                     </div>
                 </div>
             </div>
@@ -414,11 +386,13 @@ const ActionSheet = ({ isOwnProfile, member, session, onRefresh }: { isOwnProfil
                     <span>Actions</span>
                 </button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="rounded-t-lg">
+            <SheetContent side="bottom" className="rounded-t-lg max-h-[80vh]">
                 <SheetHeader className='text-left mb-4'>
                     <SheetTitle>Actions</SheetTitle>
                 </SheetHeader>
-                <ActionsView isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh}/>
+                <ScrollArea className='h-full'>
+                    <ActionsView isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh}/>
+                </ScrollArea>
             </SheetContent>
         </Sheet>
     )
@@ -506,8 +480,8 @@ const ShopView = ({ isDesktop }: { isDesktop?: boolean }) => (
                 isDesktop ? "min-h-48" : "min-h-48"
                 )}>
                 <Store className="h-10 w-10 mb-2"/>
-                <p className="font-bold">Shop Coming Soon!</p>
-                <p className="text-sm">Purchase items, roles, and more.</p>
+                <p className="font-bold">Shop</p>
+                <Button className='mt-2'>Enter Shop</Button>
             </div>
         </CardContent>
     </Card>
@@ -518,24 +492,153 @@ const ActionsView = ({ isOwnProfile, member, session, onRefresh, isDesktop }: { 
     <Card className={cn(isDesktop && "w-full")}>
         {isDesktop && <CardHeader><CardTitle>Actions</CardTitle></CardHeader>}
         <CardContent className={cn(!isDesktop && "pt-0")}>
-            <div className="grid grid-cols-1 gap-2">
+             <Accordion type="multiple" className="w-full" defaultValue={['item-1', 'item-2']}>
                 {isOwnProfile && (
-                    <>
-                        <CommandButton command="work" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start text-base py-6" variant='outline'><Briefcase className="mr-4"/> Work</CommandButton>
-                        <CommandButton command="daily" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start text-base py-6" variant='outline'><Calendar className="mr-4"/> Daily</CommandButton>
-                        <CommandButton command="weekly" userId={member.user.id} onSuccess={onRefresh} className="w-full justify-start text-base py-6" variant='outline'><Star className="mr-4"/> Weekly</CommandButton>
-                        <WithdrawDialog member={member} onActionSuccess={onRefresh} />
-                        <Separator className='my-2'/>
-                    </>
+                    <AccordionItem value="item-1">
+                        <AccordionTrigger className='font-headline'>Earn</AccordionTrigger>
+                        <AccordionContent className="grid grid-cols-1 gap-2">
+                             <CommandButton command="work" userId={member.user.id} onSuccess={onRefresh}><Briefcase className="mr-4"/> Work</CommandButton>
+                             <CommandButton command="daily" userId={member.user.id} onSuccess={onRefresh}><Calendar className="mr-4"/> Daily</CommandButton>
+                             <CommandButton command="weekly" userId={member.user.id} onSuccess={onRefresh}><Star className="mr-4"/> Weekly</CommandButton>
+                             <CommandButton command="beg" userId={member.user.id} onSuccess={onRefresh}><Hand className="mr-4"/> Beg</CommandButton>
+                             <CommandButton command="crime" userId={member.user.id} onSuccess={onRefresh}><VenetianMask className="mr-4"/> Crime</CommandButton>
+                             <CommandButton command="fish" userId={member.user.id} onSuccess={onRefresh}><Fish className="mr-4"/> Fish</CommandButton>
+                             <CommandButton command="hunt" userId={member.user.id} onSuccess={onRefresh}><Axe className="mr-4"/> Hunt</CommandButton>
+                             <CommandButton command="loot" userId={member.user.id} onSuccess={onRefresh}><Tent className="mr-4"/> Loot</CommandButton>
+                             <ArgumentDialog 
+                                triggerButton={<Button variant="outline" className="w-full justify-start text-base py-6"><Skull className="mr-4"/> Rob</Button>}
+                                title="Rob a User"
+                                description="Enter the user ID or mention of the user you want to rob."
+                                inputPlaceholder="e.g. @username or 123456789"
+                                command="rob"
+                                userId={member.user.id}
+                                onActionSuccess={onRefresh}
+                             />
+                        </AccordionContent>
+                    </AccordionItem>
                 )}
-                {session && !isOwnProfile && <TransferDialog sender={session} recipient={member} onTransferSuccess={onRefresh} />}
-                <ShareButton />
-                <Button asChild variant="outline" className="w-full justify-start text-base py-6">
-                    <a href={`https://discord.com/users/${member.user.id}`} target="_blank" rel="noopener noreferrer">
-                        <SquareArrowOutUpRight className="mr-4" /> Discord
-                    </a>
-                </Button>
-            </div>
+                 <AccordionItem value="item-2">
+                    <AccordionTrigger className='font-headline'>Bank</AccordionTrigger>
+                    <AccordionContent className="grid grid-cols-1 gap-2">
+                        {isOwnProfile && (
+                            <>
+                            <ArgumentDialog 
+                                triggerButton={<Button variant="outline" className="w-full justify-start text-base py-6"><Landmark className="mr-4"/> Deposit</Button>}
+                                title="Deposit to Bank"
+                                description="Enter the amount you wish to move from your wallet to your bank."
+                                inputPlaceholder="e.g. 100"
+                                command="deposit"
+                                userId={member.user.id}
+                                onActionSuccess={onRefresh}
+                             />
+                            <ArgumentDialog 
+                                triggerButton={<Button variant="outline" className="w-full justify-start text-base py-6"><Wallet className="mr-4"/> Withdraw</Button>}
+                                title="Withdraw from Bank"
+                                description="Enter the amount you wish to move from your bank to your wallet."
+                                inputPlaceholder="e.g. 100"
+                                command="withdraw"
+                                userId={member.user.id}
+                                onActionSuccess={onRefresh}
+                             />
+                             <ArgumentDialog 
+                                triggerButton={<Button variant="outline" className="w-full justify-start text-base py-6"><Banknote className="mr-4"/> Invest</Button>}
+                                title="Invest"
+                                description="Enter the amount you wish to invest."
+                                inputPlaceholder="e.g. 100"
+                                command="invest"
+                                userId={member.user.id}
+                                onActionSuccess={onRefresh}
+                             />
+                              <ArgumentDialog 
+                                triggerButton={<Button variant="outline" className="w-full justify-start text-base py-6"><CircleDollarSign className="mr-4"/> Loan</Button>}
+                                title="Take a Loan"
+                                description="Enter the amount you wish to loan."
+                                inputPlaceholder="e.g. 100"
+                                command="loan"
+                                userId={member.user.id}
+                                onActionSuccess={onRefresh}
+                             />
+                            </>
+                        )}
+                        {session && (
+                             <ArgumentDialog 
+                                triggerButton={<Button variant="outline" className="w-full justify-start text-base py-6"><LandPlot className="mr-4"/> Transfer</Button>}
+                                title={`Transfer to ${member.displayName}`}
+                                description="Enter the amount you wish to transfer. This cannot be undone."
+                                inputPlaceholder="e.g. 100"
+                                command="transfer"
+                                userId={session.id}
+                                onActionSuccess={onRefresh}
+                                hasRecipient={true}
+                             />
+                        )}
+                    </AccordionContent>
+                </AccordionItem>
+                {isOwnProfile && (
+                    <AccordionItem value="item-3">
+                        <AccordionTrigger className='font-headline'>Gambling</AccordionTrigger>
+                        <AccordionContent className="grid grid-cols-1 gap-2">
+                            <ArgumentDialog 
+                                triggerButton={<Button variant="outline" className="w-full justify-start text-base py-6"><Gamepad2 className="mr-4"/> Gamble</Button>}
+                                title="Gamble"
+                                description="Enter the amount you wish to gamble."
+                                inputPlaceholder="e.g. 100"
+                                command="gamble"
+                                userId={member.user.id}
+                                onActionSuccess={onRefresh}
+                             />
+                            <ArgumentDialog 
+                                triggerButton={<Button variant="outline" className="w-full justify-start text-base py-6"><Bot className="mr-4"/> Roulette</Button>}
+                                title="Play Roulette"
+                                description="Enter the amount you wish to bet on roulette."
+                                inputPlaceholder="e.g. 100"
+                                command="roulette"
+                                userId={member.user.id}
+                                onActionSuccess={onRefresh}
+                             />
+                              <ArgumentDialog 
+                                triggerButton={<Button variant="outline" className="w-full justify-start text-base py-6"><Ticket className="mr-4"/> Slots</Button>}
+                                title="Play Slots"
+                                description="Enter the amount you wish to bet on the slot machine."
+                                inputPlaceholder="e.g. 100"
+                                command="slots"
+                                userId={member.user.id}
+                                onActionSuccess={onRefresh}
+                             />
+                        </AccordionContent>
+                    </AccordionItem>
+                )}
+                 <AccordionItem value="item-4">
+                    <AccordionTrigger className='font-headline'>Social</AccordionTrigger>
+                    <AccordionContent className="grid grid-cols-1 gap-2">
+                        {isOwnProfile && (
+                            <ArgumentDialog 
+                                triggerButton={<Button variant="outline" className="w-full justify-start text-base py-6"><Scale className="mr-4"/> Trade</Button>}
+                                title="Trade with a user"
+                                description="Enter the user and the item/amount you wish to trade."
+                                inputPlaceholder="e.g. @user 100"
+                                command="trade"
+                                userId={member.user.id}
+                                onActionSuccess={onRefresh}
+                                hasRecipient
+                             />
+                        )}
+                         <CommandButton command="leaderboard" userId={member.user.id} onSuccess={onRefresh}><Trophy className="mr-4"/> Leaderboard</CommandButton>
+                         <CommandButton command="myhome" userId={member.user.id} onSuccess={onRefresh}><Home className="mr-4"/> My Home</CommandButton>
+                    </AccordionContent>
+                </AccordionItem>
+                 <AccordionItem value="item-5">
+                    <AccordionTrigger className='font-headline'>General</AccordionTrigger>
+                    <AccordionContent className="grid grid-cols-1 gap-2">
+                        <ShareButton />
+                        <Button asChild variant="outline" className="w-full justify-start text-base py-6">
+                            <a href={`https://discord.com/users/${member.user.id}`} target="_blank" rel="noopener noreferrer">
+                                <SquareArrowOutUpRight className="mr-4" /> Discord
+                            </a>
+                        </Button>
+                    </AccordionContent>
+                </AccordionItem>
+            </Accordion>
         </CardContent>
     </Card>
 )
