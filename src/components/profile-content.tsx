@@ -8,7 +8,7 @@ import { AlertTriangle, Briefcase, Calendar, Coins, PiggyBank, Swords, Shield, S
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { LucideIcon } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { handleEconomyAction } from '@/app/actions';
 import type { DiscordMember, GuildRole } from '@/lib/discord-service';
@@ -23,6 +23,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { cn } from '@/lib/utils';
 import { Separator } from './ui/separator';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 function intToHex(int: number | undefined) {
     if (int === undefined || int === null || int === 0) return '#99aab5';
@@ -208,65 +209,14 @@ function ProfileHeader({ member, userRoles }: { member: DiscordMember, userRoles
                 />
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-background via-black/20 to-black/50" />
-            <div className="container mx-auto">
-                <div className="absolute inset-x-0 bottom-0 p-4 md:p-6 text-white" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
-                    <div className="flex items-end gap-4">
+            <div className="container mx-auto px-4">
+                <div className="absolute bottom-0 translate-y-1/2 left-1/2 -translate-x-1/2 w-full max-w-5xl px-4">
+                     <div className="flex items-end gap-4">
                         <Avatar className="w-24 h-24 md:w-32 md:h-32 border-4 border-background ring-4 ring-primary">
                             <AvatarImage src={member.avatarUrl} alt={member.displayName} />
                             <AvatarFallback>{member.displayName?.charAt(0) || member.user.username.charAt(0)}</AvatarFallback>
                         </Avatar>
-                        <div className="flex-1 pb-2">
-                            <h1 className="text-3xl md:text-4xl font-bold font-headline">{member.displayName}</h1>
-                            <p className="text-white/80">@{member.user.username}</p>
-                             <div className="flex flex-wrap items-center gap-2 mt-2">
-                            {userRoles.slice(0, 3).map(role => (
-                                <Badge
-                                    key={role.id}
-                                    className="border text-xs"
-                                    style={{
-                                        backgroundColor: `${intToHex(role.color)}20`,
-                                        borderColor: `${intToHex(role.color)}80`,
-                                        color: intToHex(role.color)
-                                    }}
-                                >
-                                    {role.name}
-                                </Badge>
-                            ))}
-                            {userRoles.length > 3 && (
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <Button size="sm" variant="outline" className="h-auto px-2 py-0.5 text-xs bg-black/20 border-white/30 text-white/80 hover:bg-black/40 hover:text-white">
-                                            +{userRoles.length - 3} more
-                                        </Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>All Roles ({userRoles.length})</AlertDialogTitle>
-                                        </AlertDialogHeader>
-                                        <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto">
-                                            {userRoles.map(role => (
-                                                <Badge
-                                                    key={role.id}
-                                                    className="border"
-                                                    style={{
-                                                        backgroundColor: `${intToHex(role.color)}20`,
-                                                        borderColor: `${intToHex(role.color)}80`,
-                                                        color: intToHex(role.color)
-                                                    }}
-                                                >
-                                                    {role.name}
-                                                </Badge>
-                                            ))}
-                                        </div>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>Close</AlertDialogCancel>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
-                            )}
-                        </div>
-                        </div>
-                    </div>
+                     </div>
                 </div>
             </div>
         </div>
@@ -316,6 +266,57 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
             default:
                 return (
                     <div className="space-y-6">
+                        <div className="text-center">
+                            <h1 className="text-3xl font-bold font-headline">{member.displayName}</h1>
+                            <p className="text-muted-foreground">@{member.user.username}</p>
+                             <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
+                                {userRoles && userRoles.slice(0, 3).map(role => (
+                                    <Badge
+                                        key={role.id}
+                                        className="border text-xs"
+                                        style={{
+                                            backgroundColor: `${intToHex(role.color)}20`,
+                                            borderColor: `${intToHex(role.color)}80`,
+                                            color: intToHex(role.color)
+                                        }}
+                                    >
+                                        {role.name}
+                                    </Badge>
+                                ))}
+                                {userRoles && userRoles.length > 3 && (
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button size="sm" variant="outline" className="h-auto px-2 py-0.5 text-xs bg-background/20 border-white/30 text-foreground/80 hover:bg-background/40 hover:text-white">
+                                                +{userRoles.length - 3} more
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>All Roles ({userRoles.length})</AlertDialogTitle>
+                                            </AlertDialogHeader>
+                                            <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto">
+                                                {userRoles.map(role => (
+                                                    <Badge
+                                                        key={role.id}
+                                                        className="border"
+                                                        style={{
+                                                            backgroundColor: `${intToHex(role.color)}20`,
+                                                            borderColor: `${intToHex(role.color)}80`,
+                                                            color: intToHex(role.color)
+                                                        }}
+                                                    >
+                                                        {role.name}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Close</AlertDialogCancel>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                )}
+                            </div>
+                        </div>
                         <StatsView economyProfile={initialEconomyProfile} error={economyError} />
                     </div>
                 );
@@ -326,35 +327,90 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
         <>
             <ProfileHeader member={member} userRoles={userRoles || []} />
             
-            {/* Desktop Layout */}
-            <div className="hidden md:block container mx-auto px-4 py-8">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div className="lg:col-span-1 flex flex-col gap-6">
-                       <StatsView economyProfile={initialEconomyProfile} error={economyError} isDesktop />
-                       <ActionsView isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} isDesktop />
-                    </div>
-                    <div className="lg:col-span-2 flex flex-col gap-6">
-                        <InventoryView economyProfile={initialEconomyProfile} error={economyError} isDesktop />
-                        <div className='grid grid-cols-2 gap-6'>
-                            <PetsView isDesktop />
-                            <ShopView isDesktop />
+            <div className="pt-16 md:pt-4">
+                {/* Desktop Layout */}
+                <div className="hidden md:block container mx-auto max-w-5xl">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="lg:col-span-1 flex flex-col gap-6">
+                            <Card>
+                                <CardContent className="pt-6 text-center">
+                                    <h1 className="text-3xl font-bold font-headline">{member.displayName}</h1>
+                                    <p className="text-muted-foreground">@{member.user.username}</p>
+                                      <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
+                                        {userRoles && userRoles.slice(0, 3).map(role => (
+                                            <Badge
+                                                key={role.id}
+                                                className="border text-xs"
+                                                style={{
+                                                    backgroundColor: `${intToHex(role.color)}20`,
+                                                    borderColor: `${intToHex(role.color)}80`,
+                                                    color: intToHex(role.color)
+                                                }}
+                                            >
+                                                {role.name}
+                                            </Badge>
+                                        ))}
+                                        {userRoles && userRoles.length > 3 && (
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button size="sm" variant="outline" className="h-auto px-2 py-0.5 text-xs bg-background/20 border-foreground/30 text-foreground/80 hover:bg-background/40 hover:text-white">
+                                                        +{userRoles.length - 3} more
+                                                    </Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>All Roles ({userRoles.length})</AlertDialogTitle>
+                                                    </AlertDialogHeader>
+                                                    <div className="flex flex-wrap gap-2 max-h-60 overflow-y-auto">
+                                                        {userRoles.map(role => (
+                                                            <Badge
+                                                                key={role.id}
+                                                                className="border"
+                                                                style={{
+                                                                    backgroundColor: `${intToHex(role.color)}20`,
+                                                                    borderColor: `${intToHex(role.color)}80`,
+                                                                    color: intToHex(role.color)
+                                                                }}
+                                                            >
+                                                                {role.name}
+                                                            </Badge>
+                                                        ))}
+                                                    </div>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Close</AlertDialogCancel>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                           <StatsView economyProfile={initialEconomyProfile} error={economyError} isDesktop />
+                           <ActionsView isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} isDesktop />
+                        </div>
+                        <div className="lg:col-span-2 flex flex-col gap-6">
+                            <InventoryView economyProfile={initialEconomyProfile} error={economyError} isDesktop />
+                            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                                <PetsView isDesktop />
+                                <ShopView isDesktop />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Mobile Layout */}
-            <div className="md:hidden">
-                <div className="container mx-auto px-4 py-6 min-h-[40vh] mb-20 mt-4">
-                    {renderMobileContent()}
-                </div>
-                <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-lg border-t border-border z-50">
-                    <div className="container mx-auto grid grid-cols-5">
-                        <TabButton id="profile" label="Profile" icon={User} activeTab={activeTab} setActiveTab={setActiveTab} />
-                        <TabButton id="inventory" label="Inventory" icon={LayoutGrid} activeTab={activeTab} setActiveTab={setActiveTab} />
-                        <ActionSheet isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} />
-                        <TabButton id="pets" label="Pets" icon={PawPrint} activeTab={activeTab} setActiveTab={setActiveTab} disabled />
-                        <TabButton id="shop" label="Shop" icon={Store} activeTab={activeTab} setActiveTab={setActiveTab} />
+                {/* Mobile Layout */}
+                <div className="md:hidden">
+                    <div className="container mx-auto px-4 py-6 min-h-[40vh] mb-20 mt-8">
+                        {renderMobileContent()}
+                    </div>
+                    <div className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-lg border-t border-border z-50">
+                        <div className="container mx-auto grid grid-cols-5">
+                            <TabButton id="profile" label="Profile" icon={User} activeTab={activeTab} setActiveTab={setActiveTab} />
+                            <TabButton id="inventory" label="Inventory" icon={LayoutGrid} activeTab={activeTab} setActiveTab={setActiveTab} />
+                            <ActionSheet isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} />
+                            <TabButton id="pets" label="Pets" icon={PawPrint} activeTab={activeTab} setActiveTab={setActiveTab} disabled />
+                            <TabButton id="shop" label="Shop" icon={Store} activeTab={activeTab} setActiveTab={setActiveTab} />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -492,7 +548,7 @@ const ActionsView = ({ isOwnProfile, member, session, onRefresh, isDesktop }: { 
     <Card className={cn(isDesktop && "w-full")}>
         {isDesktop && <CardHeader><CardTitle>Actions</CardTitle></CardHeader>}
         <CardContent className={cn(!isDesktop && "pt-0")}>
-             <Accordion type="multiple" className="w-full" defaultValue={['item-1', 'item-2']}>
+             <Accordion type="multiple" className="w-full" defaultValue={['item-1', 'item-2', 'item-3', 'item-4', 'item-5']}>
                 {isOwnProfile && (
                     <AccordionItem value="item-1">
                         <AccordionTrigger className='font-headline'>Earn</AccordionTrigger>
