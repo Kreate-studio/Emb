@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Flame, ShieldCheck, Construction, Gem } from 'lucide-react';
@@ -21,6 +22,7 @@ const supportTiers = [
       'Fund Discord Nitro boosts to keep the Sanctuary blazing with enhanced features for all members.',
     buttonText: 'Boost the Flame',
     color: 'text-orange-500',
+    link: 'https://ko-fi.com/sanctyr'
   },
   {
     icon: ShieldCheck,
@@ -30,6 +32,7 @@ const supportTiers = [
     buttonText: 'Guard the Vault',
     color: 'text-sky-500',
     progress: 70,
+    link: 'https://ko-fi.com/sanctyr'
   },
   {
     icon: Construction,
@@ -38,6 +41,7 @@ const supportTiers = [
       'Support the development of new community projects and applications, like the upcoming Gaming and Artist Hubs.',
     buttonText: 'Fund the Forge',
     color: 'text-amber-500',
+    link: 'https://ko-fi.com/sanctyr/commissions'
   },
   {
     icon: Gem,
@@ -46,6 +50,7 @@ const supportTiers = [
       'Provide general support to the creators and leaders of the realm, ensuring the vision continues to thrive.',
     buttonText: 'Become a Patron',
     color: 'text-fuchsia-500',
+    link: 'https://ko-fi.com/sanctyr'
   },
 ];
 
@@ -85,13 +90,10 @@ export function DonationTiers() {
                   </div>
                 )}
                 <Button
+                  asChild
                   className="w-full"
-                  onClick={() => {
-                    // In a real app, you would handle payment here
-                    alert(`Thank you for choosing to ${tier.buttonText}!`);
-                  }}
                 >
-                  {tier.buttonText}
+                  <a href={tier.link} target="_blank" rel="noopener noreferrer">{tier.buttonText}</a>
                 </Button>
               </CardContent>
             </Card>
