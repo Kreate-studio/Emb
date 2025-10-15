@@ -1,4 +1,5 @@
 
+'use client';
 import { getGuildMember, getGuildRoles, type DiscordMember, type GuildRole } from '@/lib/discord-service';
 import { Header } from '@/components/header';
 import { getSession } from '@/lib/auth-actions';
@@ -7,6 +8,7 @@ import { ProfileContent } from '@/components/profile-content';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { unstable_noStore as noStore } from 'next/cache';
 import { redirect } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
 
 type Props = {
   params: { userId: string }
@@ -48,56 +50,75 @@ async function getProfileData(userId: string) {
     };
 }
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  // fetch data
-  const { member } = await getGuildMember(params.userId);
- 
-  if (!member) {
-     return {
-        title: 'Profile Not Found | Sanctyr',
-        description: 'The requested member could not be found in the realm.',
-     }
-  }
- 
-  // optionally access and extend (rather than replace) parent metadata
-  const previousImages = (await parent).openGraph?.images || []
- 
-  return {
-    title: `${member.displayName}'s Profile | Sanctyr`,
-    description: `View the profile, stats, and inventory of ${member.displayName} in the D'Last Sanctuary.`,
-    openGraph: {
-      title: `${member.displayName}'s Profile`,
-      description: `View the profile of ${member.displayName}.`,
-      images: [member.avatarUrl, ...previousImages],
-    },
-    twitter: {
-       card: 'summary_large_image',
-       title: `${member.displayName}'s Profile | Sanctyr`,
-       description: `View the profile of ${member.displayName}.`,
-       images: [member.avatarUrl],
-    }
-  }
-}
+// This function is still useful for server-side metadata generation, but we can't call it directly in a client component.
+// We'll call getProfileData and handle metadata in a useEffect hook or by passing props.
 
-
-export default async function ProfilePage({ params }: Props) {
+export default function ProfilePage({ params }: { params: { userId: string } }) {
     noStore();
-    const data = await getProfileData(params.userId);
+    const [data, setData] = useState<Awaited<ReturnType<typeof getProfileData>> | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [showHeader, setShowHeader] = useState(true);
+    const [lastScrollY, setLastScrollY] = useState(0);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            const profileData = await getProfileData(params.userId);
+            setData(profileData);
+            setLoading(false);
+            
+            // Set metadata
+            if (profileData.member) {
+                document.title = `${profileData.member.displayName}'s Profile | Sanctyr`;
+            } else {
+                 document.title = 'Profile Not Found | Sanctyr';
+            }
+        };
+        fetchData();
+    }, [params.userId]);
     
+    useEffect(() => {
+        const controlHeader = () => {
+            if (typeof window !== 'undefined') {
+                if (window.scrollY > 100 && window.scrollY > lastScrollY) {
+                    setShowHeader(false);
+                } else {
+                    setShowHeader(true);
+                }
+                setLastScrollY(window.scrollY);
+            }
+        };
+
+        if (typeof window !== 'undefined') {
+            window.addEventListener('scroll', controlHeader);
+            return () => {
+                window.removeEventListener('scroll', controlHeader);
+            };
+        }
+    }, [lastScrollY]);
+
     async function handleRefresh() {
         'use server';
-        // This is a bit of a workaround to trigger a re-render of the server component
-        // A more robust solution might involve revalidating paths/tags
         redirect(`/profile/${params.userId}?t=${Date.now()}`);
+    }
+    
+    // We're moving to a client-side rendering model for this page, so generateMetadata is not directly used.
+    // Metadata is handled in the useEffect hook.
+    
+    if (loading || !data) {
+        return (
+            <div className="flex flex-col min-h-screen bg-background text-foreground">
+                 {/* Render a static or loading header */}
+            </div>
+        );
     }
 
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
-            <Header session={data.session} />
-            <main className="flex-1 pb-20 md:pb-0">
+            <div className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}>
+                 <Header session={data.session} />
+            </div>
+            <main className="flex-1 pb-20 md:pb-0 pt-20 md:pt-0">
                 <ProfileContent 
                     session={data.session}
                     member={data.member}

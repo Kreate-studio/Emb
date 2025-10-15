@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
+import { AIAssistant } from '@/components/ai-assistant';
 
 const siteTitle = 'Sanctyr';
 const siteDescription =

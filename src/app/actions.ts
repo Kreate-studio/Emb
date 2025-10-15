@@ -59,6 +59,7 @@ const partnershipSchema = z.object({
   serverName: z.string().min(2, { message: "Server name must be at least 2 characters."}),
   discordUsername: z.string().min(2, { message: "Username must be at least 2 characters."}),
   serverLink: z.string().url({ message: "Please enter a valid Discord invite link."}),
+  partnershipTier: z.string().min(1, { message: "Please select a partnership tier."}),
 });
 
 export async function handlePartnershipRequest(
@@ -69,17 +70,18 @@ export async function handlePartnershipRequest(
     serverName: formData.get('server-name'),
     discordUsername: formData.get('discord-username'),
     serverLink: formData.get('server-link'),
+    partnershipTier: formData.get('partnership-tier'),
   });
 
   if (!validatedFields.success) {
     const errors = validatedFields.error.flatten().fieldErrors;
     return {
-      message: errors.serverName?.[0] || errors.discordUsername?.[0] || errors.serverLink?.[0] || 'Invalid input.',
+      message: errors.serverName?.[0] || errors.discordUsername?.[0] || errors.serverLink?.[0] || errors.partnershipTier?.[0] || 'Invalid input.',
       error: true,
     };
   }
 
-  const { serverName, discordUsername, serverLink } = validatedFields.data;
+  const { serverName, discordUsername, serverLink, partnershipTier } = validatedFields.data;
   const channelId = process.env.DISCORD_PARTNERSHIP_REQUESTS_CHANNEL_ID;
 
   if (!channelId) {
@@ -88,7 +90,7 @@ export async function handlePartnershipRequest(
   }
 
   try {
-    const message = `**New Partnership Request**\n\n**Server Name:** ${serverName}\n**Requester's Username:** ${discordUsername}\n**Invite Link:** ${serverLink}`;
+    const message = `**New Partnership Request**\n\n**Tier:** ${partnershipTier}\n**Server Name:** ${serverName}\n**Requester's Username:** ${discordUsername}\n**Invite Link:** ${serverLink}`;
     const { error } = await sendMessageToChannel(channelId, message);
 
     if (error) {

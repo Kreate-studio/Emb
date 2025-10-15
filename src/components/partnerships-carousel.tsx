@@ -22,6 +22,9 @@ import { useFormStatus } from 'react-dom';
 import type { Partner } from '@/lib/discord-service';
 import { getPartnersFromChannel } from '@/lib/discord-service';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import Link from 'next/link';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -152,7 +155,7 @@ export function PartnershipsCarousel() {
         description: state.message,
         variant: state.error ? 'destructive' : 'default',
       });
-      if (!state.error) {
+      if (state.success) {
         formRef.current?.reset();
       }
     }
@@ -180,14 +183,32 @@ export function PartnershipsCarousel() {
 
 
       <Card className="mt-12 max-w-2xl mx-auto bg-card/50 border-border/50 backdrop-blur-md">
-        <CardHeader>
+        <CardHeader className="text-center">
           <CardTitle>Partner With Us</CardTitle>
           <CardDescription>
-            Want to see your community here? Fill out the form below to send a partnership request to our High Council.
+            Interested in joining our network? Review our partnership tiers and submit a request.
           </CardDescription>
+           <div className='pt-4'>
+             <Button asChild>
+                <Link href="/partnerships">Learn More About Tiers</Link>
+            </Button>
+           </div>
         </CardHeader>
         <CardContent>
           <form ref={formRef} action={formAction} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="partnership-tier">Partnership Tier</Label>
+              <Select name="partnership-tier" required>
+                  <SelectTrigger>
+                      <SelectValue placeholder="Select a tier" />
+                  </SelectTrigger>
+                  <SelectContent>
+                      <SelectItem value="Tier 1: Standard">Tier 1: Standard Partner</SelectItem>
+                      <SelectItem value="Tier 2: Network">Tier 2: Network Partner</SelectItem>
+                      <SelectItem value="Tier 3: Strategic">Tier 3: Strategic Partner</SelectItem>
+                  </SelectContent>
+              </Select>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="server-name">Server Name</Label>
               <Input id="server-name" name="server-name" placeholder="Your community's name" required />
