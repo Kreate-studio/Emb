@@ -22,10 +22,10 @@ export const metadata: Metadata = {
     siteName: siteTitle,
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1558690281-0ab20ad67b8b?w=1200&h=630&fit=crop', // OG image size
+        url: 'https://i.ibb.co/kFPp4CT/Sanctyr.gif', // OG image size
         width: 1200,
         height: 630,
-        alt: 'Floating ruins in a dark fantasy setting.',
+        alt: 'Sanctyr Realm',
       },
     ],
     locale: 'en_US',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: siteTitle,
     description: siteDescription,
-    images: ['https://images.unsplash.com/photo-1558690281-0ab20ad67b8b?w=1200&h=630&fit=crop'],
+    images: ['https://i.ibb.co/kFPp4CT/Sanctyr.gif'],
   },
 };
 
