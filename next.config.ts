@@ -51,6 +51,12 @@ const nextConfig: NextConfig = {
         hostname: 'media.tenor.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'storage.ko-fi.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
