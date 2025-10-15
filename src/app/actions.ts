@@ -12,6 +12,7 @@ import { headers } from 'next/headers';
 import {unstable_noStore as noStore} from 'next/cache';
 import { sendMessageToChannel, sendDm } from '@/lib/discord-service';
 import { runEconomyCommand } from '@/lib/economy-service';
+import { redirect } from 'next/navigation';
 
 const emailSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -214,4 +215,6 @@ export async function handleEconomyAction(
   return { message: message || 'Command executed successfully!', success: true };
 }
 
-    
+export async function handleRefresh(userId: string) {
+    redirect(`/profile/${userId}?t=${Date.now()}`);
+}

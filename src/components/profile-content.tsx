@@ -407,7 +407,7 @@ export function ProfileContent({ session, member, userRoles, initialEconomyProfi
                         <div className="container mx-auto grid grid-cols-5">
                             <TabButton id="profile" label="Profile" icon={User} activeTab={activeTab} setActiveTab={setActiveTab} />
                             <TabButton id="inventory" label="Inventory" icon={LayoutGrid} activeTab={activeTab} setActiveTab={setActiveTab} />
-                            <ActionSheet isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={onRefresh} />
+                            <ActionSheet isOwnProfile={isOwnProfile} member={member} session={session} onRefresh={() => onRefresh()} />
                             <TabButton id="pets" label="Pets" icon={PawPrint} activeTab={activeTab} setActiveTab={setActiveTab} disabled />
                             <TabButton id="shop" label="Shop" icon={Store} activeTab={activeTab} setActiveTab={setActiveTab} />
                         </div>

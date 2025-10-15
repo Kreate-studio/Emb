@@ -7,7 +7,7 @@ import { getEconomyProfile, type EconomyProfile } from '@/lib/economy-service';
 import { ProfileContent } from '@/components/profile-content';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { unstable_noStore as noStore } from 'next/cache';
-import { redirect } from 'next/navigation';
+import { handleRefresh } from '@/app/actions';
 import React, { useState, useEffect } from 'react';
 
 type Props = {
@@ -97,11 +97,6 @@ export default function ProfilePage({ params }: { params: { userId: string } }) 
         }
     }, [lastScrollY]);
 
-    async function handleRefresh() {
-        'use server';
-        redirect(`/profile/${params.userId}?t=${Date.now()}`);
-    }
-    
     // We're moving to a client-side rendering model for this page, so generateMetadata is not directly used.
     // Metadata is handled in the useEffect hook.
     
@@ -126,7 +121,7 @@ export default function ProfilePage({ params }: { params: { userId: string } }) 
                     initialEconomyProfile={data.initialEconomyProfile}
                     economyError={data.economyError}
                     pageError={data.error}
-                    onRefresh={handleRefresh}
+                    onRefresh={() => handleRefresh(params.userId)}
                 />
             </main>
         </div>
