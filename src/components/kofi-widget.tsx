@@ -17,6 +17,7 @@ export function KofiWidget() {
             'floating-chat.donateButton.text': 'Support Us',
             'floating-chat.donateButton.background-color': '#E63946',
             'floating-chat.donateButton.text-color': '#fff',
+            'floating-chat.panel.background-color': '#0D0D0D',
           });
         }
       }}
