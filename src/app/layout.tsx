@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
-import { AIAssistant } from '@/components/ai-assistant';
+import Script from 'next/script';
 
 const siteTitle = 'Sanctyr';
 const siteDescription =
@@ -72,6 +72,17 @@ export default function RootLayout({
           {children}
           <Toaster />
         </ThemeProvider>
+        <Script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js' strategy="afterInteractive" />
+        <Script id="kofi-widget" strategy="afterInteractive">
+          {`
+            kofiWidgetOverlay.draw('sanctyr', {
+              'type': 'floating-chat',
+              'floating-chat.donateButton.text': 'Support Us',
+              'floating-chat.donateButton.background-color': '#f45d22',
+              'floating-chat.donateButton.text-color': '#fff'
+            });
+          `}
+        </Script>
       </body>
     </html>
   );
