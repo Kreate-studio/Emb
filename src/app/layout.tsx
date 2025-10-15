@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
-import { KofiWidget } from '@/components/kofi-widget';
 
 const siteTitle = 'Sanctyr';
 const siteDescription =
@@ -72,7 +71,6 @@ export default function RootLayout({
           {children}
           <Toaster />
         </ThemeProvider>
-        <KofiWidget />
       </body>
     </html>
   );
