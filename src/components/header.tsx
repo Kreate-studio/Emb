@@ -21,12 +21,12 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { handleLogout } from '@/lib/auth-actions';
 
 const navLinks = [
-  { href: '#ecosystem', label: 'Ecosystem' },
-  { href: '#partnerships', label: 'Partners' },
-  { href: '#community', label: 'Community' },
-  { href: '#lore', label: 'Lore' },
-  { href: '#events', label: 'Events' },
-  { href: '#donate', label: 'Donate' },
+  { href: '/#ecosystem', label: 'Ecosystem' },
+  { href: '/partnerships', label: 'Partners' },
+  { href: '/#community', label: 'Community' },
+  { href: '/lore', label: 'Lore' },
+  { href: '/#events', label: 'Events' },
+  { href: '/#donate', label: 'Donate' },
 ];
 
 function UserNav({ session }: { session: SessionUser }) {

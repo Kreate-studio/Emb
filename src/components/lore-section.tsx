@@ -8,6 +8,8 @@ import {
 } from '@/components/ui/accordion';
 import SectionWrapper from './section-wrapper';
 import { loreEntries } from '@/lib/site-data';
+import { Button } from './ui/button';
+import Link from 'next/link';
 
 export function LoreSection() {
   return (
@@ -28,13 +30,16 @@ export function LoreSection() {
                 <AccordionTrigger className="text-base md:text-lg font-headline hover:no-underline text-left">
                   {entry.title}
                 </AccordionTrigger>
-                <AccordionContent className="text-sm md:text-base text-muted-foreground">
+                <AccordionContent className="text-sm md:text-base text-muted-foreground whitespace-pre-wrap">
                   {entry.content}
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
         </div>
+        <Button asChild className="mt-8">
+            <Link href="/lore">Read the full Chronicle</Link>
+        </Button>
       </div>
     </SectionWrapper>
   );

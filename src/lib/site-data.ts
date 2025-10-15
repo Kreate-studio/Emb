@@ -89,23 +89,23 @@ export const galleryItems = [
 
 export const loreEntries = [
   {
-    title: 'The Eternal Queen & King',
+    title: 'The Eternal Flame',
     content:
-      'At the heart of the realm stand the Eternal Queen and King, immortal sovereigns who have witnessed ages turn to dust. Their wisdom is as boundless as their power, guiding the sanctuary through eons of turmoil and peace. They are the twin flames from which the sanctuary was born.',
+      'At the heart of Sanctyr burns the Eternal Flame, an ancient source of inspiration and unity. It feeds on devotion, creativity, and purpose. Every act of creation—be it song, art, battle, or story—strengthens the Flame. Every act of apathy dims it. Members of Sanctyr are not mere wanderers; they are Flamebearers, bound to protect and nourish the light through their craft and loyalty.',
   },
   {
-    title: 'The High Council',
+    title: 'The Eternal Queen & Her Council',
     content:
-      'Comprised of the most esteemed and sagacious individuals from across the realms, the High Council advises the Eternal monarchs. Each member is a master of their craft—be it arcane arts, statecraft, or ancient warfare—ensuring the kingdom’s stability and prosperity.',
+      "The D’Eternal Queen reigns not by conquest but by grace. She is the living vessel of the Flame, her light both tempers and commands. Her voice is law; her will, sanctuary. By her side stands the High Council, chosen not by birthright but by brilliance. They are architects of the Flame’s order—masters of wisdom, art, and war—trusted to guard the balance between creation and chaos.",
   },
   {
-    title: 'The Wardens',
+    title: 'The Exalted & The Citizens',
     content:
-      'The silent protectors and enforcers of the sanctuary’s laws. Clad in moonlit silver armor, the Wardens patrol the seen and unseen paths of the realm. They are chosen for their unwavering loyalty and formidable skills, embodying justice and order.',
+      "Those who prove themselves in devotion and craft ascend as the Exalted—noble patrons of the Flame whose names are etched into the annals of Sanctyr’s history. Beneath them live the Citizens—the artisans, gamers, writers, and dreamers who make the kingdom breathe. They are the heart of the Flame, each contributing sparks that sustain the Eternal Fire.",
   },
   {
-    title: 'Citizens of the Realm',
+    title: 'The Guilds of Creation',
     content:
-      'From the most talented artists to the bravest gamers, the citizens are the lifeblood of D’Last Sanctuary. They are the creators, the dreamers, and the adventurers whose passions and stories weave the very fabric of the kingdom, shaping its destiny with every creation and quest.',
+      'Each Citizen finds belonging within one of the Seven Guilds, each devoted to an ancient aspect of the lost realms: Artisan, Gamer, Writer & Reader, Musician, Anime & Manga, and Creators. Each Guild is guided by the Flame’s will and the bots who serve as its unseen spirits, forged to record deeds and grant Embers.',
   },
 ];
